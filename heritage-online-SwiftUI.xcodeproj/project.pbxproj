@@ -13,6 +13,30 @@
 		B166C723257C96B9005CF10C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C70E257C96B8005CF10C /* ContentView.swift */; };
 		B166C724257C96B9005CF10C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B166C70F257C96B9005CF10C /* Assets.xcassets */; };
 		B166C725257C96B9005CF10C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B166C70F257C96B9005CF10C /* Assets.xcassets */; };
+		B166C733257C9746005CF10C /* RestfulAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C732257C9746005CF10C /* RestfulAPI.swift */; };
+		B166C734257C9746005CF10C /* RestfulAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C732257C9746005CF10C /* RestfulAPI.swift */; };
+		B166C73A257C9856005CF10C /* RestfulModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C739257C9856005CF10C /* RestfulModel.swift */; };
+		B166C73B257C9856005CF10C /* RestfulModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C739257C9856005CF10C /* RestfulModel.swift */; };
+		B166C73F257C988E005CF10C /* NetworkRequestTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C73E257C988E005CF10C /* NetworkRequestTask.swift */; };
+		B166C740257C988E005CF10C /* NetworkRequestTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C73E257C988E005CF10C /* NetworkRequestTask.swift */; };
+		B166C744257C98CC005CF10C /* BaseNetworkRequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C743257C98CC005CF10C /* BaseNetworkRequestProtocol.swift */; };
+		B166C745257C98CC005CF10C /* BaseNetworkRequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C743257C98CC005CF10C /* BaseNetworkRequestProtocol.swift */; };
+		B166C74A257C9911005CF10C /* CacheableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C749257C9911005CF10C /* CacheableData.swift */; };
+		B166C74B257C9911005CF10C /* CacheableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C749257C9911005CF10C /* CacheableData.swift */; };
+		B166C752257C9957005CF10C /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C751257C9957005CF10C /* ImageLoader.swift */; };
+		B166C753257C9957005CF10C /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C751257C9957005CF10C /* ImageLoader.swift */; };
+		B166C75A257C9A91005CF10C /* HomePageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C759257C9A91005CF10C /* HomePageCardView.swift */; };
+		B166C75B257C9A91005CF10C /* HomePageCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C759257C9A91005CF10C /* HomePageCardView.swift */; };
+		B166C760257C9B66005CF10C /* NewsListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C75F257C9B66005CF10C /* NewsListResponse.swift */; };
+		B166C761257C9B66005CF10C /* NewsListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C75F257C9B66005CF10C /* NewsListResponse.swift */; };
+		B166C771257C9D33005CF10C /* HomePageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C770257C9D33005CF10C /* HomePageContent.swift */; };
+		B166C772257C9D33005CF10C /* HomePageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C770257C9D33005CF10C /* HomePageContent.swift */; };
+		B166C776257C9D4C005CF10C /* HomePageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C775257C9D4C005CF10C /* HomePageList.swift */; };
+		B166C777257C9D4C005CF10C /* HomePageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C775257C9D4C005CF10C /* HomePageList.swift */; };
+		B166C782257CA112005CF10C /* NewsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C781257CA112005CF10C /* NewsListViewModel.swift */; };
+		B166C783257CA112005CF10C /* NewsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C781257CA112005CF10C /* NewsListViewModel.swift */; };
+		B166C788257CA283005CF10C /* NewsListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C787257CA283005CF10C /* NewsListRequest.swift */; };
+		B166C789257CA283005CF10C /* NewsListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B166C787257CA283005CF10C /* NewsListRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +48,18 @@
 		B166C71C257C96B9005CF10C /* heritage-online-SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "heritage-online-SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B166C71E257C96B9005CF10C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B166C71F257C96B9005CF10C /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		B166C732257C9746005CF10C /* RestfulAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestfulAPI.swift; sourceTree = "<group>"; };
+		B166C739257C9856005CF10C /* RestfulModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestfulModel.swift; sourceTree = "<group>"; };
+		B166C73E257C988E005CF10C /* NetworkRequestTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestTask.swift; sourceTree = "<group>"; };
+		B166C743257C98CC005CF10C /* BaseNetworkRequestProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNetworkRequestProtocol.swift; sourceTree = "<group>"; };
+		B166C749257C9911005CF10C /* CacheableData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheableData.swift; sourceTree = "<group>"; };
+		B166C751257C9957005CF10C /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		B166C759257C9A91005CF10C /* HomePageCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageCardView.swift; sourceTree = "<group>"; };
+		B166C75F257C9B66005CF10C /* NewsListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListResponse.swift; sourceTree = "<group>"; };
+		B166C770257C9D33005CF10C /* HomePageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageContent.swift; sourceTree = "<group>"; };
+		B166C775257C9D4C005CF10C /* HomePageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageList.swift; sourceTree = "<group>"; };
+		B166C781257CA112005CF10C /* NewsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListViewModel.swift; sourceTree = "<group>"; };
+		B166C787257CA283005CF10C /* NewsListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +93,9 @@
 		B166C70C257C96B8005CF10C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B166C758257C9A78005CF10C /* HomePage */,
+				B166C750257C994A005CF10C /* ImageHelper */,
+				B166C730257C96F0005CF10C /* Network */,
 				B166C70D257C96B8005CF10C /* heritage_online_SwiftUIApp.swift */,
 				B166C70E257C96B8005CF10C /* ContentView.swift */,
 				B166C70F257C96B9005CF10C /* Assets.xcassets */,
@@ -88,6 +127,79 @@
 				B166C71F257C96B9005CF10C /* macOS.entitlements */,
 			);
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		B166C730257C96F0005CF10C /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B166C786257CA279005CF10C /* Request */,
+				B166C780257CA105005CF10C /* ViewModel */,
+				B166C75E257C9B06005CF10C /* Responses */,
+				B166C748257C98FF005CF10C /* CacheHelpers */,
+				B166C731257C9726005CF10C /* Protocols */,
+				B166C73E257C988E005CF10C /* NetworkRequestTask.swift */,
+				B166C743257C98CC005CF10C /* BaseNetworkRequestProtocol.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		B166C731257C9726005CF10C /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				B166C732257C9746005CF10C /* RestfulAPI.swift */,
+				B166C739257C9856005CF10C /* RestfulModel.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		B166C748257C98FF005CF10C /* CacheHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				B166C749257C9911005CF10C /* CacheableData.swift */,
+			);
+			path = CacheHelpers;
+			sourceTree = "<group>";
+		};
+		B166C750257C994A005CF10C /* ImageHelper */ = {
+			isa = PBXGroup;
+			children = (
+				B166C751257C9957005CF10C /* ImageLoader.swift */,
+			);
+			path = ImageHelper;
+			sourceTree = "<group>";
+		};
+		B166C758257C9A78005CF10C /* HomePage */ = {
+			isa = PBXGroup;
+			children = (
+				B166C759257C9A91005CF10C /* HomePageCardView.swift */,
+				B166C770257C9D33005CF10C /* HomePageContent.swift */,
+				B166C775257C9D4C005CF10C /* HomePageList.swift */,
+			);
+			path = HomePage;
+			sourceTree = "<group>";
+		};
+		B166C75E257C9B06005CF10C /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				B166C75F257C9B66005CF10C /* NewsListResponse.swift */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		B166C780257CA105005CF10C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				B166C781257CA112005CF10C /* NewsListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		B166C786257CA279005CF10C /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				B166C787257CA283005CF10C /* NewsListRequest.swift */,
+			);
+			path = Request;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,8 +299,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B166C744257C98CC005CF10C /* BaseNetworkRequestProtocol.swift in Sources */,
+				B166C74A257C9911005CF10C /* CacheableData.swift in Sources */,
+				B166C733257C9746005CF10C /* RestfulAPI.swift in Sources */,
+				B166C776257C9D4C005CF10C /* HomePageList.swift in Sources */,
+				B166C75A257C9A91005CF10C /* HomePageCardView.swift in Sources */,
 				B166C722257C96B9005CF10C /* ContentView.swift in Sources */,
+				B166C771257C9D33005CF10C /* HomePageContent.swift in Sources */,
 				B166C720257C96B9005CF10C /* heritage_online_SwiftUIApp.swift in Sources */,
+				B166C73F257C988E005CF10C /* NetworkRequestTask.swift in Sources */,
+				B166C782257CA112005CF10C /* NewsListViewModel.swift in Sources */,
+				B166C788257CA283005CF10C /* NewsListRequest.swift in Sources */,
+				B166C760257C9B66005CF10C /* NewsListResponse.swift in Sources */,
+				B166C752257C9957005CF10C /* ImageLoader.swift in Sources */,
+				B166C73A257C9856005CF10C /* RestfulModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,8 +320,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B166C745257C98CC005CF10C /* BaseNetworkRequestProtocol.swift in Sources */,
+				B166C74B257C9911005CF10C /* CacheableData.swift in Sources */,
+				B166C734257C9746005CF10C /* RestfulAPI.swift in Sources */,
+				B166C777257C9D4C005CF10C /* HomePageList.swift in Sources */,
+				B166C75B257C9A91005CF10C /* HomePageCardView.swift in Sources */,
 				B166C723257C96B9005CF10C /* ContentView.swift in Sources */,
+				B166C772257C9D33005CF10C /* HomePageContent.swift in Sources */,
 				B166C721257C96B9005CF10C /* heritage_online_SwiftUIApp.swift in Sources */,
+				B166C740257C988E005CF10C /* NetworkRequestTask.swift in Sources */,
+				B166C783257CA112005CF10C /* NewsListViewModel.swift in Sources */,
+				B166C789257CA283005CF10C /* NewsListRequest.swift in Sources */,
+				B166C761257C9B66005CF10C /* NewsListResponse.swift in Sources */,
+				B166C753257C9957005CF10C /* ImageLoader.swift in Sources */,
+				B166C73B257C9856005CF10C /* RestfulModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
