@@ -12,6 +12,9 @@ struct HomePageCardView: View {
     
     var body: some View {
         VStack(alignment:.leading){
+            if let imageUrl = newsList.compressImg{
+                NetworkImage(url: URL(string: "https://sunkai.xyz:5001/img/"+imageUrl)!, placeholder: {Color.gray})
+            }
             Text(newsList.title).font(.title).bold()
             Text(newsList.date).foregroundColor(.gray)
             Text(newsList.content)

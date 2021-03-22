@@ -84,10 +84,13 @@ protocol RestfulAPI {
 
 enum HeritageAPI:RestfulAPI {
     case getNewsList
+    case GetBanner
     func getRequestName() -> String {
         switch self {
         case .getNewsList:
             return "GetNewsList"
+        case .GetBanner:
+            return "GetBanner"
         }
     }
     
@@ -95,12 +98,14 @@ enum HeritageAPI:RestfulAPI {
         switch self {
         case .getNewsList:
             return "/api/NewsList"
+        case .GetBanner:
+            return "/api/banner"
         }
     }
     
     func getRequestType() -> RequestType {
         switch self{
-        case .getNewsList:
+        default:
             return .GET
         }
     }

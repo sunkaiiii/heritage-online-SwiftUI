@@ -12,9 +12,13 @@ struct HomePageList: View {
     var title:String
     var body: some View {
         NavigationView{
-            List(newsListModel.newsList){ news in
-                HomePageCardView(newsList: news)
-            }.navigationBarTitle(Text(title))
+            VStack{
+                BannerView()
+                List(newsListModel.newsList){ news in
+                    HomePageCardView(newsList: news)
+                }.navigationBarTitle(Text(title))
+            }
+
         }
     }
 }
