@@ -1,14 +1,14 @@
 //
-//  heritage_online_SwiftUIApp.swift
-//  Shared
+//  heritage_onlineApp.swift
+//  heritage-online
 //
-//  Created by 孙楷 on 6/12/20.
+//  Created by Kai Sun on 21/5/2026.
 //
 
 import SwiftUI
 
 @main
-struct heritage_online_SwiftUIApp: App {
+struct heritage_onlineApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
