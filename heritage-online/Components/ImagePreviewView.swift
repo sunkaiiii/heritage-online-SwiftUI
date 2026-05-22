@@ -26,32 +26,25 @@ struct ImagePreviewView: View {
                     onDismiss()
                 }
 
-            if !imageUrls.isEmpty, let url = URL(string: imageUrls[currentIndex]) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .scaleEffect(scale)
-                            .offset(offset)
-                            .gesture(
-                                SimultaneousGesture(
-                                    magnificationGesture,
-                                    dragGesture
-                                )
+            if !imageUrls.isEmpty {
+                HeritageAsyncImage(url: URL(string: imageUrls[currentIndex])) { image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .scaleEffect(scale)
+                        .offset(offset)
+                        .gesture(
+                            SimultaneousGesture(
+                                magnificationGesture,
+                                dragGesture
                             )
-                            .onTapGesture {
-                                onDismiss()
-                            }
-                    case .failure:
-                        errorView
-                    case .empty:
-                        ProgressView()
-                            .tint(.white)
-                    @unknown default:
-                        errorView
-                    }
+                        )
+                        .onTapGesture {
+                            onDismiss()
+                        }
+                } placeholder: {
+                    ProgressView()
+                        .tint(.white)
                 }
             }
 
@@ -119,15 +112,5 @@ struct ImagePreviewView: View {
             .onEnded { _ in
                 lastOffset = offset
             }
-    }
-
-    private var errorView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "photo.badge.exclamationmark")
-                .font(.largeTitle)
-                .foregroundColor(.white)
-            Text(String(localized: "content_load_failed"))
-                .foregroundColor(.white)
-        }
     }
 }

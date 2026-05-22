@@ -181,9 +181,17 @@ enum ApiError: Error, LocalizedError {
     }
 }
 
+// MARK: - Shared Trusted URLSession for Images
+
+let heritageTrustedSession: URLSession = {
+    let config = URLSessionConfiguration.default
+    config.timeoutIntervalForRequest = 30
+    return URLSession(configuration: config, delegate: TrustAllCertificatesDelegate(), delegateQueue: nil)
+}()
+
 // MARK: - Self-Signed Certificate Support
 
-private class TrustAllCertificatesDelegate: NSObject, URLSessionDelegate {
+class TrustAllCertificatesDelegate: NSObject, URLSessionDelegate {
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
            let serverTrust = challenge.protectionSpace.serverTrust {

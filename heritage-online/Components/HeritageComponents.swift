@@ -121,23 +121,11 @@ struct HeritageListImage: View {
     let fallbackText: String
 
     var body: some View {
-        if let imageUrl = imageUrl, let url = URL(string: imageUrl) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    imagePlaceholder
-                case .empty:
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                @unknown default:
-                    imagePlaceholder
-                }
-            }
-        } else {
+        HeritageAsyncImage(
+            url: imageUrl.flatMap(URL.init(string:))
+        ) { image in
+            image.resizable()
+        } placeholder: {
             imagePlaceholder
         }
     }
@@ -259,29 +247,16 @@ struct HeritageReferenceCard: View {
 struct HeritageDetailImage: View {
     let imageUrl: String?
     let fallbackText: String
-    var contentMode: ContentMode = .fill
 
     var body: some View {
-        if let imageUrl = imageUrl, let url = URL(string: imageUrl) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: contentMode)
-                case .failure:
-                    imagePlaceholder
-                case .empty:
-                    ProgressView()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                @unknown default:
-                    imagePlaceholder
-                }
-            }
-            .background(Color(hex: "EFE3DE"))
-        } else {
+        HeritageAsyncImage(
+            url: imageUrl.flatMap(URL.init(string:))
+        ) { image in
+            image.resizable()
+        } placeholder: {
             imagePlaceholder
         }
+        .background(Color(hex: "EFE3DE"))
     }
 
     private var imagePlaceholder: some View {
