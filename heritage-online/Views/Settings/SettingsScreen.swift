@@ -6,7 +6,6 @@ struct SettingsScreen: View {
     @Binding var themeMode: AppThemeMode
     @Binding var languageMode: AppLanguageMode
     let onBack: () -> Void
-    var onMyPageClick: (() -> Void)? = nil
 
     var body: some View {
         ScrollView {
@@ -14,6 +13,11 @@ struct SettingsScreen: View {
                 HStack {
                     HeritagePageHeader(title: loc.localized("nav_settings"))
                     Spacer()
+                    Button(action: onBack) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .padding(.top, 8)
 
@@ -50,16 +54,16 @@ struct SettingsScreen: View {
                 .padding(.horizontal, 20)
 
                 HeritageContentCard {
-                        VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 14) {
                         Text(loc.localized("nav_my"))
                             .font(.title3)
                             .fontWeight(.semibold)
 
-                        Button {
-                            onMyPageClick?()
+                        NavigationLink {
+                            FavoritesView()
                         } label: {
                             HStack {
-                                Label("my_favorites", systemImage: "heart")
+                                Label(loc.localized("my_favorites"), systemImage: "heart")
                                     .foregroundColor(.primary)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -71,11 +75,11 @@ struct SettingsScreen: View {
 
                         Divider()
 
-                        Button {
-                            onMyPageClick?()
+                        NavigationLink {
+                            RecentView()
                         } label: {
                             HStack {
-                                Label("my_recent", systemImage: "clock")
+                                Label(loc.localized("my_recent"), systemImage: "clock")
                                     .foregroundColor(.primary)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -110,20 +114,5 @@ struct SettingsScreen: View {
             .padding(.bottom, 30)
         }
         .background(theme.background)
-        .toolbar {
-            #if os(iOS)
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("action_back") {
-                    onBack()
-                }
-            }
-            #else
-            ToolbarItem(placement: .automatic) {
-                Button("action_back") {
-                    onBack()
-                }
-            }
-            #endif
-        }
     }
 }

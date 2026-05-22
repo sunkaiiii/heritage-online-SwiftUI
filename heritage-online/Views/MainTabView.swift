@@ -27,27 +27,25 @@ struct MainTabView: View {
     @Environment(LocalizationManager.self) private var loc
     @State private var selectedTab: HomeTab = .articles
     @State private var showSettings = false
-    @State private var showMyPage = false
     @AppStorage("theme_mode") private var themeMode: String = AppThemeMode.system.rawValue
     @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
     var body: some View {
         ZStack {
-            if showMyPage {
-                MyPage(onBack: { showMyPage = false })
-            } else if showSettings {
-                SettingsScreen(
-                    themeMode: Binding(
-                        get: { AppThemeMode(rawValue: themeMode) ?? .system },
-                        set: { themeMode = $0.rawValue }
-                    ),
-                    languageMode: Binding(
-                        get: { AppLanguageMode(rawValue: languageMode) ?? .system },
-                        set: { languageMode = $0.rawValue }
-                    ),
-                    onBack: { showSettings = false },
-                    onMyPageClick: { showMyPage = true }
-                )
+            if showSettings {
+                NavigationStack {
+                    SettingsScreen(
+                        themeMode: Binding(
+                            get: { AppThemeMode(rawValue: themeMode) ?? .system },
+                            set: { themeMode = $0.rawValue }
+                        ),
+                        languageMode: Binding(
+                            get: { AppLanguageMode(rawValue: languageMode) ?? .system },
+                            set: { languageMode = $0.rawValue }
+                        ),
+                        onBack: { showSettings = false }
+                    )
+                }
             } else {
                 TabView(selection: $selectedTab) {
                     ArticlesListView(onSettings: { showSettings = true })
