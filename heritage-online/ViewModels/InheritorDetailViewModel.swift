@@ -12,15 +12,22 @@ class InheritorDetailViewModel {
     private let inheritorId: String?
     private let sourceId: String?
     private let repository: HeritageRepositoryProtocol
+    private let savedContentRepo: SavedContentRepository
+
+    private var contentKey: String {
+        SavedContent.computeKey(id: inheritorId, sourceId: sourceId, sourceUrl: nil)
+    }
 
     init(
         inheritorId: String? = nil,
         sourceId: String? = nil,
-        repository: HeritageRepositoryProtocol = HeritageRepository()
+        repository: HeritageRepositoryProtocol = HeritageRepository(),
+        savedContentRepo: SavedContentRepository
     ) {
         self.inheritorId = inheritorId
         self.sourceId = sourceId
         self.repository = repository
+        self.savedContentRepo = savedContentRepo
     }
 
     func load() async {
@@ -38,6 +45,8 @@ class InheritorDetailViewModel {
                 return
             }
             item = detail
+            isFavorite = savedContentRepo.isFavorite(contentKey: contentKey)
+            recordViewed(detail: detail)
             isLoading = false
         } catch {
             errorMessage = error.localizedDescription
@@ -64,6 +73,42 @@ class InheritorDetailViewModel {
     }
 
     func toggleFavorite() {
+        guard let detail = item else { return }
         isFavorite.toggle()
+        savedContentRepo.toggleFavorite(
+            contentKey: contentKey,
+            contentType: "inheritor",
+            title: detail.name,
+            summary: detail.description,
+            coverImageUrl: detail.coverImage?.previewUrl,
+            category: detail.category,
+            region: detail.region,
+            year: nil,
+            sourceUrl: detail.sourceUrl,
+            targetId: detail.id,
+            targetSourceId: sourceId,
+            targetSourceUrl: detail.sourceUrl,
+            targetCategory: detail.category,
+            targetKind: nil
+        )
+    }
+
+    private func recordViewed(detail: InheritorDetailDto) {
+        savedContentRepo.recordViewed(
+            contentKey: contentKey,
+            contentType: "inheritor",
+            title: detail.name,
+            summary: detail.description,
+            coverImageUrl: detail.coverImage?.previewUrl,
+            category: detail.category,
+            region: detail.region,
+            year: nil,
+            sourceUrl: detail.sourceUrl,
+            targetId: detail.id,
+            targetSourceId: sourceId,
+            targetSourceUrl: detail.sourceUrl,
+            targetCategory: detail.category,
+            targetKind: nil
+        )
     }
 }

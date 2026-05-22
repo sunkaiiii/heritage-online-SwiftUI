@@ -18,7 +18,8 @@ struct DirectoryDetailScreen: View {
         itemId: String? = nil,
         sourceId: String? = nil,
         kind: DirectoryItemKind = .nationalProject,
-        navigationPath: Binding<NavigationPath>
+        navigationPath: Binding<NavigationPath>,
+        savedContentRepo: SavedContentRepository
     ) {
         self.itemId = itemId
         self.sourceId = sourceId
@@ -27,7 +28,8 @@ struct DirectoryDetailScreen: View {
         self._viewModel = State(initialValue: DirectoryDetailViewModel(
             itemId: itemId,
             sourceId: sourceId,
-            kind: kind
+            kind: kind,
+            savedContentRepo: savedContentRepo
         ))
     }
 

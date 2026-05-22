@@ -13,17 +13,24 @@ class DirectoryDetailViewModel {
     private let sourceId: String?
     private let kind: DirectoryItemKind
     private let repository: HeritageRepositoryProtocol
+    private let savedContentRepo: SavedContentRepository
+
+    private var contentKey: String {
+        SavedContent.computeKey(id: itemId, sourceId: sourceId, sourceUrl: nil, kind: kind.rawValue)
+    }
 
     init(
         itemId: String? = nil,
         sourceId: String? = nil,
         kind: DirectoryItemKind = .nationalProject,
-        repository: HeritageRepositoryProtocol = HeritageRepository()
+        repository: HeritageRepositoryProtocol = HeritageRepository(),
+        savedContentRepo: SavedContentRepository
     ) {
         self.itemId = itemId
         self.sourceId = sourceId
         self.kind = kind
         self.repository = repository
+        self.savedContentRepo = savedContentRepo
     }
 
     func load() async {
@@ -41,6 +48,8 @@ class DirectoryDetailViewModel {
                 return
             }
             item = detail
+            isFavorite = savedContentRepo.isFavorite(contentKey: contentKey)
+            recordViewed(detail: detail)
             isLoading = false
         } catch {
             errorMessage = error.localizedDescription
@@ -67,6 +76,42 @@ class DirectoryDetailViewModel {
     }
 
     func toggleFavorite() {
+        guard let detail = item else { return }
         isFavorite.toggle()
+        savedContentRepo.toggleFavorite(
+            contentKey: contentKey,
+            contentType: "directoryItem",
+            title: detail.title,
+            summary: detail.summary,
+            coverImageUrl: detail.coverImage?.previewUrl,
+            category: detail.category,
+            region: detail.region,
+            year: detail.publishedYear,
+            sourceUrl: detail.sourceUrl,
+            targetId: detail.id,
+            targetSourceId: sourceId,
+            targetSourceUrl: detail.sourceUrl,
+            targetCategory: detail.category,
+            targetKind: detail.kind.rawValue
+        )
+    }
+
+    private func recordViewed(detail: DirectoryItemDetailDto) {
+        savedContentRepo.recordViewed(
+            contentKey: contentKey,
+            contentType: "directoryItem",
+            title: detail.title,
+            summary: detail.summary,
+            coverImageUrl: detail.coverImage?.previewUrl,
+            category: detail.category,
+            region: detail.region,
+            year: detail.publishedYear,
+            sourceUrl: detail.sourceUrl,
+            targetId: detail.id,
+            targetSourceId: sourceId,
+            targetSourceUrl: detail.sourceUrl,
+            targetCategory: detail.category,
+            targetKind: detail.kind.rawValue
+        )
     }
 }

@@ -20,7 +20,8 @@ struct ArticleDetailScreen: View {
         sourceId: String? = nil,
         sourceUrl: String? = nil,
         category: ArticleCategory = .news,
-        navigationPath: Binding<NavigationPath>
+        navigationPath: Binding<NavigationPath>,
+        savedContentRepo: SavedContentRepository
     ) {
         self.articleId = articleId
         self.sourceId = sourceId
@@ -31,7 +32,8 @@ struct ArticleDetailScreen: View {
             articleId: articleId,
             sourceId: sourceId,
             sourceUrl: sourceUrl,
-            category: category
+            category: category,
+            savedContentRepo: savedContentRepo
         ))
     }
 

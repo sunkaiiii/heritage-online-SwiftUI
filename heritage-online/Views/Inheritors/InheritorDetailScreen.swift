@@ -16,14 +16,16 @@ struct InheritorDetailScreen: View {
     init(
         inheritorId: String? = nil,
         sourceId: String? = nil,
-        navigationPath: Binding<NavigationPath>
+        navigationPath: Binding<NavigationPath>,
+        savedContentRepo: SavedContentRepository
     ) {
         self.inheritorId = inheritorId
         self.sourceId = sourceId
         self._navigationPath = navigationPath
         self._viewModel = State(initialValue: InheritorDetailViewModel(
             inheritorId: inheritorId,
-            sourceId: sourceId
+            sourceId: sourceId,
+            savedContentRepo: savedContentRepo
         ))
     }
 

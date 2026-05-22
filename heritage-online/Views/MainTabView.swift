@@ -81,6 +81,7 @@ enum ArticleNavigationDestination: Hashable {
 struct ArticlesListView: View {
     let onSettings: () -> Void
     @State private var navigationPath = NavigationPath()
+    @Environment(SavedContentRepository.self) private var savedContentRepo
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -112,7 +113,8 @@ struct ArticlesListView: View {
                             sourceId: sourceId,
                             sourceUrl: sourceUrl,
                             category: category,
-                            navigationPath: $navigationPath
+                            navigationPath: $navigationPath,
+                            savedContentRepo: savedContentRepo
                         )
                     }
                 }
@@ -128,6 +130,7 @@ enum DirectoryNavigationDestination: Hashable {
 
 struct DirectoryListView: View {
     @State private var navigationPath = NavigationPath()
+    @Environment(SavedContentRepository.self) private var savedContentRepo
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -143,7 +146,8 @@ struct DirectoryListView: View {
                             itemId: id,
                             sourceId: sourceId,
                             kind: kind,
-                            navigationPath: $navigationPath
+                            navigationPath: $navigationPath,
+                            savedContentRepo: savedContentRepo
                         )
                     }
                 }
@@ -160,6 +164,7 @@ enum InheritorNavigationDestination: Hashable {
 
 struct InheritorsListView: View {
     @State private var navigationPath = NavigationPath()
+    @Environment(SavedContentRepository.self) private var savedContentRepo
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -174,14 +179,16 @@ struct InheritorsListView: View {
                         InheritorDetailScreen(
                             inheritorId: id,
                             sourceId: sourceId,
-                            navigationPath: $navigationPath
+                            navigationPath: $navigationPath,
+                            savedContentRepo: savedContentRepo
                         )
                     case .directoryDetail(let id, let sourceId, let kind):
                         DirectoryDetailScreen(
                             itemId: id,
                             sourceId: sourceId,
                             kind: kind,
-                            navigationPath: $navigationPath
+                            navigationPath: $navigationPath,
+                            savedContentRepo: savedContentRepo
                         )
                     }
                 }

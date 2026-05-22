@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct heritage_onlineApp: App {
@@ -23,6 +24,7 @@ struct heritage_onlineApp: App {
                 locManager: locManager
             )
         }
+        .modelContainer(for: SavedContent.self)
     }
 }
 
@@ -32,20 +34,13 @@ struct AppRoot: View {
     var themeManager: ThemeManager
     var locManager: LocalizationManager
     @Environment(\.colorScheme) private var systemColorScheme
+    @Environment(\.modelContext) private var modelContext
 
     private var resolvedLanguage: String {
         switch languageMode {
         case .system: return Locale.current.language.languageCode?.identifier ?? "en"
         case .simplifiedChinese: return "zh-Hans"
         case .english: return "en"
-        }
-    }
-
-    private var resolvedLocale: Locale {
-        switch languageMode {
-        case .system: return .current
-        case .simplifiedChinese: return Locale(identifier: "zh-Hans")
-        case .english: return Locale(identifier: "en")
         }
     }
 
@@ -61,6 +56,7 @@ struct AppRoot: View {
         ContentView()
             .environment(themeManager)
             .environment(locManager)
+            .environment(SavedContentRepository(modelContext: modelContext))
             .preferredColorScheme(resolvedColorScheme)
             .onAppear { syncAll() }
             .onChange(of: themeMode) { _, _ in syncAll() }
