@@ -34,6 +34,12 @@ class HeritageImageLoader {
                 } else {
                     phase = .failure(URLError(.cannotDecodeContentData))
                 }
+                #elseif canImport(AppKit)
+                if let nsImage = NSImage(data: data) {
+                    phase = .success(Image(nsImage: nsImage))
+                } else {
+                    phase = .failure(URLError(.cannotDecodeContentData))
+                }
                 #endif
             } catch {
                 guard !Task.isCancelled else { return }

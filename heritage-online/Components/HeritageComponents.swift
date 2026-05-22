@@ -206,7 +206,7 @@ struct HeritageFactCard: View {
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundColor(Color(hex: "8F372F"))
-                            .frame(width: UIScreen.main.bounds.width * 0.28, alignment: .leading)
+                            .frame(minWidth: 100, alignment: .leading)
                         Text(fact.value)
                             .font(.body)
                             .frame(maxWidth: .infinity, alignment: .leading)

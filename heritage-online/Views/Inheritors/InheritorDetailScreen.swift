@@ -22,6 +22,22 @@ struct InheritorDetailScreen: View {
         ))
     }
 
+    private var detailToolbarButtons: some View {
+        HStack(spacing: 4) {
+            Button {
+                viewModel.toggleFavorite()
+            } label: {
+                Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(viewModel.isFavorite ? Color(hex: "8F372F") : .secondary)
+            }
+            Button {
+                Task { await viewModel.refresh() }
+            } label: {
+                Image(systemName: "arrow.clockwise")
+            }
+        }
+    }
+
     var previewUrls: [String] {
         guard let item = viewModel.item else { return [] }
         var urls: [String] = []
@@ -64,27 +80,24 @@ struct InheritorDetailScreen: View {
             .background(Color(hex: "FCF8F5"))
         }
         .navigationTitle(String(localized: "inheritor_detail_title"))
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .toolbar {
+            #if os(iOS)
             ToolbarItem(placement: .navigationBarTrailing) {
-                HStack(spacing: 4) {
-                    Button {
-                        viewModel.toggleFavorite()
-                    } label: {
-                        Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(viewModel.isFavorite ? Color(hex: "8F372F") : .secondary)
-                    }
-                    Button {
-                        Task { await viewModel.refresh() }
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                }
+                detailToolbarButtons
             }
+            #else
+            ToolbarItem(placement: .automatic) {
+                detailToolbarButtons
+            }
+            #endif
         }
         .task {
             await viewModel.load()
         }
+        #if os(iOS)
         .fullScreenCover(isPresented: $showImagePreview) {
             ImagePreviewView(
                 imageUrls: previewUrls,
@@ -93,6 +106,16 @@ struct InheritorDetailScreen: View {
                 showImagePreview = false
             }
         }
+        #else
+        .sheet(isPresented: $showImagePreview) {
+            ImagePreviewView(
+                imageUrls: previewUrls,
+                initialIndex: previewIndex
+            ) {
+                showImagePreview = false
+            }
+        }
+        #endif
     }
 
     @ViewBuilder

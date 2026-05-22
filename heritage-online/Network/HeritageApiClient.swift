@@ -191,8 +191,16 @@ let heritageTrustedSession: URLSession = {
 
 // MARK: - Self-Signed Certificate Support
 
-class TrustAllCertificatesDelegate: NSObject, URLSessionDelegate {
+class TrustAllCertificatesDelegate: NSObject, URLSessionDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        handle(challenge: challenge, completionHandler: completionHandler)
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        handle(challenge: challenge, completionHandler: completionHandler)
+    }
+
+    private func handle(challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
            let serverTrust = challenge.protectionSpace.serverTrust {
             completionHandler(.useCredential, URLCredential(trust: serverTrust))

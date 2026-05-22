@@ -43,13 +43,23 @@ struct SettingsScreen: View {
                 }
             }
             .navigationTitle(String(localized: "nav_settings"))
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(String(localized: "action_back")) {
                         onBack()
                     }
                 }
+                #else
+                ToolbarItem(placement: .automatic) {
+                    Button(String(localized: "action_back")) {
+                        onBack()
+                    }
+                }
+                #endif
             }
         }
     }

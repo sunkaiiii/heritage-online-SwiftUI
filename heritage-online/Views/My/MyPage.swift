@@ -31,13 +31,23 @@ struct MyPage: View {
                 }
             }
             .navigationTitle(String(localized: "nav_my"))
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
+                #if os(iOS)
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(String(localized: "action_back")) {
                         dismiss()
                     }
                 }
+                #else
+                ToolbarItem(placement: .automatic) {
+                    Button(String(localized: "action_back")) {
+                        dismiss()
+                    }
+                }
+                #endif
             }
         }
     }

@@ -207,7 +207,9 @@ struct ArticlesScreen: View {
                     .foregroundStyle(.secondary)
                 TextField(String(localized: "filter_placeholder_year"), text: $draftYearFilter)
                     .textFieldStyle(.roundedBorder)
+                    #if os(iOS)
                     .keyboardType(.numberPad)
+                    #endif
             }
 
             HStack {

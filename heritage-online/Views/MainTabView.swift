@@ -41,6 +41,7 @@ struct MainTabView: View {
                     NavigationStack {
                         ArticlesListView()
                             .toolbar {
+                                #if os(iOS)
                                 ToolbarItem(placement: .navigationBarTrailing) {
                                     Button {
                                         showSettings = true
@@ -48,6 +49,15 @@ struct MainTabView: View {
                                         Image(systemName: "gearshape")
                                     }
                                 }
+                                #else
+                                ToolbarItem(placement: .automatic) {
+                                    Button {
+                                        showSettings = true
+                                    } label: {
+                                        Image(systemName: "gearshape")
+                                    }
+                                }
+                                #endif
                             }
                     }
                     .tabItem {
@@ -85,7 +95,9 @@ struct ArticlesListView: View {
     var body: some View {
         ArticlesScreen()
             .navigationTitle(String(localized: "nav_articles"))
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .navigationDestination(for: ArticleNavigationDestination.self) { dest in
                 switch dest {
                 case .articleDetail(let id, let sourceId, let sourceUrl, let category):
@@ -110,7 +122,9 @@ struct DirectoryListView: View {
     var body: some View {
         DirectoryScreen()
             .navigationTitle(String(localized: "nav_directory"))
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .navigationDestination(for: DirectoryNavigationDestination.self) { dest in
                 switch dest {
                 case .directoryDetail(let id, let sourceId, let kind):
@@ -134,7 +148,9 @@ struct InheritorsListView: View {
     var body: some View {
         InheritorsScreen()
             .navigationTitle(String(localized: "nav_inheritors"))
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .navigationDestination(for: InheritorNavigationDestination.self) { dest in
                 switch dest {
                 case .inheritorDetail(let id, let sourceId):
