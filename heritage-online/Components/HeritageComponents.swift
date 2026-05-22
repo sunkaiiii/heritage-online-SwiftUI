@@ -91,7 +91,7 @@ struct HeritageContentCard<Content: View>: View {
 
     private var cardContent: some View {
         content()
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(theme.surfaceContainer)
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }

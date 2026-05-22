@@ -3,6 +3,7 @@ import SwiftUI
 struct InheritorsScreen: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = InheritorsViewModel()
     @State private var showFilterSheet = false
@@ -136,11 +137,28 @@ struct InheritorsScreen: View {
                 Task { await viewModel.loadItems() }
             }
         } else {
+            if horizontalSizeClass == .regular {
+            let columns = [GridItem(.adaptive(minimum: 300))]
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, inheritor in
+                    InheritorRow(inheritor: inheritor) {
+                        navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: inheritor.id, sourceId: nil))
+                    }
+                        .onAppear {
+                            if index == viewModel.items.count - 3 {
+                                Task { await viewModel.loadMoreItems() }
+                            }
+                        }
+                }
+            }
+            .padding(.horizontal, 20)
+            } else {
             ForEach(viewModel.items) { inheritor in
                 InheritorRow(inheritor: inheritor) {
                         navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: inheritor.id, sourceId: nil))
                     }
                     .padding(.horizontal, 20)
+            }
             }
 
             if viewModel.isLoadingMore {

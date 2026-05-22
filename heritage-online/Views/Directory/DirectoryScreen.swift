@@ -3,6 +3,7 @@ import SwiftUI
 struct DirectoryScreen: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = DirectoryViewModel()
     @State private var showFilterSheet = false
@@ -204,11 +205,28 @@ struct DirectoryScreen: View {
                 Task { await viewModel.loadItems() }
             }
         } else {
+            if horizontalSizeClass == .regular {
+            let columns = [GridItem(.adaptive(minimum: 300))]
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, item in
+                    DirectoryItemRow(item: item) {
+                        navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: item.id, sourceId: nil, kind: item.kind))
+                    }
+                        .onAppear {
+                            if index == viewModel.items.count - 3 {
+                                Task { await viewModel.loadMoreItems() }
+                            }
+                        }
+                }
+            }
+            .padding(.horizontal, 20)
+            } else {
             ForEach(viewModel.items) { item in
                 DirectoryItemRow(item: item) {
                         navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: item.id, sourceId: nil, kind: item.kind))
                     }
                     .padding(.horizontal, 20)
+            }
             }
 
             if viewModel.isLoadingMore {

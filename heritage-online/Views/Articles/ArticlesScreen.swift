@@ -3,6 +3,7 @@ import SwiftUI
 struct ArticlesScreen: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Binding var navigationPath: NavigationPath
     var onSettings: (() -> Void)? = nil
     @State private var viewModel = ArticlesViewModel()
@@ -178,6 +179,22 @@ struct ArticlesScreen: View {
                 Task { await viewModel.loadArticles() }
             }
         } else {
+            if horizontalSizeClass == .regular {
+            let columns = [GridItem(.adaptive(minimum: 350))]
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(Array(viewModel.articles.enumerated()), id: \.element.id) { index, article in
+                    ArticleRow(article: article, prominent: false) {
+                        navigationPath.append(ArticleNavigationDestination.articleDetail(id: article.id, sourceId: nil, sourceUrl: article.sourceUrl, category: article.category))
+                    }
+                        .onAppear {
+                            if index == viewModel.articles.count - 3 {
+                                Task { await viewModel.loadMoreArticles() }
+                            }
+                        }
+                }
+            }
+            .padding(.horizontal, 20)
+            } else {
             ForEach(Array(viewModel.articles.enumerated()), id: \.element.id) { index, article in
                 ArticleRow(article: article, prominent: index == 0) {
                     navigationPath.append(ArticleNavigationDestination.articleDetail(id: article.id, sourceId: nil, sourceUrl: article.sourceUrl, category: article.category))
@@ -188,6 +205,7 @@ struct ArticlesScreen: View {
                             Task { await viewModel.loadMoreArticles() }
                         }
                     }
+            }
             }
 
             if viewModel.isLoadingMore {
