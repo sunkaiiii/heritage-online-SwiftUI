@@ -25,7 +25,7 @@ struct DirectoryScreen: View {
                 Color.clear
                     .frame(height: 1)
                     .onAppear {
-                        if !viewModel.isLoading && !viewModel.items.isEmpty {
+                        if !viewModel.isLoading && !viewModel.isLoadingMore && viewModel.hasMore && !viewModel.items.isEmpty {
                             Task { await viewModel.loadMoreItems() }
                         }
                     }

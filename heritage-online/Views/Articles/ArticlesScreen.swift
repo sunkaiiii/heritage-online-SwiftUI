@@ -21,6 +21,13 @@ struct ArticlesScreen: View {
                 yearFilterChip
                 categoryTabs
                 contentSection
+                Color.clear
+                    .frame(height: 1)
+                    .onAppear {
+                        if !viewModel.isLoadingArticles && !viewModel.isLoadingMore && viewModel.hasMoreArticles && !viewModel.articles.isEmpty {
+                            Task { await viewModel.loadMoreArticles() }
+                        }
+                    }
             }
             .padding(.bottom, 18)
         }
