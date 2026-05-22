@@ -29,7 +29,10 @@ struct MainTabView: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var selectedTab: SidebarItem?
+    @State private var selectedTab: SidebarItem = .articles
+    @State private var articlesPath = NavigationPath()
+    @State private var directoryPath = NavigationPath()
+    @State private var inheritorsPath = NavigationPath()
     @AppStorage("theme_mode") private var themeMode: String = AppThemeMode.system.rawValue
     @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
@@ -63,15 +66,15 @@ struct MainTabView: View {
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 280)
         } detail: {
             ZStack {
-                ArticlesListView()
+                ArticlesListView(navigationPath: $articlesPath)
                     .opacity(selectedTab == .articles ? 1 : 0)
                     .disabled(selectedTab != .articles)
 
-                DirectoryListView()
+                DirectoryListView(navigationPath: $directoryPath)
                     .opacity(selectedTab == .directory ? 1 : 0)
                     .disabled(selectedTab != .directory)
 
-                InheritorsListView()
+                InheritorsListView(navigationPath: $inheritorsPath)
                     .opacity(selectedTab == .inheritors ? 1 : 0)
                     .disabled(selectedTab != .inheritors)
 
@@ -84,9 +87,6 @@ struct MainTabView: View {
                 }
             }
         }
-        .onAppear {
-            if selectedTab == nil { selectedTab = .articles }
-        }
     }
 
     private var sidebar: some View {
@@ -94,6 +94,7 @@ struct MainTabView: View {
             Section {
                 ForEach([SidebarItem.articles, .directory, .inheritors], id: \.self) { item in
                     Label(loc.localized(item.labelKey), systemImage: item.icon)
+                        .tag(item)
                 }
             }
 
@@ -125,36 +126,33 @@ struct MainTabView: View {
                     SettingsScreen(
                         themeMode: themeBinding,
                         languageMode: languageBinding,
-                        onBack: { selectedTab = nil }
+                        onBack: { selectedTab = .articles }
                     )
                 }
             } else {
                 TabView(selection: Binding(
-                    get: { selectedTab ?? .articles },
+                    get: { selectedTab },
                     set: { selectedTab = $0 }
                 )) {
-                    ArticlesListView(onSettings: { selectedTab = .settings })
+                    ArticlesListView(navigationPath: $articlesPath, onSettings: { selectedTab = .settings })
                         .tabItem {
                             Label(loc.localized(SidebarItem.articles.labelKey), systemImage: SidebarItem.articles.icon)
                         }
                         .tag(SidebarItem.articles)
 
-                    DirectoryListView()
+                    DirectoryListView(navigationPath: $directoryPath)
                         .tabItem {
                             Label(loc.localized(SidebarItem.directory.labelKey), systemImage: SidebarItem.directory.icon)
                         }
                         .tag(SidebarItem.directory)
 
-                    InheritorsListView()
+                    InheritorsListView(navigationPath: $inheritorsPath)
                         .tabItem {
                             Label(loc.localized(SidebarItem.inheritors.labelKey), systemImage: SidebarItem.inheritors.icon)
                         }
                         .tag(SidebarItem.inheritors)
                 }
                 .tint(theme.primary)
-                .onAppear {
-                    if selectedTab == nil { selectedTab = .articles }
-                }
             }
         }
     }
@@ -167,8 +165,8 @@ enum ArticleNavigationDestination: Hashable {
 }
 
 struct ArticlesListView: View {
+    @Binding var navigationPath: NavigationPath
     var onSettings: (() -> Void)? = nil
-    @State private var navigationPath = NavigationPath()
     @Environment(SavedContentRepository.self) private var savedContentRepo
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
@@ -216,7 +214,7 @@ enum DirectoryNavigationDestination: Hashable {
 }
 
 struct DirectoryListView: View {
-    @State private var navigationPath = NavigationPath()
+    @Binding var navigationPath: NavigationPath
     @Environment(SavedContentRepository.self) private var savedContentRepo
 
     var body: some View {
@@ -250,7 +248,7 @@ enum InheritorNavigationDestination: Hashable {
 }
 
 struct InheritorsListView: View {
-    @State private var navigationPath = NavigationPath()
+    @Binding var navigationPath: NavigationPath
     @Environment(SavedContentRepository.self) private var savedContentRepo
 
     var body: some View {
