@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 class DirectoryDetailViewModel {
     var isLoading: Bool = false

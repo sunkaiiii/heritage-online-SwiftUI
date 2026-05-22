@@ -21,6 +21,13 @@ struct InheritorsScreen: View {
                 activeFilterChips
                 genderFilterChip
                 contentSection
+                Color.clear
+                    .frame(height: 1)
+                    .onAppear {
+                        if !viewModel.isLoading && !viewModel.items.isEmpty {
+                            Task { await viewModel.loadMoreItems() }
+                        }
+                    }
             }
             .padding(.bottom, 18)
         }
@@ -153,7 +160,6 @@ struct InheritorsScreen: View {
                         }
                 }
             }
-            .padding(.horizontal, 20)
             } else {
             ForEach(viewModel.items) { inheritor in
                 InheritorRow(inheritor: inheritor) {

@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 class ArticleDetailViewModel {
     var isLoading: Bool = false

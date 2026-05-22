@@ -22,6 +22,13 @@ struct DirectoryScreen: View {
                 activeFilterChips
                 statisticsSection
                 contentSection
+                Color.clear
+                    .frame(height: 1)
+                    .onAppear {
+                        if !viewModel.isLoading && !viewModel.items.isEmpty {
+                            Task { await viewModel.loadMoreItems() }
+                        }
+                    }
             }
             .padding(.bottom, 18)
         }
@@ -211,15 +218,10 @@ struct DirectoryScreen: View {
             if horizontalSizeClass == .regular {
             let columns = [GridItem(.adaptive(minimum: 300))]
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(Array(viewModel.items.enumerated()), id: \.element.id) { index, item in
+                ForEach(viewModel.items) { item in
                     DirectoryItemRow(item: item) {
                         navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: item.id, sourceId: nil, kind: item.kind))
                     }
-                        .onAppear {
-                            if index == viewModel.items.count - 3 {
-                                Task { await viewModel.loadMoreItems() }
-                            }
-                        }
                 }
             }
             .padding(.horizontal, 20)

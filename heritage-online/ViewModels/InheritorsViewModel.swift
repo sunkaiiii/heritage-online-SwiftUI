@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 class InheritorsViewModel {
     var searchKeywords: String = ""

@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 class ArticlesViewModel {
     var selectedCategory: ArticleCategory = .news
