@@ -29,7 +29,7 @@ struct MainTabView: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var selectedTab: SidebarItem?
+    @State private var selectedTab: SidebarItem = .articles
     @State private var articlesPath = NavigationPath()
     @State private var directoryPath = NavigationPath()
     @State private var inheritorsPath = NavigationPath()
@@ -42,6 +42,17 @@ struct MainTabView: View {
 
     private var languageBinding: Binding<AppLanguageMode> {
         Binding(get: { AppLanguageMode(rawValue: languageMode) ?? .system }, set: { languageMode = $0.rawValue })
+    }
+
+    private var sidebarSelection: Binding<SidebarItem?> {
+        Binding<SidebarItem?>(
+            get: { selectedTab },
+            set: { newValue in
+                if let newValue {
+                    selectedTab = newValue
+                }
+            }
+        )
     }
 
     var body: some View {
@@ -57,26 +68,30 @@ struct MainTabView: View {
             sidebar
                 .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 280)
         } detail: {
-            ZStack {
-                ArticlesListView(navigationPath: $articlesPath)
-                    .opacity(selectedTab == .articles ? 1 : 0)
-                    .disabled(selectedTab != .articles)
-                DirectoryListView(navigationPath: $directoryPath)
-                    .opacity(selectedTab == .directory ? 1 : 0)
-                    .disabled(selectedTab != .directory)
-                InheritorsListView(navigationPath: $inheritorsPath)
-                    .opacity(selectedTab == .inheritors ? 1 : 0)
-                    .disabled(selectedTab != .inheritors)
-                if selectedTab == .settings {
-                    SettingsScreen(themeMode: themeBinding, languageMode: languageBinding, onBack: { selectedTab = .articles })
-                }
-            }
+            detailContent
         }
-        .onAppear { if selectedTab == nil { selectedTab = .articles } }
+    }
+
+    @ViewBuilder
+    private var detailContent: some View {
+        switch selectedTab {
+        case .articles:
+            ArticlesListView(navigationPath: $articlesPath)
+        case .directory:
+            DirectoryListView(navigationPath: $directoryPath)
+        case .inheritors:
+            InheritorsListView(navigationPath: $inheritorsPath)
+        case .settings:
+            SettingsScreen(
+                themeMode: themeBinding,
+                languageMode: languageBinding,
+                onBack: { selectedTab = .articles }
+            )
+        }
     }
 
     private var sidebar: some View {
-        List(selection: $selectedTab) {
+        List(selection: sidebarSelection) {
             Section {
                 ForEach([SidebarItem.articles, .directory, .inheritors], id: \.self) { item in
                     Label(loc.localized(item.labelKey), systemImage: item.icon)
@@ -91,8 +106,11 @@ struct MainTabView: View {
                 HStack {
                     Label(loc.localized("my_about"), systemImage: "info.circle")
                     Spacer()
-                    Text("v0.1.0").font(.caption).foregroundStyle(.secondary)
+                    Text("v0.1.0")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
+                .disabled(true)
             }
         }
         .listStyle(.sidebar)
@@ -102,10 +120,10 @@ struct MainTabView: View {
         ZStack {
             if selectedTab == .settings {
                 NavigationStack {
-                    SettingsScreen(themeMode: themeBinding, languageMode: languageBinding, onBack: { selectedTab = nil })
+                    SettingsScreen(themeMode: themeBinding, languageMode: languageBinding, onBack: { selectedTab = .articles })
                 }
             } else {
-                TabView(selection: Binding(get: { selectedTab ?? .articles }, set: { selectedTab = $0 })) {
+                TabView(selection: Binding(get: { selectedTab }, set: { selectedTab = $0 })) {
                     ArticlesListView(navigationPath: $articlesPath, onSettings: { selectedTab = .settings })
                         .tabItem { Label(loc.localized(SidebarItem.articles.labelKey), systemImage: SidebarItem.articles.icon) }
                         .tag(SidebarItem.articles)
@@ -117,7 +135,6 @@ struct MainTabView: View {
                         .tag(SidebarItem.inheritors)
                 }
                 .tint(theme.primary)
-                .onAppear { if selectedTab == nil { selectedTab = .articles } }
             }
         }
     }
