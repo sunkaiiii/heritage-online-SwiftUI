@@ -8,6 +8,7 @@ struct ArticlesScreen: View {
     var onSettings: (() -> Void)? = nil
     @State private var viewModel = ArticlesViewModel()
     @State private var showFilterSheet = false
+    @State private var scrollID: String?
     @State private var draftYearFilter = ""
 
     var body: some View {
@@ -23,6 +24,7 @@ struct ArticlesScreen: View {
             }
             .padding(.bottom, 18)
         }
+        .scrollPosition(id: $scrollID)
         .background(theme.background)
         .task {
             await viewModel.loadBanners()

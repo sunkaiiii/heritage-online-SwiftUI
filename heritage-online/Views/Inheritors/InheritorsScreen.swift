@@ -7,6 +7,7 @@ struct InheritorsScreen: View {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = InheritorsViewModel()
     @State private var showFilterSheet = false
+    @State private var scrollID: String?
     @State private var draftRegionFilter = ""
     @State private var draftCategoryFilter = ""
     @State private var draftYearFilter = ""
@@ -23,6 +24,7 @@ struct InheritorsScreen: View {
             }
             .padding(.bottom, 18)
         }
+        .scrollPosition(id: $scrollID)
         .background(theme.background)
         .task {
             await viewModel.loadItems()

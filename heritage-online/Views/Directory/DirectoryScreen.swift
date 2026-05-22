@@ -7,6 +7,7 @@ struct DirectoryScreen: View {
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = DirectoryViewModel()
     @State private var showFilterSheet = false
+    @State private var scrollID: String?
     @State private var draftRegionFilter = ""
     @State private var draftCategoryFilter = ""
     @State private var draftYearFilter = ""
@@ -24,6 +25,7 @@ struct DirectoryScreen: View {
             }
             .padding(.bottom, 18)
         }
+        .scrollPosition(id: $scrollID)
         .background(theme.background)
         .task {
             await viewModel.loadItems()
