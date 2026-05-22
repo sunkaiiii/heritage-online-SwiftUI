@@ -29,7 +29,7 @@ struct MainTabView: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @State private var selectedTab: SidebarItem = .articles
+    @State private var selectedTab: SidebarItem?
     @State private var articlesPath = NavigationPath()
     @State private var directoryPath = NavigationPath()
     @State private var inheritorsPath = NavigationPath()
@@ -37,17 +37,11 @@ struct MainTabView: View {
     @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
     private var themeBinding: Binding<AppThemeMode> {
-        Binding(
-            get: { AppThemeMode(rawValue: themeMode) ?? .system },
-            set: { themeMode = $0.rawValue }
-        )
+        Binding(get: { AppThemeMode(rawValue: themeMode) ?? .system }, set: { themeMode = $0.rawValue })
     }
 
     private var languageBinding: Binding<AppLanguageMode> {
-        Binding(
-            get: { AppLanguageMode(rawValue: languageMode) ?? .system },
-            set: { languageMode = $0.rawValue }
-        )
+        Binding(get: { AppLanguageMode(rawValue: languageMode) ?? .system }, set: { languageMode = $0.rawValue })
     }
 
     var body: some View {
@@ -58,8 +52,6 @@ struct MainTabView: View {
         }
     }
 
-    // MARK: - Wide Layout (macOS, iPad)
-
     private var wideLayout: some View {
         NavigationSplitView {
             sidebar
@@ -69,24 +61,18 @@ struct MainTabView: View {
                 ArticlesListView(navigationPath: $articlesPath)
                     .opacity(selectedTab == .articles ? 1 : 0)
                     .disabled(selectedTab != .articles)
-
                 DirectoryListView(navigationPath: $directoryPath)
                     .opacity(selectedTab == .directory ? 1 : 0)
                     .disabled(selectedTab != .directory)
-
                 InheritorsListView(navigationPath: $inheritorsPath)
                     .opacity(selectedTab == .inheritors ? 1 : 0)
                     .disabled(selectedTab != .inheritors)
-
                 if selectedTab == .settings {
-                    SettingsScreen(
-                        themeMode: themeBinding,
-                        languageMode: languageBinding,
-                        onBack: { selectedTab = .articles }
-                    )
+                    SettingsScreen(themeMode: themeBinding, languageMode: languageBinding, onBack: { selectedTab = .articles })
                 }
             }
         }
+        .onAppear { if selectedTab == nil { selectedTab = .articles } }
     }
 
     private var sidebar: some View {
@@ -97,68 +83,45 @@ struct MainTabView: View {
                         .tag(item)
                 }
             }
-
             Section {
                 Label(loc.localized("nav_settings"), systemImage: SidebarItem.settings.icon)
                     .tag(SidebarItem.settings)
             }
-
             Section {
                 HStack {
                     Label(loc.localized("my_about"), systemImage: "info.circle")
                     Spacer()
-                    Text("v0.1.0")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Text("v0.1.0").font(.caption).foregroundStyle(.secondary)
                 }
             }
         }
         .listStyle(.sidebar)
-        .background(theme.background)
     }
-
-    // MARK: - Compact Layout (iPhone)
 
     private var compactLayout: some View {
         ZStack {
             if selectedTab == .settings {
                 NavigationStack {
-                    SettingsScreen(
-                        themeMode: themeBinding,
-                        languageMode: languageBinding,
-                        onBack: { selectedTab = .articles }
-                    )
+                    SettingsScreen(themeMode: themeBinding, languageMode: languageBinding, onBack: { selectedTab = nil })
                 }
             } else {
-                TabView(selection: Binding(
-                    get: { selectedTab },
-                    set: { selectedTab = $0 }
-                )) {
+                TabView(selection: Binding(get: { selectedTab ?? .articles }, set: { selectedTab = $0 })) {
                     ArticlesListView(navigationPath: $articlesPath, onSettings: { selectedTab = .settings })
-                        .tabItem {
-                            Label(loc.localized(SidebarItem.articles.labelKey), systemImage: SidebarItem.articles.icon)
-                        }
+                        .tabItem { Label(loc.localized(SidebarItem.articles.labelKey), systemImage: SidebarItem.articles.icon) }
                         .tag(SidebarItem.articles)
-
                     DirectoryListView(navigationPath: $directoryPath)
-                        .tabItem {
-                            Label(loc.localized(SidebarItem.directory.labelKey), systemImage: SidebarItem.directory.icon)
-                        }
+                        .tabItem { Label(loc.localized(SidebarItem.directory.labelKey), systemImage: SidebarItem.directory.icon) }
                         .tag(SidebarItem.directory)
-
                     InheritorsListView(navigationPath: $inheritorsPath)
-                        .tabItem {
-                            Label(loc.localized(SidebarItem.inheritors.labelKey), systemImage: SidebarItem.inheritors.icon)
-                        }
+                        .tabItem { Label(loc.localized(SidebarItem.inheritors.labelKey), systemImage: SidebarItem.inheritors.icon) }
                         .tag(SidebarItem.inheritors)
                 }
                 .tint(theme.primary)
+                .onAppear { if selectedTab == nil { selectedTab = .articles } }
             }
         }
     }
 }
-
-// MARK: - Articles Navigation
 
 enum ArticleNavigationDestination: Hashable {
     case articleDetail(id: String?, sourceId: String?, sourceUrl: String?, category: ArticleCategory)
@@ -168,7 +131,6 @@ struct ArticlesListView: View {
     @Binding var navigationPath: NavigationPath
     var onSettings: (() -> Void)? = nil
     @Environment(SavedContentRepository.self) private var savedContentRepo
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -178,36 +140,22 @@ struct ArticlesListView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
                 .toolbar {
-                    if let onSettings = onSettings {
+                    if let onSettings {
                         #if os(iOS)
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: onSettings) { Image(systemName: "gearshape") }
-                        }
+                        ToolbarItem(placement: .navigationBarTrailing) { Button(action: onSettings) { Image(systemName: "gearshape") } }
                         #else
-                        ToolbarItem(placement: .automatic) {
-                            Button(action: onSettings) { Image(systemName: "gearshape") }
-                        }
+                        ToolbarItem(placement: .automatic) { Button(action: onSettings) { Image(systemName: "gearshape") } }
                         #endif
                     }
                 }
                 .navigationDestination(for: ArticleNavigationDestination.self) { dest in
-                    switch dest {
-                    case .articleDetail(let id, let sourceId, let sourceUrl, let category):
-                        ArticleDetailScreen(
-                            articleId: id,
-                            sourceId: sourceId,
-                            sourceUrl: sourceUrl,
-                            category: category,
-                            navigationPath: $navigationPath,
-                            savedContentRepo: savedContentRepo
-                        )
+                    if case .articleDetail(let id, let sourceId, let sourceUrl, let category) = dest {
+                        ArticleDetailScreen(articleId: id, sourceId: sourceId, sourceUrl: sourceUrl, category: category, navigationPath: $navigationPath, savedContentRepo: savedContentRepo)
                     }
                 }
         }
     }
 }
-
-// MARK: - Directory Navigation
 
 enum DirectoryNavigationDestination: Hashable {
     case directoryDetail(id: String?, sourceId: String?, kind: DirectoryItemKind)
@@ -225,22 +173,13 @@ struct DirectoryListView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
                 .navigationDestination(for: DirectoryNavigationDestination.self) { dest in
-                    switch dest {
-                    case .directoryDetail(let id, let sourceId, let kind):
-                        DirectoryDetailScreen(
-                            itemId: id,
-                            sourceId: sourceId,
-                            kind: kind,
-                            navigationPath: $navigationPath,
-                            savedContentRepo: savedContentRepo
-                        )
+                    if case .directoryDetail(let id, let sourceId, let kind) = dest {
+                        DirectoryDetailScreen(itemId: id, sourceId: sourceId, kind: kind, navigationPath: $navigationPath, savedContentRepo: savedContentRepo)
                     }
                 }
         }
     }
 }
-
-// MARK: - Inheritors Navigation
 
 enum InheritorNavigationDestination: Hashable {
     case inheritorDetail(id: String?, sourceId: String?)
@@ -261,20 +200,9 @@ struct InheritorsListView: View {
                 .navigationDestination(for: InheritorNavigationDestination.self) { dest in
                     switch dest {
                     case .inheritorDetail(let id, let sourceId):
-                        InheritorDetailScreen(
-                            inheritorId: id,
-                            sourceId: sourceId,
-                            navigationPath: $navigationPath,
-                            savedContentRepo: savedContentRepo
-                        )
+                        InheritorDetailScreen(inheritorId: id, sourceId: sourceId, navigationPath: $navigationPath, savedContentRepo: savedContentRepo)
                     case .directoryDetail(let id, let sourceId, let kind):
-                        DirectoryDetailScreen(
-                            itemId: id,
-                            sourceId: sourceId,
-                            kind: kind,
-                            navigationPath: $navigationPath,
-                            savedContentRepo: savedContentRepo
-                        )
+                        DirectoryDetailScreen(itemId: id, sourceId: sourceId, kind: kind, navigationPath: $navigationPath, savedContentRepo: savedContentRepo)
                     }
                 }
         }
