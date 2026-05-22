@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ArticlesScreen: View {
+    @Environment(ThemeManager.self) private var theme
     @Binding var navigationPath: NavigationPath
     var onSettings: (() -> Void)? = nil
     @State private var viewModel = ArticlesViewModel()
@@ -20,7 +21,7 @@ struct ArticlesScreen: View {
             }
             .padding(.bottom, 18)
         }
-        .background(Color(hex: "FCF8F5"))
+        .background(theme.background)
         .task {
             await viewModel.loadBanners()
             await viewModel.loadArticles()
@@ -70,7 +71,7 @@ struct ArticlesScreen: View {
                 HStack(spacing: 12) {
                     ForEach(0..<2, id: \.self) { _ in
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(hex: "EFE3DE"))
+                            .fill(theme.surfaceContainerHigh)
                             .frame(width: 300, height: 156)
                     }
                 }
@@ -142,13 +143,13 @@ struct ArticlesScreen: View {
                             .padding(.vertical, 8)
                             .background(
                                 viewModel.selectedCategory == category
-                                    ? Color(hex: "FFDAD4")
-                                    : Color(hex: "EFE3DE")
+                                    ? theme.primaryContainer
+                                    : theme.surfaceContainerHigh
                             )
                             .foregroundColor(
                                 viewModel.selectedCategory == category
-                                    ? Color(hex: "3A0905")
-                                    : Color(hex: "51443F")
+                                    ? theme.onPrimaryContainer
+                                    : theme.onSurfaceVariant
                             )
                             .clipShape(Capsule())
                     }

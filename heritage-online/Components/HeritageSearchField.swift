@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HeritageSearchField: View {
+    @Environment(ThemeManager.self) private var theme
     @Binding var text: String
     let placeholder: String
 
@@ -10,6 +11,7 @@ struct HeritageSearchField: View {
                 .foregroundColor(.secondary)
             TextField(placeholder, text: $text)
                 .textFieldStyle(.plain)
+                .foregroundColor(theme.onSurface)
             if !text.isEmpty {
                 Button {
                     text = ""
@@ -20,10 +22,10 @@ struct HeritageSearchField: View {
             }
         }
         .padding(12)
-        .background(Color(hex: "F5ECE7"))
+        .background(theme.surfaceContainer)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color(hex: "D6C2BA"), lineWidth: 1)
+                .stroke(theme.outlineVariant, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal, 20)

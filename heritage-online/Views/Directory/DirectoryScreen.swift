@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DirectoryScreen: View {
+    @Environment(ThemeManager.self) private var theme
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = DirectoryViewModel()
     @State private var showFilterSheet = false
@@ -21,7 +22,7 @@ struct DirectoryScreen: View {
             }
             .padding(.bottom, 18)
         }
-        .background(Color(hex: "FCF8F5"))
+        .background(theme.background)
         .task {
             await viewModel.loadItems()
             await viewModel.loadStatistics()
@@ -81,13 +82,13 @@ struct DirectoryScreen: View {
                             .padding(.vertical, 8)
                             .background(
                                 viewModel.selectedKind == kind
-                                    ? Color(hex: "FFDAD4")
-                                    : Color(hex: "EFE3DE")
+                                    ? theme.primaryContainer
+                                    : theme.surfaceContainerHigh
                             )
                             .foregroundColor(
                                 viewModel.selectedKind == kind
-                                    ? Color(hex: "3A0905")
-                                    : Color(hex: "51443F")
+                                    ? theme.onPrimaryContainer
+                                    : theme.onSurfaceVariant
                             )
                             .clipShape(Capsule())
                     }
@@ -154,7 +155,7 @@ struct DirectoryScreen: View {
                         Text("\(String(localized: "directory_statistics_total")): \(stats.total)")
                             .font(.headline)
                             .fontWeight(.bold)
-                            .foregroundColor(Color(hex: "8F372F"))
+                            .foregroundColor(theme.primary)
 
                         ForEach(Array(stats.dimensions.enumerated()), id: \.offset) { _, dimension in
                             VStack(alignment: .leading, spacing: 4) {

@@ -23,18 +23,29 @@ enum HomeTab: String, CaseIterable {
 }
 
 struct MainTabView: View {
+    @Environment(ThemeManager.self) private var theme
     @State private var selectedTab: HomeTab = .articles
     @State private var showSettings = false
-    @State private var themeMode: AppThemeMode = .system
-    @State private var languageMode: AppLanguageMode = .system
+    @State private var showMyPage = false
+    @AppStorage("theme_mode") private var themeMode: String = AppThemeMode.system.rawValue
+    @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
     var body: some View {
         ZStack {
-            if showSettings {
+            if showMyPage {
+                MyPage(onBack: { showMyPage = false })
+            } else if showSettings {
                 SettingsScreen(
-                    themeMode: $themeMode,
-                    languageMode: $languageMode,
-                    onBack: { showSettings = false }
+                    themeMode: Binding(
+                        get: { AppThemeMode(rawValue: themeMode) ?? .system },
+                        set: { themeMode = $0.rawValue }
+                    ),
+                    languageMode: Binding(
+                        get: { AppLanguageMode(rawValue: languageMode) ?? .system },
+                        set: { languageMode = $0.rawValue }
+                    ),
+                    onBack: { showSettings = false },
+                    onMyPageClick: { showMyPage = true }
                 )
             } else {
                 TabView(selection: $selectedTab) {
@@ -56,7 +67,7 @@ struct MainTabView: View {
                         }
                         .tag(HomeTab.inheritors)
                 }
-                .tint(Color(hex: "8F372F"))
+                .tint(theme.primary)
             }
         }
     }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct InheritorDetailScreen: View {
+    @Environment(ThemeManager.self) private var theme
     let inheritorId: String?
     let sourceId: String?
     @Binding var navigationPath: NavigationPath
@@ -31,7 +32,7 @@ struct InheritorDetailScreen: View {
                 viewModel.toggleFavorite()
             } label: {
                 Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(viewModel.isFavorite ? Color(hex: "8F372F") : .secondary)
+                    .foregroundColor(viewModel.isFavorite ? theme.primary : .secondary)
             }
             Button {
                 Task { await viewModel.refresh() }
@@ -80,7 +81,7 @@ struct InheritorDetailScreen: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 18)
             }
-            .background(Color(hex: "FCF8F5"))
+            .background(theme.background)
         }
         .navigationTitle(String(localized: "inheritor_detail_title"))
         #if os(iOS)

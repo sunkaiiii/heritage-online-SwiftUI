@@ -1,80 +1,81 @@
 import SwiftUI
 
 struct MyPage: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(ThemeManager.self) private var theme
+    let onBack: () -> Void
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    NavigationLink {
-                        FavoritesView()
-                    } label: {
-                        Label(String(localized: "my_favorites"), systemImage: "heart.fill")
-                    }
-
-                    NavigationLink {
-                        RecentView()
-                    } label: {
-                        Label(String(localized: "my_recent"), systemImage: "clock")
-                    }
+        ScrollView {
+            VStack(spacing: 20) {
+                HStack {
+                    HeritagePageHeader(title: String(localized: "nav_my"))
+                    Spacer()
                 }
+                .padding(.top, 8)
 
-                Section {
+                HeritageContentCard(onClick: {}) {
                     HStack {
-                        Label(String(localized: "my_about"), systemImage: "info.circle")
+                        Label(String(localized: "my_favorites"), systemImage: "heart")
+                            .foregroundColor(.primary)
                         Spacer()
-                        Text("v0.1.0")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
                     }
+                    .padding(18)
                 }
+                .padding(.horizontal, 20)
+
+                HeritageContentCard(onClick: {}) {
+                    HStack {
+                        Label(String(localized: "my_recent"), systemImage: "clock")
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(18)
+                }
+                .padding(.horizontal, 20)
+
+                HeritageContentCard {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(String(localized: "settings_about"))
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                        HStack {
+                            Text(String(localized: "my_about"))
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text("v0.1.0")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .padding(18)
+                }
+                .padding(.horizontal, 20)
             }
-            .navigationTitle(String(localized: "nav_my"))
+            .padding(.bottom, 30)
+        }
+        .background(theme.background)
+        .navigationTitle(String(localized: "nav_my"))
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+        .toolbar {
             #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            #endif
-            .toolbar {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(String(localized: "action_back")) {
-                        dismiss()
-                    }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(String(localized: "action_back")) {
+                    onBack()
                 }
-                #else
-                ToolbarItem(placement: .automatic) {
-                    Button(String(localized: "action_back")) {
-                        dismiss()
-                    }
-                }
-                #endif
             }
+            #else
+            ToolbarItem(placement: .automatic) {
+                Button(String(localized: "action_back")) {
+                    onBack()
+                }
+            }
+            #endif
         }
-    }
-}
-
-struct FavoritesView: View {
-    var body: some View {
-        List {
-            ContentUnavailableView(
-                String(localized: "my_favorites_empty"),
-                systemImage: "heart.slash",
-                description: Text(String(localized: "my_favorites_empty_message"))
-            )
-        }
-        .navigationTitle(String(localized: "my_favorites"))
-    }
-}
-
-struct RecentView: View {
-    var body: some View {
-        List {
-            ContentUnavailableView(
-                String(localized: "my_recent_empty"),
-                systemImage: "clock.badge.questionmark",
-                description: Text(String(localized: "my_recent_empty_message"))
-            )
-        }
-        .navigationTitle(String(localized: "my_recent"))
     }
 }

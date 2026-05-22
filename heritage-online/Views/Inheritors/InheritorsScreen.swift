@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct InheritorsScreen: View {
+    @Environment(ThemeManager.self) private var theme
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = InheritorsViewModel()
     @State private var showFilterSheet = false
@@ -20,7 +21,7 @@ struct InheritorsScreen: View {
             }
             .padding(.bottom, 18)
         }
-        .background(Color(hex: "FCF8F5"))
+        .background(theme.background)
         .task {
             await viewModel.loadItems()
         }

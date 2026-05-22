@@ -32,51 +32,40 @@ enum AppLanguageMode: String, CaseIterable {
     }
 }
 
-// MARK: - Heritage Color Scheme
+// MARK: - Theme Manager
 
-struct HeritageColors {
-    // Light Theme
-    static let lightPrimary = Color(hex: "8F372F")
-    static let lightOnPrimary = Color.white
-    static let lightPrimaryContainer = Color(hex: "FFDAD4")
-    static let lightOnPrimaryContainer = Color(hex: "3A0905")
-    static let lightSecondary = Color(hex: "6B5852")
-    static let lightSecondaryContainer = Color(hex: "EFE2DC")
-    static let lightTertiary = Color(hex: "735C23")
-    static let lightTertiaryContainer = Color(hex: "FFE1A6")
-    static let lightBackground = Color(hex: "FCF8F5")
-    static let lightOnBackground = Color(hex: "211A18")
-    static let lightSurface = Color(hex: "FCF8F5")
-    static let lightOnSurface = Color(hex: "211A18")
-    static let lightSurfaceVariant = Color(hex: "EADDD7")
-    static let lightOnSurfaceVariant = Color(hex: "51443F")
-    static let lightSurfaceContainerLow = Color(hex: "FBF3EF")
-    static let lightSurfaceContainer = Color(hex: "F5ECE7")
-    static let lightSurfaceContainerHigh = Color(hex: "EFE3DE")
-    static let lightOutline = Color(hex: "83736D")
-    static let lightOutlineVariant = Color(hex: "D6C2BA")
+@MainActor
+@Observable
+class ThemeManager {
+    var mode: AppThemeMode = .system
+    var isDark: Bool = false
 
-    // Dark Theme
-    static let darkPrimary = Color(hex: "FFB4AA")
-    static let darkOnPrimary = Color(hex: "561E19")
-    static let darkPrimaryContainer = Color(hex: "733028")
-    static let darkOnPrimaryContainer = Color(hex: "FFDAD4")
-    static let darkSecondary = Color(hex: "D8C2BA")
-    static let darkSecondaryContainer = Color(hex: "51403A")
-    static let darkTertiary = Color(hex: "E2C47C")
-    static let darkTertiaryContainer = Color(hex: "594419")
-    static let darkBackground = Color(hex: "16100E")
-    static let darkOnBackground = Color(hex: "EDE0DC")
-    static let darkSurface = Color(hex: "16100E")
-    static let darkOnSurface = Color(hex: "EDE0DC")
-    static let darkSurfaceVariant = Color(hex: "51443F")
-    static let darkOnSurfaceVariant = Color(hex: "D6C2BA")
-    static let darkSurfaceContainerLow = Color(hex: "241D1A")
-    static let darkSurfaceContainer = Color(hex: "2A211E")
-    static let darkSurfaceContainerHigh = Color(hex: "362B27")
-    static let darkOutline = Color(hex: "9F8D86")
-    static let darkOutlineVariant = Color(hex: "5D4C45")
+    func update(mode: AppThemeMode, systemIsDark: Bool) {
+        self.mode = mode
+        self.isDark = switch mode {
+        case .system: systemIsDark
+        case .light: false
+        case .dark: true
+        }
+    }
+
+    var background: Color { isDark ? Color(hex: "16100E") : Color(hex: "FCF8F5") }
+    var surfaceVariant: Color { isDark ? Color(hex: "51443F") : Color(hex: "EADDD7") }
+    var surfaceContainerLow: Color { isDark ? Color(hex: "241D1A") : Color(hex: "FBF3EF") }
+    var surfaceContainer: Color { isDark ? Color(hex: "2A211E") : Color(hex: "F5ECE7") }
+    var surfaceContainerHigh: Color { isDark ? Color(hex: "362B27") : Color(hex: "EFE3DE") }
+    var onSurfaceVariant: Color { isDark ? Color(hex: "D6C2BA") : Color(hex: "51443F") }
+    var outline: Color { isDark ? Color(hex: "9F8D86") : Color(hex: "83736D") }
+    var outlineVariant: Color { isDark ? Color(hex: "5D4C45") : Color(hex: "D6C2BA") }
+    var primary: Color { isDark ? Color(hex: "FFB4AA") : Color(hex: "8F372F") }
+    var onPrimary: Color { isDark ? Color(hex: "561E19") : Color.white }
+    var primaryContainer: Color { isDark ? Color(hex: "733028") : Color(hex: "FFDAD4") }
+    var onPrimaryContainer: Color { isDark ? Color(hex: "FFDAD4") : Color(hex: "3A0905") }
+    var onBackground: Color { isDark ? Color(hex: "EDE0DC") : Color(hex: "211A18") }
+    var onSurface: Color { isDark ? Color(hex: "EDE0DC") : Color(hex: "211A18") }
 }
+
+// MARK: - Color Hex Helper
 
 extension Color {
     init(hex: String) {

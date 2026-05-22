@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Page Background
 
 struct HeritagePageBackground<Content: View>: View {
+    @Environment(ThemeManager.self) private var theme
     let content: Content
 
     init(@ViewBuilder content: () -> Content) {
@@ -12,13 +13,14 @@ struct HeritagePageBackground<Content: View>: View {
     var body: some View {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: "FCF8F5"))
+            .background(theme.background)
     }
 }
 
 // MARK: - Page Header
 
 struct HeritagePageHeader: View {
+    @Environment(ThemeManager.self) private var theme
     let title: String
     let subtitle: String?
 
@@ -32,6 +34,7 @@ struct HeritagePageHeader: View {
             Text(title)
                 .font(.largeTitle)
                 .fontWeight(.semibold)
+                .foregroundColor(theme.onBackground)
             if let subtitle = subtitle, !subtitle.isEmpty {
                 Text(subtitle)
                     .font(.body)
@@ -48,6 +51,7 @@ struct HeritagePageHeader: View {
 // MARK: - Section Header
 
 struct HeritageSectionHeader: View {
+    @Environment(ThemeManager.self) private var theme
     let title: String
 
     var body: some View {
@@ -56,7 +60,7 @@ struct HeritageSectionHeader: View {
                 .font(.title2)
                 .fontWeight(.semibold)
             Divider()
-                .overlay(Color(hex: "D6C2BA"))
+                .overlay(theme.outlineVariant)
         }
         .padding(.horizontal, 20)
     }
@@ -65,6 +69,7 @@ struct HeritageSectionHeader: View {
 // MARK: - Content Card
 
 struct HeritageContentCard<Content: View>: View {
+    @Environment(ThemeManager.self) private var theme
     let onClick: (() -> Void)?
     @ViewBuilder let content: () -> Content
 
@@ -76,10 +81,8 @@ struct HeritageContentCard<Content: View>: View {
     var body: some View {
         Group {
             if let onClick = onClick {
-                Button(action: onClick) {
-                    cardContent
-                }
-                .buttonStyle(.plain)
+                Button(action: onClick) { cardContent }
+                    .buttonStyle(.plain)
             } else {
                 cardContent
             }
@@ -89,7 +92,7 @@ struct HeritageContentCard<Content: View>: View {
     private var cardContent: some View {
         content()
             .frame(maxWidth: .infinity)
-            .background(Color(hex: "F5ECE7"))
+            .background(theme.surfaceContainer)
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
@@ -97,18 +100,21 @@ struct HeritageContentCard<Content: View>: View {
 // MARK: - Meta Chip
 
 struct HeritageMetaChip: View {
+    @Environment(ThemeManager.self) private var theme
     let text: String
+    var isSelected: Bool = false
 
     var body: some View {
         Text(text)
             .font(.caption)
             .fontWeight(.semibold)
+            .foregroundColor(isSelected ? theme.onPrimaryContainer : theme.onSurfaceVariant)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
-            .background(Color(hex: "EFE3DE"))
+            .background(isSelected ? theme.primaryContainer : theme.surfaceContainerHigh)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color(hex: "D6C2BA"), lineWidth: 1)
+                    .stroke(theme.outlineVariant, lineWidth: isSelected ? 0 : 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -117,6 +123,7 @@ struct HeritageMetaChip: View {
 // MARK: - List Image
 
 struct HeritageListImage: View {
+    @Environment(ThemeManager.self) private var theme
     let imageUrl: String?
     let fallbackText: String
 
@@ -132,11 +139,11 @@ struct HeritageListImage: View {
 
     private var imagePlaceholder: some View {
         ZStack {
-            Color(hex: "EFE3DE")
+            theme.surfaceContainerHigh
             Text(fallbackText)
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundColor(Color(hex: "51443F").opacity(0.82))
+                .foregroundColor(theme.onSurfaceVariant.opacity(0.82))
         }
     }
 }
@@ -193,11 +200,11 @@ struct HeritageFact: Identifiable {
 // MARK: - Fact Card
 
 struct HeritageFactCard: View {
+    @Environment(ThemeManager.self) private var theme
     let facts: [HeritageFact]
 
     var body: some View {
         if facts.isEmpty { EmptyView() }
-
         HeritageContentCard {
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(facts) { fact in
@@ -205,7 +212,7 @@ struct HeritageFactCard: View {
                         Text(fact.label)
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .foregroundColor(Color(hex: "8F372F"))
+                            .foregroundColor(theme.primary)
                             .frame(minWidth: 100, alignment: .leading)
                         Text(fact.value)
                             .font(.body)
@@ -245,6 +252,7 @@ struct HeritageReferenceCard: View {
 // MARK: - Detail Image
 
 struct HeritageDetailImage: View {
+    @Environment(ThemeManager.self) private var theme
     let imageUrl: String?
     let fallbackText: String
 
@@ -256,16 +264,16 @@ struct HeritageDetailImage: View {
         } placeholder: {
             imagePlaceholder
         }
-        .background(Color(hex: "EFE3DE"))
+        .background(theme.surfaceContainerHigh)
     }
 
     private var imagePlaceholder: some View {
         ZStack {
-            Color(hex: "EFE3DE")
+            theme.surfaceContainerHigh
             Text(fallbackText)
                 .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundColor(Color(hex: "51443F").opacity(0.82))
+                .foregroundColor(theme.onSurfaceVariant.opacity(0.82))
         }
     }
 }
@@ -273,6 +281,7 @@ struct HeritageDetailImage: View {
 // MARK: - Filter Button
 
 struct HeritageFilterButton: View {
+    @Environment(ThemeManager.self) private var theme
     let activeFilterCount: Int
     let action: () -> Void
 
@@ -284,9 +293,9 @@ struct HeritageFilterButton: View {
                 if activeFilterCount > 0 {
                     Text("\(activeFilterCount)")
                         .font(.system(size: 10, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(theme.onPrimary)
                         .frame(width: 16, height: 16)
-                        .background(Color(hex: "8F372F"))
+                        .background(theme.primary)
                         .clipShape(Circle())
                         .offset(x: 8, y: -8)
                 }
@@ -362,6 +371,7 @@ struct EmptyContent: View {
 // MARK: - Inline Retry Message
 
 struct InlineRetryMessage: View {
+    @Environment(ThemeManager.self) private var theme
     let message: String
     let onRetry: () -> Void
 
@@ -369,16 +379,16 @@ struct InlineRetryMessage: View {
         HStack {
             Text(message)
                 .font(.body)
-                .foregroundColor(.white)
+                .foregroundColor(theme.onPrimaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(String(localized: "action_retry")) {
                 onRetry()
             }
             .buttonStyle(.bordered)
-            .tint(.white)
+            .tint(theme.onPrimaryContainer)
         }
         .padding(14)
-        .background(Color(hex: "8F372F").opacity(0.85))
+        .background(theme.primary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal, 20)
     }
@@ -387,22 +397,23 @@ struct InlineRetryMessage: View {
 // MARK: - Stale Content Warning
 
 struct StaleContentWarning: View {
+    @Environment(ThemeManager.self) private var theme
     let onRetry: () -> Void
 
     var body: some View {
         HStack {
             Text(String(localized: "content_may_be_stale"))
                 .font(.body)
-                .foregroundColor(.white)
+                .foregroundColor(theme.onPrimaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Button(String(localized: "action_retry")) {
                 onRetry()
             }
             .buttonStyle(.bordered)
-            .tint(.white)
+            .tint(theme.onPrimaryContainer)
         }
         .padding(14)
-        .background(Color(hex: "8F372F").opacity(0.85))
+        .background(theme.primary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }

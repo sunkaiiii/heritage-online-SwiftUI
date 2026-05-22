@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DirectoryDetailScreen: View {
+    @Environment(ThemeManager.self) private var theme
     let itemId: String?
     let sourceId: String?
     let kind: DirectoryItemKind
@@ -35,7 +36,7 @@ struct DirectoryDetailScreen: View {
                 viewModel.toggleFavorite()
             } label: {
                 Image(systemName: viewModel.isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(viewModel.isFavorite ? Color(hex: "8F372F") : .secondary)
+                    .foregroundColor(viewModel.isFavorite ? theme.primary : .secondary)
             }
             Button {
                 Task { await viewModel.refresh() }
@@ -88,7 +89,7 @@ struct DirectoryDetailScreen: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 18)
             }
-            .background(Color(hex: "FCF8F5"))
+            .background(theme.background)
         }
         .navigationTitle(String(localized: "directory_detail_title"))
         #if os(iOS)
