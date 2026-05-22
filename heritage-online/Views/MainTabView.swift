@@ -1,15 +1,17 @@
 import SwiftUI
 
-enum HomeTab: String, CaseIterable {
+enum SidebarItem: String, CaseIterable, Hashable {
     case articles
     case directory
     case inheritors
+    case settings
 
     var labelKey: String {
         switch self {
         case .articles: return "nav_articles"
         case .directory: return "nav_directory"
         case .inheritors: return "nav_inheritors"
+        case .settings: return "nav_settings"
         }
     }
 
@@ -18,6 +20,7 @@ enum HomeTab: String, CaseIterable {
         case .articles: return "newspaper"
         case .directory: return "books.vertical"
         case .inheritors: return "person.3"
+        case .settings: return "gearshape"
         }
     }
 }
@@ -25,48 +28,133 @@ enum HomeTab: String, CaseIterable {
 struct MainTabView: View {
     @Environment(ThemeManager.self) private var theme
     @Environment(LocalizationManager.self) private var loc
-    @State private var selectedTab: HomeTab = .articles
-    @State private var showSettings = false
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @State private var selectedTab: SidebarItem?
     @AppStorage("theme_mode") private var themeMode: String = AppThemeMode.system.rawValue
     @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
+    private var themeBinding: Binding<AppThemeMode> {
+        Binding(
+            get: { AppThemeMode(rawValue: themeMode) ?? .system },
+            set: { themeMode = $0.rawValue }
+        )
+    }
+
+    private var languageBinding: Binding<AppLanguageMode> {
+        Binding(
+            get: { AppLanguageMode(rawValue: languageMode) ?? .system },
+            set: { languageMode = $0.rawValue }
+        )
+    }
+
     var body: some View {
+        if horizontalSizeClass == .regular {
+            wideLayout
+        } else {
+            compactLayout
+        }
+    }
+
+    // MARK: - Wide Layout (macOS, iPad)
+
+    private var wideLayout: some View {
+        NavigationSplitView {
+            sidebar
+                .navigationSplitViewColumnWidth(min: 200, ideal: 220, max: 280)
+        } detail: {
+            ZStack {
+                ArticlesListView()
+                    .opacity(selectedTab == .articles ? 1 : 0)
+                    .disabled(selectedTab != .articles)
+
+                DirectoryListView()
+                    .opacity(selectedTab == .directory ? 1 : 0)
+                    .disabled(selectedTab != .directory)
+
+                InheritorsListView()
+                    .opacity(selectedTab == .inheritors ? 1 : 0)
+                    .disabled(selectedTab != .inheritors)
+
+                if selectedTab == .settings {
+                    SettingsScreen(
+                        themeMode: themeBinding,
+                        languageMode: languageBinding,
+                        onBack: { selectedTab = .articles }
+                    )
+                }
+            }
+        }
+        .onAppear {
+            if selectedTab == nil { selectedTab = .articles }
+        }
+    }
+
+    private var sidebar: some View {
+        List(selection: $selectedTab) {
+            Section {
+                ForEach([SidebarItem.articles, .directory, .inheritors], id: \.self) { item in
+                    Label(loc.localized(item.labelKey), systemImage: item.icon)
+                }
+            }
+
+            Section {
+                Label(loc.localized("nav_settings"), systemImage: SidebarItem.settings.icon)
+                    .tag(SidebarItem.settings)
+            }
+
+            Section {
+                HStack {
+                    Label(loc.localized("my_about"), systemImage: "info.circle")
+                    Spacer()
+                    Text("v0.1.0")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .listStyle(.sidebar)
+        .background(theme.background)
+    }
+
+    // MARK: - Compact Layout (iPhone)
+
+    private var compactLayout: some View {
         ZStack {
-            if showSettings {
+            if selectedTab == .settings {
                 NavigationStack {
                     SettingsScreen(
-                        themeMode: Binding(
-                            get: { AppThemeMode(rawValue: themeMode) ?? .system },
-                            set: { themeMode = $0.rawValue }
-                        ),
-                        languageMode: Binding(
-                            get: { AppLanguageMode(rawValue: languageMode) ?? .system },
-                            set: { languageMode = $0.rawValue }
-                        ),
-                        onBack: { showSettings = false }
+                        themeMode: themeBinding,
+                        languageMode: languageBinding,
+                        onBack: { selectedTab = nil }
                     )
                 }
             } else {
-                TabView(selection: $selectedTab) {
-                    ArticlesListView(onSettings: { showSettings = true })
+                TabView(selection: Binding(
+                    get: { selectedTab ?? .articles },
+                    set: { selectedTab = $0 }
+                )) {
+                    ArticlesListView(onSettings: { selectedTab = .settings })
                         .tabItem {
-                            Label(loc.localized(HomeTab.articles.labelKey), systemImage: HomeTab.articles.icon)
+                            Label(loc.localized(SidebarItem.articles.labelKey), systemImage: SidebarItem.articles.icon)
                         }
-                        .tag(HomeTab.articles)
+                        .tag(SidebarItem.articles)
 
                     DirectoryListView()
                         .tabItem {
-                            Label(loc.localized(HomeTab.directory.labelKey), systemImage: HomeTab.directory.icon)
+                            Label(loc.localized(SidebarItem.directory.labelKey), systemImage: SidebarItem.directory.icon)
                         }
-                        .tag(HomeTab.directory)
+                        .tag(SidebarItem.directory)
 
                     InheritorsListView()
                         .tabItem {
-                            Label(loc.localized(HomeTab.inheritors.labelKey), systemImage: HomeTab.inheritors.icon)
+                            Label(loc.localized(SidebarItem.inheritors.labelKey), systemImage: SidebarItem.inheritors.icon)
                         }
-                        .tag(HomeTab.inheritors)
+                        .tag(SidebarItem.inheritors)
                 }
                 .tint(theme.primary)
+                .onAppear {
+                    if selectedTab == nil { selectedTab = .articles }
+                }
             }
         }
     }
@@ -79,9 +167,10 @@ enum ArticleNavigationDestination: Hashable {
 }
 
 struct ArticlesListView: View {
-    let onSettings: () -> Void
+    var onSettings: (() -> Void)? = nil
     @State private var navigationPath = NavigationPath()
     @Environment(SavedContentRepository.self) private var savedContentRepo
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -91,19 +180,17 @@ struct ArticlesListView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
                 .toolbar {
-                    #if os(iOS)
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button { onSettings() } label: {
-                            Image(systemName: "gearshape")
+                    if let onSettings = onSettings {
+                        #if os(iOS)
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: onSettings) { Image(systemName: "gearshape") }
                         }
-                    }
-                    #else
-                    ToolbarItem(placement: .automatic) {
-                        Button { onSettings() } label: {
-                            Image(systemName: "gearshape")
+                        #else
+                        ToolbarItem(placement: .automatic) {
+                            Button(action: onSettings) { Image(systemName: "gearshape") }
                         }
+                        #endif
                     }
-                    #endif
                 }
                 .navigationDestination(for: ArticleNavigationDestination.self) { dest in
                     switch dest {

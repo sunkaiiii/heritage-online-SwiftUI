@@ -94,6 +94,7 @@ struct DirectoryScreen: View {
                             )
                             .clipShape(Capsule())
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, 20)
