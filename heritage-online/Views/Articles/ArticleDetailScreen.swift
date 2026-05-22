@@ -5,6 +5,7 @@ struct ArticleDetailScreen: View {
     let sourceId: String?
     let sourceUrl: String?
     let category: ArticleCategory
+    @Binding var navigationPath: NavigationPath
 
     @State private var viewModel: ArticleDetailViewModel
     @State private var showImagePreview = false
@@ -16,12 +17,14 @@ struct ArticleDetailScreen: View {
         articleId: String? = nil,
         sourceId: String? = nil,
         sourceUrl: String? = nil,
-        category: ArticleCategory = .news
+        category: ArticleCategory = .news,
+        navigationPath: Binding<NavigationPath>
     ) {
         self.articleId = articleId
         self.sourceId = sourceId
         self.sourceUrl = sourceUrl
         self.category = category
+        self._navigationPath = navigationPath
         self._viewModel = State(initialValue: ArticleDetailViewModel(
             articleId: articleId,
             sourceId: sourceId,
@@ -248,7 +251,13 @@ struct ArticleDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: reference.publishedAt,
-                            onClick: nil
+                            onClick: {
+                                if let sourceId = reference.sourceId, !sourceId.isEmpty {
+                                    navigationPath.append(ArticleNavigationDestination.articleDetail(id: nil, sourceId: sourceId, sourceUrl: nil, category: article.category))
+                                } else if let detailUrl = reference.detailUrl, !detailUrl.isEmpty {
+                                    navigationPath.append(ArticleNavigationDestination.articleDetail(id: nil, sourceId: nil, sourceUrl: detailUrl, category: article.category))
+                                }
+                            }
                         )
                     }
                 }

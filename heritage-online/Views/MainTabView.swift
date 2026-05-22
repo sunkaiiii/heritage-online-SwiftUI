@@ -101,7 +101,8 @@ struct ArticlesListView: View {
                             articleId: id,
                             sourceId: sourceId,
                             sourceUrl: sourceUrl,
-                            category: category
+                            category: category,
+                            navigationPath: $navigationPath
                         )
                     }
                 }
@@ -131,7 +132,8 @@ struct DirectoryListView: View {
                         DirectoryDetailScreen(
                             itemId: id,
                             sourceId: sourceId,
-                            kind: kind
+                            kind: kind,
+                            navigationPath: $navigationPath
                         )
                     }
                 }
@@ -161,13 +163,15 @@ struct InheritorsListView: View {
                     case .inheritorDetail(let id, let sourceId):
                         InheritorDetailScreen(
                             inheritorId: id,
-                            sourceId: sourceId
+                            sourceId: sourceId,
+                            navigationPath: $navigationPath
                         )
                     case .directoryDetail(let id, let sourceId, let kind):
                         DirectoryDetailScreen(
                             itemId: id,
                             sourceId: sourceId,
-                            kind: kind
+                            kind: kind,
+                            navigationPath: $navigationPath
                         )
                     }
                 }

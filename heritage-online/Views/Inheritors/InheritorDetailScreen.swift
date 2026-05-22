@@ -3,6 +3,7 @@ import SwiftUI
 struct InheritorDetailScreen: View {
     let inheritorId: String?
     let sourceId: String?
+    @Binding var navigationPath: NavigationPath
 
     @State private var viewModel: InheritorDetailViewModel
     @State private var showImagePreview = false
@@ -12,10 +13,12 @@ struct InheritorDetailScreen: View {
 
     init(
         inheritorId: String? = nil,
-        sourceId: String? = nil
+        sourceId: String? = nil,
+        navigationPath: Binding<NavigationPath>
     ) {
         self.inheritorId = inheritorId
         self.sourceId = sourceId
+        self._navigationPath = navigationPath
         self._viewModel = State(initialValue: InheritorDetailViewModel(
             inheritorId: inheritorId,
             sourceId: sourceId
@@ -227,7 +230,7 @@ struct InheritorDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: ref.category ?? ref.region,
-                            onClick: nil
+                            onClick: makeInheritorOrDirectoryClick(ref: ref)
                         )
                     }
                 }
@@ -242,11 +245,26 @@ struct InheritorDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: ref.category ?? ref.region,
-                            onClick: nil
+                            onClick: makeInheritorRefClick(ref: ref)
                         )
                     }
                 }
             }
         }
+    }
+
+    private func makeInheritorOrDirectoryClick(ref: DirectoryReferenceDto) -> (() -> Void)? {
+        guard let sourceId = ref.sourceId, !sourceId.isEmpty else { return nil }
+        if ref.isInheritorReference {
+            return { navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: nil, sourceId: sourceId)) }
+        } else {
+            let kind = DirectoryItemKind.allCases.first(where: { $0.rawValue == ref.kind }) ?? .nationalProject
+            return { navigationPath.append(InheritorNavigationDestination.directoryDetail(id: nil, sourceId: sourceId, kind: kind)) }
+        }
+    }
+
+    private func makeInheritorRefClick(ref: DirectoryReferenceDto) -> (() -> Void)? {
+        guard let sourceId = ref.sourceId, !sourceId.isEmpty else { return nil }
+        return { navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: nil, sourceId: sourceId)) }
     }
 }

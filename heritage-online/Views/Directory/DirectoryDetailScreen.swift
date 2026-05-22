@@ -4,6 +4,7 @@ struct DirectoryDetailScreen: View {
     let itemId: String?
     let sourceId: String?
     let kind: DirectoryItemKind
+    @Binding var navigationPath: NavigationPath
 
     @State private var viewModel: DirectoryDetailViewModel
     @State private var showImagePreview = false
@@ -14,11 +15,13 @@ struct DirectoryDetailScreen: View {
     init(
         itemId: String? = nil,
         sourceId: String? = nil,
-        kind: DirectoryItemKind = .nationalProject
+        kind: DirectoryItemKind = .nationalProject,
+        navigationPath: Binding<NavigationPath>
     ) {
         self.itemId = itemId
         self.sourceId = sourceId
         self.kind = kind
+        self._navigationPath = navigationPath
         self._viewModel = State(initialValue: DirectoryDetailViewModel(
             itemId: itemId,
             sourceId: sourceId,
@@ -269,7 +272,7 @@ struct DirectoryDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: ref.category ?? ref.region,
-                            onClick: nil
+                            onClick: makeDirectoryRefClick(ref: ref, fallbackKind: item.kind)
                         )
                     }
                 }
@@ -284,7 +287,7 @@ struct DirectoryDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: ref.category ?? ref.region,
-                            onClick: nil
+                            onClick: makeInheritorOrDirectoryClick(ref: ref, fallbackKind: item.kind)
                         )
                     }
                 }
@@ -299,11 +302,27 @@ struct DirectoryDetailScreen: View {
                         HeritageReferenceCard(
                             title: title,
                             meta: ref.category,
-                            onClick: nil
+                            onClick: makeDirectoryRefClick(ref: ref, fallbackKind: item.kind)
                         )
                     }
                 }
             }
+        }
+    }
+
+    private func makeDirectoryRefClick(ref: DirectoryReferenceDto, fallbackKind: DirectoryItemKind) -> (() -> Void)? {
+        guard let sourceId = ref.sourceId, !sourceId.isEmpty, !ref.isInheritorReference else { return nil }
+        let resolvedKind = DirectoryItemKind.allCases.first(where: { $0.rawValue == ref.kind }) ?? fallbackKind
+        return { navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: nil, sourceId: sourceId, kind: resolvedKind)) }
+    }
+
+    private func makeInheritorOrDirectoryClick(ref: DirectoryReferenceDto, fallbackKind: DirectoryItemKind) -> (() -> Void)? {
+        guard let sourceId = ref.sourceId, !sourceId.isEmpty else { return nil }
+        if ref.isInheritorReference {
+            return { navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: nil, sourceId: sourceId)) }
+        } else {
+            let resolvedKind = DirectoryItemKind.allCases.first(where: { $0.rawValue == ref.kind }) ?? fallbackKind
+            return { navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: nil, sourceId: sourceId, kind: resolvedKind)) }
         }
     }
 }
