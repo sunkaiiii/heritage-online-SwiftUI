@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ArticlesScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     @Binding var navigationPath: NavigationPath
     var onSettings: (() -> Void)? = nil
     @State private var viewModel = ArticlesViewModel()
@@ -43,8 +44,8 @@ struct ArticlesScreen: View {
     private var headerSection: some View {
         HStack {
             HeritagePageHeader(
-                title: String(localized: "articles_header_title"),
-                subtitle: String(localized: "articles_header_subtitle")
+                title: loc.localized("articles_header_title"),
+                subtitle: loc.localized("articles_header_subtitle")
             )
             Spacer()
             HStack(spacing: 8) {
@@ -96,7 +97,7 @@ struct ArticlesScreen: View {
     // MARK: - Section Header
 
     private var sectionHeader: some View {
-        HeritageSectionHeader(title: String(localized: "articles_latest_title"))
+        HeritageSectionHeader(title: loc.localized("articles_latest_title"))
     }
 
     // MARK: - Search Field
@@ -104,7 +105,7 @@ struct ArticlesScreen: View {
     private var searchField: some View {
         HeritageSearchField(
             text: $viewModel.searchKeywords,
-            placeholder: String(localized: "articles_search_placeholder")
+            placeholder: loc.localized("articles_search_placeholder")
         )
     }
 
@@ -114,7 +115,7 @@ struct ArticlesScreen: View {
     private var yearFilterChip: some View {
         if !viewModel.yearFilter.isEmpty {
             HStack {
-                HeritageMetaChip(text: String(localized: "filter_field_year") + ": " + viewModel.yearFilter)
+                HeritageMetaChip(text: loc.localized("filter_field_year") + ": " + viewModel.yearFilter)
                 Button {
                     viewModel.yearFilter = ""
                     Task { await viewModel.loadArticles() }
@@ -171,8 +172,8 @@ struct ArticlesScreen: View {
             }
         } else if viewModel.articles.isEmpty {
             let emptyMessage = viewModel.searchKeywords.isEmpty
-                ? String(localized: "home_empty_message")
-                : String(localized: "articles_search_empty_message")
+                ? loc.localized("home_empty_message")
+                : loc.localized("articles_search_empty_message")
             EmptyContent(message: emptyMessage) {
                 Task { await viewModel.loadArticles() }
             }
@@ -201,16 +202,16 @@ struct ArticlesScreen: View {
 
     private var filterSheetView: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text(String(localized: "filter_title"))
+            Text(loc.localized("filter_title"))
                 .font(.title2)
                 .fontWeight(.semibold)
                 .padding(.top, 24)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(String(localized: "filter_field_year"))
+                Text(loc.localized("filter_field_year"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                TextField(String(localized: "filter_placeholder_year"), text: $draftYearFilter)
+                TextField(loc.localized("filter_placeholder_year"), text: $draftYearFilter)
                     .textFieldStyle(.roundedBorder)
                     #if os(iOS)
                     .keyboardType(.numberPad)
@@ -218,14 +219,14 @@ struct ArticlesScreen: View {
             }
 
             HStack {
-                Button(String(localized: "filter_clear")) {
+                Button("filter_clear") {
                     viewModel.yearFilter = ""
                     draftYearFilter = ""
                     showFilterSheet = false
                     Task { await viewModel.loadArticles() }
                 }
                 Spacer()
-                Button(String(localized: "filter_apply")) {
+                Button("filter_apply") {
                     viewModel.yearFilter = draftYearFilter
                     showFilterSheet = false
                     Task { await viewModel.loadArticles() }
@@ -245,6 +246,7 @@ struct ArticlesScreen: View {
 // MARK: - Banner Card
 
 struct BannerCard: View {
+    @Environment(LocalizationManager.self) private var loc
     let banner: HomeBannerDto
 
     var bannerImageUrl: String? {
@@ -268,7 +270,7 @@ struct BannerCard: View {
     private var bannerImage: some View {
         HeritageListImage(
             imageUrl: bannerImageUrl,
-            fallbackText: String(localized: "brand_fallback")
+            fallbackText: loc.localized("brand_fallback")
         )
         .frame(width: 300, height: 156)
         .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -278,6 +280,7 @@ struct BannerCard: View {
 // MARK: - Article Row
 
 struct ArticleRow: View {
+    @Environment(LocalizationManager.self) private var loc
     let article: ArticleSummaryDto
     let prominent: Bool
     let onClick: (() -> Void)?
@@ -293,7 +296,7 @@ struct ArticleRow: View {
             image: {
                 HeritageListImage(
                     imageUrl: imageUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(
                     width: prominent ? nil : 104,
@@ -303,7 +306,7 @@ struct ArticleRow: View {
             },
             text: {
                 HeritageMetaChip(text: article.category.label)
-                Text(article.title?.isEmpty == false ? article.title! : String(localized: "unnamed_article"))
+                Text(article.title?.isEmpty == false ? article.title! : loc.localized("unnamed_article"))
                     .font(.headline)
                     .fontWeight(.semibold)
                     .lineLimit(prominent ? 3 : 2)

@@ -6,6 +6,7 @@ struct heritage_onlineApp: App {
     @AppStorage("language_mode") private var languageMode: String = AppLanguageMode.system.rawValue
 
     @State private var themeManager = ThemeManager()
+    @State private var locManager = LocalizationManager()
 
     var body: some Scene {
         WindowGroup {
@@ -18,7 +19,8 @@ struct heritage_onlineApp: App {
                     get: { AppLanguageMode(rawValue: languageMode) ?? .system },
                     set: { languageMode = $0.rawValue }
                 ),
-                themeManager: themeManager
+                themeManager: themeManager,
+                locManager: locManager
             )
         }
     }
@@ -28,7 +30,16 @@ struct AppRoot: View {
     @Binding var themeMode: AppThemeMode
     @Binding var languageMode: AppLanguageMode
     var themeManager: ThemeManager
+    var locManager: LocalizationManager
     @Environment(\.colorScheme) private var systemColorScheme
+
+    private var resolvedLanguage: String {
+        switch languageMode {
+        case .system: return Locale.current.language.languageCode?.identifier ?? "en"
+        case .simplifiedChinese: return "zh-Hans"
+        case .english: return "en"
+        }
+    }
 
     private var resolvedLocale: Locale {
         switch languageMode {
@@ -49,19 +60,16 @@ struct AppRoot: View {
     var body: some View {
         ContentView()
             .environment(themeManager)
-            .environment(\.locale, resolvedLocale)
+            .environment(locManager)
             .preferredColorScheme(resolvedColorScheme)
-            .id(languageMode)
-            .onAppear { syncTheme() }
-            .onChange(of: themeMode) { _, _ in syncTheme() }
-            .onChange(of: languageMode) { _, _ in syncTheme() }
-            .onChange(of: systemColorScheme) { _, _ in syncTheme() }
+            .onAppear { syncAll() }
+            .onChange(of: themeMode) { _, _ in syncAll() }
+            .onChange(of: languageMode) { _, _ in syncAll() }
+            .onChange(of: systemColorScheme) { _, _ in syncAll() }
     }
 
-    private func syncTheme() {
-        themeManager.update(
-            mode: themeMode,
-            systemIsDark: systemColorScheme == .dark
-        )
+    private func syncAll() {
+        themeManager.update(mode: themeMode, systemIsDark: systemColorScheme == .dark)
+        locManager.setLanguage(resolvedLanguage)
     }
 }

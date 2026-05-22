@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InheritorDetailScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     let inheritorId: String?
     let sourceId: String?
     @Binding var navigationPath: NavigationPath
@@ -83,7 +84,7 @@ struct InheritorDetailScreen: View {
             }
             .background(theme.background)
         }
-        .navigationTitle(String(localized: "inheritor_detail_title"))
+        .navigationTitle("inheritor_detail_title")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -128,7 +129,7 @@ struct InheritorDetailScreen: View {
             if let coverUrl = item.coverImage?.previewUrl {
                 HeritageDetailImage(
                     imageUrl: coverUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(height: 220)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -138,7 +139,7 @@ struct InheritorDetailScreen: View {
                 }
             }
 
-            Text(item.name?.isEmpty == false ? item.name! : String(localized: "unnamed_inheritor"))
+            Text(item.name?.isEmpty == false ? item.name! : loc.localized("unnamed_inheritor"))
                 .font(.title)
                 .fontWeight(.bold)
 
@@ -146,7 +147,7 @@ struct InheritorDetailScreen: View {
                 Link(destination: url) {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.up.right.square")
-                        Text(String(localized: "inheritor_open_source"))
+                        Text(loc.localized("inheritor_open_source"))
                     }
                     .font(.caption)
                 }
@@ -157,14 +158,14 @@ struct InheritorDetailScreen: View {
     @ViewBuilder
     private func factsSection(item: InheritorDetailDto) -> some View {
         let facts: [HeritageFact] = [
-            item.gender?.isEmpty == false ? HeritageFact(label: String(localized: "filter_field_gender"), value: item.gender!) : nil,
-            item.birthDateText?.isEmpty == false ? HeritageFact(label: String(localized: "inheritor_birth_date"), value: item.birthDateText!) : nil,
-            item.ethnicity?.isEmpty == false ? HeritageFact(label: String(localized: "inheritor_ethnicity"), value: item.ethnicity!) : nil,
-            item.category?.isEmpty == false ? HeritageFact(label: String(localized: "filter_field_category"), value: item.category!) : nil,
-            item.region?.isEmpty == false ? HeritageFact(label: String(localized: "filter_field_region"), value: item.region!) : nil,
-            item.batch?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_batch"), value: item.batch!) : nil,
-            item.projectCode?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_project_code"), value: item.projectCode!) : nil,
-            item.projectName?.isEmpty == false ? HeritageFact(label: String(localized: "inheritor_project_name"), value: item.projectName!) : nil,
+            item.gender?.isEmpty == false ? HeritageFact(label: loc.localized("filter_field_gender"), value: item.gender!) : nil,
+            item.birthDateText?.isEmpty == false ? HeritageFact(label: loc.localized("inheritor_birth_date"), value: item.birthDateText!) : nil,
+            item.ethnicity?.isEmpty == false ? HeritageFact(label: loc.localized("inheritor_ethnicity"), value: item.ethnicity!) : nil,
+            item.category?.isEmpty == false ? HeritageFact(label: loc.localized("filter_field_category"), value: item.category!) : nil,
+            item.region?.isEmpty == false ? HeritageFact(label: loc.localized("filter_field_region"), value: item.region!) : nil,
+            item.batch?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_batch"), value: item.batch!) : nil,
+            item.projectCode?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_project_code"), value: item.projectCode!) : nil,
+            item.projectName?.isEmpty == false ? HeritageFact(label: loc.localized("inheritor_project_name"), value: item.projectName!) : nil,
         ].compactMap { $0 }
 
         if !facts.isEmpty {
@@ -206,7 +207,7 @@ struct InheritorDetailScreen: View {
                         let previewIdx = offset + item.contentBlocks.prefix(idx).filter { $0.type == .image }.count
                         HeritageDetailImage(
                             imageUrl: imageUrl,
-                            fallbackText: String(localized: "brand_fallback")
+                            fallbackText: loc.localized("brand_fallback")
                         )
                         .frame(height: 200)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -225,7 +226,7 @@ struct InheritorDetailScreen: View {
     private func relatedSection(item: InheritorDetailDto) -> some View {
         if !item.relatedProjects.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "inheritor_related_projects_title"))
+                HeritageSectionHeader(title: loc.localized("inheritor_related_projects_title"))
                 ForEach(Array(item.relatedProjects.enumerated()), id: \.offset) { _, ref in
                     if let title = ref.title {
                         HeritageReferenceCard(
@@ -240,7 +241,7 @@ struct InheritorDetailScreen: View {
 
         if !item.relatedInheritors.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "inheritor_related_inheritors_title"))
+                HeritageSectionHeader(title: loc.localized("inheritor_related_inheritors_title"))
                 ForEach(Array(item.relatedInheritors.enumerated()), id: \.offset) { _, ref in
                     if let title = ref.title {
                         HeritageReferenceCard(

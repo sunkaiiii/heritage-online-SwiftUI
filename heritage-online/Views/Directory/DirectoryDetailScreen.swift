@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DirectoryDetailScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     let itemId: String?
     let sourceId: String?
     let kind: DirectoryItemKind
@@ -91,7 +92,7 @@ struct DirectoryDetailScreen: View {
             }
             .background(theme.background)
         }
-        .navigationTitle(String(localized: "directory_detail_title"))
+        .navigationTitle("directory_detail_title")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -143,7 +144,7 @@ struct DirectoryDetailScreen: View {
             if let coverUrl = item.coverImage?.previewUrl {
                 HeritageDetailImage(
                     imageUrl: coverUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(height: 220)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -153,7 +154,7 @@ struct DirectoryDetailScreen: View {
                 }
             }
 
-            Text(item.title?.isEmpty == false ? item.title! : String(localized: "unnamed_directory_item"))
+            Text(item.title?.isEmpty == false ? item.title! : loc.localized("unnamed_directory_item"))
                 .font(.title)
                 .fontWeight(.bold)
 
@@ -161,7 +162,7 @@ struct DirectoryDetailScreen: View {
                 Link(destination: url) {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.up.right.square")
-                        Text(String(localized: "directory_open_source"))
+                        Text(loc.localized("directory_open_source"))
                     }
                     .font(.caption)
                 }
@@ -172,13 +173,13 @@ struct DirectoryDetailScreen: View {
     @ViewBuilder
     private func factsSection(item: DirectoryItemDetailDto) -> some View {
         let facts: [HeritageFact] = [
-            item.region?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_region"), value: item.region!) : nil,
-            item.projectCode?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_project_code"), value: item.projectCode!) : nil,
-            item.batch?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_batch"), value: item.batch!) : nil,
-            item.publishedYear != nil ? HeritageFact(label: String(localized: "filter_field_year"), value: String(item.publishedYear!)) : nil,
-            item.listType?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_list_type"), value: item.listType!) : nil,
-            item.nominationType?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_nomination_type"), value: item.nominationType!) : nil,
-            item.protectionUnit?.isEmpty == false ? HeritageFact(label: String(localized: "directory_field_protection_unit"), value: item.protectionUnit!) : nil,
+            item.region?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_region"), value: item.region!) : nil,
+            item.projectCode?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_project_code"), value: item.projectCode!) : nil,
+            item.batch?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_batch"), value: item.batch!) : nil,
+            item.publishedYear != nil ? HeritageFact(label: loc.localized("filter_field_year"), value: String(item.publishedYear!)) : nil,
+            item.listType?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_list_type"), value: item.listType!) : nil,
+            item.nominationType?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_nomination_type"), value: item.nominationType!) : nil,
+            item.protectionUnit?.isEmpty == false ? HeritageFact(label: loc.localized("directory_field_protection_unit"), value: item.protectionUnit!) : nil,
         ].compactMap { $0 }
 
         if !facts.isEmpty {
@@ -200,7 +201,7 @@ struct DirectoryDetailScreen: View {
     private func gallerySection(item: DirectoryItemDetailDto) -> some View {
         if !item.gallery.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "directory_gallery_title"))
+                HeritageSectionHeader(title: loc.localized("directory_gallery_title"))
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(Array(item.gallery.enumerated()), id: \.offset) { index, media in
@@ -208,7 +209,7 @@ struct DirectoryDetailScreen: View {
                                 let idx = 1 + index
                                 HeritageDetailImage(
                                     imageUrl: url,
-                                    fallbackText: String(localized: "brand_fallback")
+                                    fallbackText: loc.localized("brand_fallback")
                                 )
                                 .frame(width: 160, height: 120)
                                 .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -248,7 +249,7 @@ struct DirectoryDetailScreen: View {
                         let previewIdx = offset + item.contentBlocks.prefix(idx).filter { $0.type == .image }.count
                         HeritageDetailImage(
                             imageUrl: imageUrl,
-                            fallbackText: String(localized: "brand_fallback")
+                            fallbackText: loc.localized("brand_fallback")
                         )
                         .frame(height: 200)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -267,7 +268,7 @@ struct DirectoryDetailScreen: View {
     private func relatedSection(item: DirectoryItemDetailDto) -> some View {
         if !item.relatedProjects.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "directory_related_projects_title"))
+                HeritageSectionHeader(title: loc.localized("directory_related_projects_title"))
                 ForEach(Array(item.relatedProjects.enumerated()), id: \.offset) { _, ref in
                     if let title = ref.title {
                         HeritageReferenceCard(
@@ -282,7 +283,7 @@ struct DirectoryDetailScreen: View {
 
         if !item.relatedInheritors.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "directory_related_inheritors_title"))
+                HeritageSectionHeader(title: loc.localized("directory_related_inheritors_title"))
                 ForEach(Array(item.relatedInheritors.enumerated()), id: \.offset) { _, ref in
                     if let title = ref.title {
                         HeritageReferenceCard(
@@ -297,7 +298,7 @@ struct DirectoryDetailScreen: View {
 
         if !item.relatedDocuments.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "directory_related_documents_title"))
+                HeritageSectionHeader(title: loc.localized("directory_related_documents_title"))
                 ForEach(Array(item.relatedDocuments.enumerated()), id: \.offset) { _, ref in
                     if let title = ref.title {
                         HeritageReferenceCard(

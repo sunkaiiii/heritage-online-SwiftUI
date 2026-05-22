@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ArticleDetailScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     let articleId: String?
     let sourceId: String?
     let sourceUrl: String?
@@ -91,7 +92,7 @@ struct ArticleDetailScreen: View {
             }
             .background(theme.background)
         }
-        .navigationTitle(String(localized: "article_detail_title"))
+        .navigationTitle("article_detail_title")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -138,7 +139,7 @@ struct ArticleDetailScreen: View {
             if let coverUrl = article.coverImage?.previewUrl {
                 HeritageDetailImage(
                     imageUrl: coverUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(height: 220)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -148,13 +149,13 @@ struct ArticleDetailScreen: View {
                 }
             }
 
-            Text(article.title?.isEmpty == false ? article.title! : String(localized: "unnamed_article"))
+            Text(article.title?.isEmpty == false ? article.title! : loc.localized("unnamed_article"))
                 .font(.title)
                 .fontWeight(.bold)
 
             if let sourceName = article.sourceName, !sourceName.isEmpty {
                 HStack(spacing: 4) {
-                    Text(String(localized: "article_source") + ": ")
+                    Text(loc.localized("article_source") + ": ")
                         .font(.caption)
                     Text(sourceName)
                         .font(.caption)
@@ -173,7 +174,7 @@ struct ArticleDetailScreen: View {
                 Link(destination: url) {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.up.right.square")
-                        Text(String(localized: "article_open_source"))
+                        Text(loc.localized("article_open_source"))
                     }
                     .font(.caption)
                 }
@@ -184,8 +185,8 @@ struct ArticleDetailScreen: View {
     @ViewBuilder
     private func factsSection(article: ArticleDetailDto) -> some View {
         let facts = [
-            article.author?.isEmpty == false ? HeritageFact(label: String(localized: "article_author"), value: article.author!) : nil,
-            article.editor?.isEmpty == false ? HeritageFact(label: String(localized: "article_editor"), value: article.editor!) : nil,
+            article.author?.isEmpty == false ? HeritageFact(label: loc.localized("article_author"), value: article.author!) : nil,
+            article.editor?.isEmpty == false ? HeritageFact(label: loc.localized("article_editor"), value: article.editor!) : nil,
         ].compactMap { $0 }
 
         if !facts.isEmpty {
@@ -227,7 +228,7 @@ struct ArticleDetailScreen: View {
                         let previewIdx = offset + article.contentBlocks.prefix(idx).filter { $0.type == .image }.count
                         HeritageDetailImage(
                             imageUrl: imageUrl,
-                            fallbackText: String(localized: "brand_fallback")
+                            fallbackText: loc.localized("brand_fallback")
                         )
                         .frame(height: 200)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -246,7 +247,7 @@ struct ArticleDetailScreen: View {
     private func relatedArticlesSection(article: ArticleDetailDto) -> some View {
         if !article.relatedArticles.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "article_related_articles_title"))
+                HeritageSectionHeader(title: loc.localized("article_related_articles_title"))
                 ForEach(Array(article.relatedArticles.enumerated()), id: \.offset) { _, reference in
                     if let title = reference.title {
                         HeritageReferenceCard(

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     @Binding var themeMode: AppThemeMode
     @Binding var languageMode: AppLanguageMode
     let onBack: () -> Void
@@ -11,19 +12,19 @@ struct SettingsScreen: View {
         ScrollView {
             VStack(spacing: 20) {
                 HStack {
-                    HeritagePageHeader(title: String(localized: "nav_settings"))
+                    HeritagePageHeader(title: loc.localized("nav_settings"))
                     Spacer()
                 }
                 .padding(.top, 8)
 
                 HeritageContentCard {
                     VStack(alignment: .leading, spacing: 14) {
-                        Text(String(localized: "settings_theme"))
+                        Text(loc.localized("settings_theme"))
                             .font(.title3)
                             .fontWeight(.semibold)
-                        Picker(String(localized: "settings_theme"), selection: $themeMode) {
+                        Picker(loc.localized("settings_theme"), selection: $themeMode) {
                             ForEach(AppThemeMode.allCases, id: \.self) { mode in
-                                Text(mode.label).tag(mode)
+                                Text(loc.localized(mode.labelKey)).tag(mode)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -34,12 +35,12 @@ struct SettingsScreen: View {
 
                 HeritageContentCard {
                     VStack(alignment: .leading, spacing: 14) {
-                        Text(String(localized: "settings_language"))
+                        Text(loc.localized("settings_language"))
                             .font(.title3)
                             .fontWeight(.semibold)
-                        Picker(String(localized: "settings_language"), selection: $languageMode) {
+                        Picker(loc.localized("settings_language"), selection: $languageMode) {
                             ForEach(AppLanguageMode.allCases, id: \.self) { mode in
-                                Text(mode.label).tag(mode)
+                                Text(loc.localized(mode.labelKey)).tag(mode)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -50,7 +51,7 @@ struct SettingsScreen: View {
 
                 HeritageContentCard {
                         VStack(alignment: .leading, spacing: 14) {
-                        Text(String(localized: "nav_my"))
+                        Text(loc.localized("nav_my"))
                             .font(.title3)
                             .fontWeight(.semibold)
 
@@ -58,7 +59,7 @@ struct SettingsScreen: View {
                             onMyPageClick?()
                         } label: {
                             HStack {
-                                Label(String(localized: "my_favorites"), systemImage: "heart")
+                                Label("my_favorites", systemImage: "heart")
                                     .foregroundColor(.primary)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -74,7 +75,7 @@ struct SettingsScreen: View {
                             onMyPageClick?()
                         } label: {
                             HStack {
-                                Label(String(localized: "my_recent"), systemImage: "clock")
+                                Label("my_recent", systemImage: "clock")
                                     .foregroundColor(.primary)
                                 Spacer()
                                 Image(systemName: "chevron.right")
@@ -90,11 +91,11 @@ struct SettingsScreen: View {
 
                 HeritageContentCard {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(String(localized: "settings_about"))
+                        Text(loc.localized("settings_about"))
                             .font(.title3)
                             .fontWeight(.semibold)
                         HStack {
-                            Text(String(localized: "my_about"))
+                            Text(loc.localized("my_about"))
                                 .foregroundColor(.secondary)
                             Spacer()
                             Text("v0.1.0")
@@ -112,13 +113,13 @@ struct SettingsScreen: View {
         .toolbar {
             #if os(iOS)
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(String(localized: "action_back")) {
+                Button("action_back") {
                     onBack()
                 }
             }
             #else
             ToolbarItem(placement: .automatic) {
-                Button(String(localized: "action_back")) {
+                Button("action_back") {
                     onBack()
                 }
             }

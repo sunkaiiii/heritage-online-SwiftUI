@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DirectoryScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = DirectoryViewModel()
     @State private var showFilterSheet = false
@@ -47,8 +48,8 @@ struct DirectoryScreen: View {
     private var headerSection: some View {
         HStack {
             HeritagePageHeader(
-                title: String(localized: "directory_header_title"),
-                subtitle: String(localized: "directory_header_subtitle")
+                title: loc.localized("directory_header_title"),
+                subtitle: loc.localized("directory_header_subtitle")
             )
             Spacer()
             HStack(spacing: 8) {
@@ -103,7 +104,7 @@ struct DirectoryScreen: View {
     private var searchField: some View {
         HeritageSearchField(
             text: $viewModel.searchKeywords,
-            placeholder: String(localized: "directory_search_placeholder")
+            placeholder: loc.localized("directory_search_placeholder")
         )
     }
 
@@ -112,10 +113,10 @@ struct DirectoryScreen: View {
     @ViewBuilder
     private var activeFilterChips: some View {
         let filters: [(String, String)] = [
-            viewModel.regionFilter.isEmpty ? nil : (String(localized: "filter_field_region"), viewModel.regionFilter),
-            viewModel.categoryFilter.isEmpty ? nil : (String(localized: "filter_field_category"), viewModel.categoryFilter),
-            viewModel.yearFilter.isEmpty ? nil : (String(localized: "filter_field_year"), viewModel.yearFilter),
-            viewModel.listTypeFilter.isEmpty ? nil : (String(localized: "directory_field_list_type"), viewModel.listTypeFilter),
+            viewModel.regionFilter.isEmpty ? nil : (loc.localized("filter_field_region"), viewModel.regionFilter),
+            viewModel.categoryFilter.isEmpty ? nil : (loc.localized("filter_field_category"), viewModel.categoryFilter),
+            viewModel.yearFilter.isEmpty ? nil : (loc.localized("filter_field_year"), viewModel.yearFilter),
+            viewModel.listTypeFilter.isEmpty ? nil : (loc.localized("directory_field_list_type"), viewModel.listTypeFilter),
         ].compactMap { $0 }
 
         if !filters.isEmpty {
@@ -125,10 +126,10 @@ struct DirectoryScreen: View {
                         HeritageMetaChip(text: "\(label): \(value)")
                         Button {
                             switch label {
-                            case String(localized: "filter_field_region"): viewModel.regionFilter = ""
-                            case String(localized: "filter_field_category"): viewModel.categoryFilter = ""
-                            case String(localized: "filter_field_year"): viewModel.yearFilter = ""
-                            case String(localized: "directory_field_list_type"): viewModel.listTypeFilter = ""
+                            case loc.localized("filter_field_region"): viewModel.regionFilter = ""
+                            case loc.localized("filter_field_category"): viewModel.categoryFilter = ""
+                            case loc.localized("filter_field_year"): viewModel.yearFilter = ""
+                            case loc.localized("directory_field_list_type"): viewModel.listTypeFilter = ""
                             default: break
                             }
                             Task { await viewModel.loadItems() }
@@ -149,10 +150,10 @@ struct DirectoryScreen: View {
     private var statisticsSection: some View {
         if let stats = viewModel.statistics {
             VStack(alignment: .leading, spacing: 12) {
-                HeritageSectionHeader(title: String(localized: "directory_statistics_title"))
+                HeritageSectionHeader(title: loc.localized("directory_statistics_title"))
                 HeritageContentCard {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("\(String(localized: "directory_statistics_total")): \(stats.total)")
+                        Text("\(loc.localized("directory_statistics_total")): \(stats.total)")
                             .font(.headline)
                             .fontWeight(.bold)
                             .foregroundColor(theme.primary)
@@ -199,7 +200,7 @@ struct DirectoryScreen: View {
                 Task { await viewModel.loadItems() }
             }
         } else if viewModel.items.isEmpty {
-            EmptyContent(message: String(localized: "directory_empty_message")) {
+            EmptyContent(message: loc.localized("directory_empty_message")) {
                 Task { await viewModel.loadItems() }
             }
         } else {
@@ -223,18 +224,18 @@ struct DirectoryScreen: View {
     private var filterSheetView: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(String(localized: "filter_title"))
+                Text(loc.localized("filter_title"))
                     .font(.title2)
                     .fontWeight(.semibold)
                     .padding(.top, 24)
 
-                filterField(label: String(localized: "filter_field_region"), placeholder: String(localized: "filter_placeholder_region"), text: $draftRegionFilter)
-                filterField(label: String(localized: "filter_field_category"), placeholder: String(localized: "directory_field_category"), text: $draftCategoryFilter)
-                filterField(label: String(localized: "filter_field_year"), placeholder: String(localized: "filter_placeholder_year"), text: $draftYearFilter)
-                filterField(label: String(localized: "directory_field_list_type"), placeholder: String(localized: "directory_field_list_type"), text: $draftListTypeFilter)
+                filterField(label: loc.localized("filter_field_region"), placeholder: loc.localized("filter_placeholder_region"), text: $draftRegionFilter)
+                filterField(label: loc.localized("filter_field_category"), placeholder: loc.localized("directory_field_category"), text: $draftCategoryFilter)
+                filterField(label: loc.localized("filter_field_year"), placeholder: loc.localized("filter_placeholder_year"), text: $draftYearFilter)
+                filterField(label: loc.localized("directory_field_list_type"), placeholder: loc.localized("directory_field_list_type"), text: $draftListTypeFilter)
 
                 HStack {
-                    Button(String(localized: "filter_clear")) {
+                    Button("filter_clear") {
                         viewModel.regionFilter = ""
                         viewModel.categoryFilter = ""
                         viewModel.yearFilter = ""
@@ -243,7 +244,7 @@ struct DirectoryScreen: View {
                         Task { await viewModel.loadItems() }
                     }
                     Spacer()
-                    Button(String(localized: "filter_apply")) {
+                    Button("filter_apply") {
                         viewModel.regionFilter = draftRegionFilter
                         viewModel.categoryFilter = draftCategoryFilter
                         viewModel.yearFilter = draftYearFilter
@@ -279,6 +280,7 @@ struct DirectoryScreen: View {
 // MARK: - Directory Item Row
 
 struct DirectoryItemRow: View {
+    @Environment(LocalizationManager.self) private var loc
     let item: DirectoryItemSummaryDto
     let onClick: (() -> Void)?
 
@@ -292,7 +294,7 @@ struct DirectoryItemRow: View {
             image: {
                 HeritageListImage(
                     imageUrl: imageUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(width: 104, height: 82)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
@@ -304,7 +306,7 @@ struct DirectoryItemRow: View {
                         HeritageMetaChip(text: category)
                     }
                 }
-                Text(item.title?.isEmpty == false ? item.title! : String(localized: "unnamed_directory_item"))
+                Text(item.title?.isEmpty == false ? item.title! : loc.localized("unnamed_directory_item"))
                     .font(.headline)
                     .fontWeight(.semibold)
                     .lineLimit(2)

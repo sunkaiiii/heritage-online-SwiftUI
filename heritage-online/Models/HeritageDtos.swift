@@ -47,6 +47,14 @@ enum ArticleCategory: String, Codable, CaseIterable, Hashable {
         case .specialTopic: return String(localized: "category_special_topic")
         }
     }
+
+    var labelKey: String {
+        switch self {
+        case .news: return "category_news"
+        case .forum: return "category_forum"
+        case .specialTopic: return "category_special_topic"
+        }
+    }
 }
 
 enum ArticleContentBlockType: String, Codable, Hashable {
@@ -141,6 +149,17 @@ enum DirectoryItemKind: String, Codable, CaseIterable, Hashable {
         case .unescoEntry: return String(localized: "directory_kind_unesco_entry")
         case .chinaUnescoEntry: return String(localized: "directory_kind_china_unesco_entry")
         case .contractingState: return String(localized: "directory_kind_contracting_state")
+        }
+    }
+
+    var labelKey: String {
+        switch self {
+        case .nationalProject: return "directory_kind_national_project"
+        case .culturalEcoZone: return "directory_kind_cultural_eco_zone"
+        case .productiveProtectionBase: return "directory_kind_productive_protection_base"
+        case .unescoEntry: return "directory_kind_unesco_entry"
+        case .chinaUnescoEntry: return "directory_kind_china_unesco_entry"
+        case .contractingState: return "directory_kind_contracting_state"
         }
     }
 }

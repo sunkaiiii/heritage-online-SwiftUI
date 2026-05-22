@@ -310,7 +310,7 @@ struct LoadingContent: View {
     var body: some View {
         VStack(spacing: 12) {
             ProgressView()
-            Text(String(localized: "content_loading"))
+            Text("content_loading")
                 .font(.body)
                 .foregroundStyle(.secondary)
         }
@@ -326,14 +326,14 @@ struct ErrorContent: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(String(localized: "content_load_failed"))
+            Text("content_load_failed")
                 .font(.headline)
                 .fontWeight(.semibold)
             Text(message)
                 .font(.body)
                 .foregroundStyle(.secondary)
             Button(action: onRetry) {
-                Text(String(localized: "action_retry"))
+                Text("action_retry")
             }
             .buttonStyle(.borderedProminent)
             .padding(.top, 8)
@@ -351,14 +351,14 @@ struct EmptyContent: View {
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(String(localized: "content_empty_title"))
+            Text("content_empty_title")
                 .font(.headline)
                 .fontWeight(.semibold)
             Text(message)
                 .font(.body)
                 .foregroundStyle(.secondary)
             Button(action: onRefresh) {
-                Text(String(localized: "action_refresh"))
+                Text("action_refresh")
             }
             .buttonStyle(.borderedProminent)
             .padding(.top, 8)
@@ -381,7 +381,7 @@ struct InlineRetryMessage: View {
                 .font(.body)
                 .foregroundColor(theme.onPrimaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Button(String(localized: "action_retry")) {
+            Button("action_retry") {
                 onRetry()
             }
             .buttonStyle(.bordered)
@@ -402,11 +402,11 @@ struct StaleContentWarning: View {
 
     var body: some View {
         HStack {
-            Text(String(localized: "content_may_be_stale"))
+            Text("content_may_be_stale")
                 .font(.body)
                 .foregroundColor(theme.onPrimaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Button(String(localized: "action_retry")) {
+            Button("action_retry") {
                 onRetry()
             }
             .buttonStyle(.bordered)

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct InheritorsScreen: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     @Binding var navigationPath: NavigationPath
     @State private var viewModel = InheritorsViewModel()
     @State private var showFilterSheet = false
@@ -39,8 +40,8 @@ struct InheritorsScreen: View {
     private var headerSection: some View {
         HStack {
             HeritagePageHeader(
-                title: String(localized: "inheritors_title"),
-                subtitle: String(localized: "inheritors_subtitle")
+                title: loc.localized("inheritors_title"),
+                subtitle: loc.localized("inheritors_subtitle")
             )
             Spacer()
             HStack(spacing: 8) {
@@ -63,7 +64,7 @@ struct InheritorsScreen: View {
     private var searchField: some View {
         HeritageSearchField(
             text: $viewModel.searchKeywords,
-            placeholder: String(localized: "inheritors_search_placeholder")
+            placeholder: loc.localized("inheritors_search_placeholder")
         )
     }
 
@@ -72,9 +73,9 @@ struct InheritorsScreen: View {
     @ViewBuilder
     private var activeFilterChips: some View {
         let filters: [(String, String)] = [
-            viewModel.regionFilter.isEmpty ? nil : (String(localized: "filter_field_region"), viewModel.regionFilter),
-            viewModel.categoryFilter.isEmpty ? nil : (String(localized: "filter_field_category"), viewModel.categoryFilter),
-            viewModel.yearFilter.isEmpty ? nil : (String(localized: "filter_field_year"), viewModel.yearFilter),
+            viewModel.regionFilter.isEmpty ? nil : (loc.localized("filter_field_region"), viewModel.regionFilter),
+            viewModel.categoryFilter.isEmpty ? nil : (loc.localized("filter_field_category"), viewModel.categoryFilter),
+            viewModel.yearFilter.isEmpty ? nil : (loc.localized("filter_field_year"), viewModel.yearFilter),
         ].compactMap { $0 }
 
         if !filters.isEmpty {
@@ -84,9 +85,9 @@ struct InheritorsScreen: View {
                         HeritageMetaChip(text: "\(label): \(value)")
                         Button {
                             switch label {
-                            case String(localized: "filter_field_region"): viewModel.regionFilter = ""
-                            case String(localized: "filter_field_category"): viewModel.categoryFilter = ""
-                            case String(localized: "filter_field_year"): viewModel.yearFilter = ""
+                            case loc.localized("filter_field_region"): viewModel.regionFilter = ""
+                            case loc.localized("filter_field_category"): viewModel.categoryFilter = ""
+                            case loc.localized("filter_field_year"): viewModel.yearFilter = ""
                             default: break
                             }
                             Task { await viewModel.loadItems() }
@@ -107,7 +108,7 @@ struct InheritorsScreen: View {
     private var genderFilterChip: some View {
         if !viewModel.genderFilter.isEmpty {
             HStack {
-                HeritageMetaChip(text: "\(String(localized: "filter_field_gender")): \(viewModel.genderFilter)")
+                HeritageMetaChip(text: "\(loc.localized("filter_field_gender")): \(viewModel.genderFilter)")
                 Button {
                     viewModel.genderFilter = ""
                     Task { await viewModel.loadItems() }
@@ -131,7 +132,7 @@ struct InheritorsScreen: View {
                 Task { await viewModel.loadItems() }
             }
         } else if viewModel.items.isEmpty {
-            EmptyContent(message: String(localized: "inheritors_empty_message")) {
+            EmptyContent(message: loc.localized("inheritors_empty_message")) {
                 Task { await viewModel.loadItems() }
             }
         } else {
@@ -155,29 +156,29 @@ struct InheritorsScreen: View {
     private var filterSheetView: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text(String(localized: "filter_title"))
+                Text(loc.localized("filter_title"))
                     .font(.title2)
                     .fontWeight(.semibold)
                     .padding(.top, 24)
 
-                filterField(label: String(localized: "filter_field_region"), placeholder: String(localized: "filter_placeholder_region"), text: $draftRegionFilter)
-                filterField(label: String(localized: "filter_field_category"), placeholder: String(localized: "directory_field_category"), text: $draftCategoryFilter)
-                filterField(label: String(localized: "filter_field_year"), placeholder: String(localized: "filter_placeholder_year"), text: $draftYearFilter)
+                filterField(label: loc.localized("filter_field_region"), placeholder: loc.localized("filter_placeholder_region"), text: $draftRegionFilter)
+                filterField(label: loc.localized("filter_field_category"), placeholder: loc.localized("directory_field_category"), text: $draftCategoryFilter)
+                filterField(label: loc.localized("filter_field_year"), placeholder: loc.localized("filter_placeholder_year"), text: $draftYearFilter)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(String(localized: "filter_field_gender"))
+                    Text(loc.localized("filter_field_gender"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Picker("", selection: $draftGenderFilter) {
-                        Text(String(localized: "filter_gender_any")).tag("")
-                        Text(String(localized: "filter_gender_male")).tag("男")
-                        Text(String(localized: "filter_gender_female")).tag("女")
+                        Text(loc.localized("filter_gender_any")).tag("")
+                        Text(loc.localized("filter_gender_male")).tag("男")
+                        Text(loc.localized("filter_gender_female")).tag("女")
                     }
                     .pickerStyle(.segmented)
                 }
 
                 HStack {
-                    Button(String(localized: "filter_clear")) {
+                    Button("filter_clear") {
                         viewModel.regionFilter = ""
                         viewModel.categoryFilter = ""
                         viewModel.yearFilter = ""
@@ -186,7 +187,7 @@ struct InheritorsScreen: View {
                         Task { await viewModel.loadItems() }
                     }
                     Spacer()
-                    Button(String(localized: "filter_apply")) {
+                    Button("filter_apply") {
                         viewModel.regionFilter = draftRegionFilter
                         viewModel.categoryFilter = draftCategoryFilter
                         viewModel.yearFilter = draftYearFilter
@@ -222,6 +223,7 @@ struct InheritorsScreen: View {
 // MARK: - Inheritor Row
 
 struct InheritorRow: View {
+    @Environment(LocalizationManager.self) private var loc
     let inheritor: InheritorSummaryDto
     let onClick: (() -> Void)?
 
@@ -235,13 +237,13 @@ struct InheritorRow: View {
             image: {
                 HeritageListImage(
                     imageUrl: imageUrl,
-                    fallbackText: String(localized: "brand_fallback")
+                    fallbackText: loc.localized("brand_fallback")
                 )
                 .frame(width: 92, height: 92)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
             },
             text: {
-                Text(inheritor.name?.isEmpty == false ? inheritor.name! : String(localized: "unnamed_inheritor"))
+                Text(inheritor.name?.isEmpty == false ? inheritor.name! : loc.localized("unnamed_inheritor"))
                     .font(.headline)
                     .fontWeight(.semibold)
                     .lineLimit(1)

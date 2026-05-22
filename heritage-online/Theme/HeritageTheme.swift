@@ -14,6 +14,14 @@ enum AppThemeMode: String, CaseIterable {
         case .dark: return String(localized: "theme_dark")
         }
     }
+
+    var labelKey: String {
+        switch self {
+        case .system: return "theme_system"
+        case .light: return "theme_light"
+        case .dark: return "theme_dark"
+        }
+    }
 }
 
 // MARK: - App Language Mode
@@ -28,6 +36,14 @@ enum AppLanguageMode: String, CaseIterable {
         case .system: return String(localized: "language_system")
         case .simplifiedChinese: return String(localized: "language_chinese")
         case .english: return String(localized: "language_english")
+        }
+    }
+
+    var labelKey: String {
+        switch self {
+        case .system: return "language_system"
+        case .simplifiedChinese: return "language_chinese"
+        case .english: return "language_english"
         }
     }
 }

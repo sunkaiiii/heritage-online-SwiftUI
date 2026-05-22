@@ -5,11 +5,11 @@ enum HomeTab: String, CaseIterable {
     case directory
     case inheritors
 
-    var label: String {
+    var labelKey: String {
         switch self {
-        case .articles: return String(localized: "nav_articles")
-        case .directory: return String(localized: "nav_directory")
-        case .inheritors: return String(localized: "nav_inheritors")
+        case .articles: return "nav_articles"
+        case .directory: return "nav_directory"
+        case .inheritors: return "nav_inheritors"
         }
     }
 
@@ -24,6 +24,7 @@ enum HomeTab: String, CaseIterable {
 
 struct MainTabView: View {
     @Environment(ThemeManager.self) private var theme
+    @Environment(LocalizationManager.self) private var loc
     @State private var selectedTab: HomeTab = .articles
     @State private var showSettings = false
     @State private var showMyPage = false
@@ -51,19 +52,19 @@ struct MainTabView: View {
                 TabView(selection: $selectedTab) {
                     ArticlesListView(onSettings: { showSettings = true })
                         .tabItem {
-                            Label(HomeTab.articles.label, systemImage: HomeTab.articles.icon)
+                            Label(loc.localized(HomeTab.articles.labelKey), systemImage: HomeTab.articles.icon)
                         }
                         .tag(HomeTab.articles)
 
                     DirectoryListView()
                         .tabItem {
-                            Label(HomeTab.directory.label, systemImage: HomeTab.directory.icon)
+                            Label(loc.localized(HomeTab.directory.labelKey), systemImage: HomeTab.directory.icon)
                         }
                         .tag(HomeTab.directory)
 
                     InheritorsListView()
                         .tabItem {
-                            Label(HomeTab.inheritors.label, systemImage: HomeTab.inheritors.icon)
+                            Label(loc.localized(HomeTab.inheritors.labelKey), systemImage: HomeTab.inheritors.icon)
                         }
                         .tag(HomeTab.inheritors)
                 }
@@ -86,7 +87,7 @@ struct ArticlesListView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ArticlesScreen(navigationPath: $navigationPath, onSettings: onSettings)
-                .navigationTitle(String(localized: "nav_articles"))
+                .navigationTitle("nav_articles")
                 #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
@@ -133,7 +134,7 @@ struct DirectoryListView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             DirectoryScreen(navigationPath: $navigationPath)
-                .navigationTitle(String(localized: "nav_directory"))
+                .navigationTitle("nav_directory")
                 #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
@@ -165,7 +166,7 @@ struct InheritorsListView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             InheritorsScreen(navigationPath: $navigationPath)
-                .navigationTitle(String(localized: "nav_inheritors"))
+                .navigationTitle("nav_inheritors")
                 #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
