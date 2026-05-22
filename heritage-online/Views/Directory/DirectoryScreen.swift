@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DirectoryScreen: View {
+    @Binding var navigationPath: NavigationPath
     @State private var viewModel = DirectoryViewModel()
     @State private var showFilterSheet = false
     @State private var draftRegionFilter = ""
@@ -202,7 +203,9 @@ struct DirectoryScreen: View {
             }
         } else {
             ForEach(viewModel.items) { item in
-                DirectoryItemRow(item: item)
+                DirectoryItemRow(item: item) {
+                        navigationPath.append(DirectoryNavigationDestination.directoryDetail(id: item.id, sourceId: nil, kind: item.kind))
+                    }
                     .padding(.horizontal, 20)
             }
 
@@ -276,6 +279,7 @@ struct DirectoryScreen: View {
 
 struct DirectoryItemRow: View {
     let item: DirectoryItemSummaryDto
+    let onClick: (() -> Void)?
 
     var imageUrl: String? {
         item.coverImage?.previewUrl
@@ -283,6 +287,7 @@ struct DirectoryItemRow: View {
 
     var body: some View {
         HeritageListCard(
+            onClick: onClick,
             image: {
                 HeritageListImage(
                     imageUrl: imageUrl,

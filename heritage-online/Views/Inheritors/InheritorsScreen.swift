@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct InheritorsScreen: View {
+    @Binding var navigationPath: NavigationPath
     @State private var viewModel = InheritorsViewModel()
     @State private var showFilterSheet = false
     @State private var draftRegionFilter = ""
@@ -134,7 +135,9 @@ struct InheritorsScreen: View {
             }
         } else {
             ForEach(viewModel.items) { inheritor in
-                InheritorRow(inheritor: inheritor)
+                InheritorRow(inheritor: inheritor) {
+                        navigationPath.append(InheritorNavigationDestination.inheritorDetail(id: inheritor.id, sourceId: nil))
+                    }
                     .padding(.horizontal, 20)
             }
 
@@ -219,6 +222,7 @@ struct InheritorsScreen: View {
 
 struct InheritorRow: View {
     let inheritor: InheritorSummaryDto
+    let onClick: (() -> Void)?
 
     var imageUrl: String? {
         inheritor.coverImage?.previewUrl
@@ -226,6 +230,7 @@ struct InheritorRow: View {
 
     var body: some View {
         HeritageListCard(
+            onClick: onClick,
             image: {
                 HeritageListImage(
                     imageUrl: imageUrl,

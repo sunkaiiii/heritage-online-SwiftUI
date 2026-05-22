@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ArticlesScreen: View {
+    @Binding var navigationPath: NavigationPath
+    var onSettings: (() -> Void)? = nil
     @State private var viewModel = ArticlesViewModel()
     @State private var showFilterSheet = false
     @State private var draftYearFilter = ""
@@ -175,7 +177,9 @@ struct ArticlesScreen: View {
             }
         } else {
             ForEach(Array(viewModel.articles.enumerated()), id: \.element.id) { index, article in
-                ArticleRow(article: article, prominent: index == 0)
+                ArticleRow(article: article, prominent: index == 0) {
+                    navigationPath.append(ArticleNavigationDestination.articleDetail(id: article.id, sourceId: nil, sourceUrl: article.sourceUrl, category: article.category))
+                }
                     .padding(.horizontal, 20)
                     .onAppear {
                         if index == viewModel.articles.count - 3 {
@@ -275,6 +279,7 @@ struct BannerCard: View {
 struct ArticleRow: View {
     let article: ArticleSummaryDto
     let prominent: Bool
+    let onClick: (() -> Void)?
 
     var imageUrl: String? {
         article.coverImage?.previewUrl
@@ -282,6 +287,7 @@ struct ArticleRow: View {
 
     var body: some View {
         HeritageListCard(
+            onClick: onClick,
             prominent: prominent,
             image: {
                 HeritageListImage(
