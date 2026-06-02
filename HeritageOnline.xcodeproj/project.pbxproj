@@ -44,6 +44,11 @@
 		B2000013 /* ComponentPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* ComponentPreviewView.swift */; };
 		B2000014 /* ContentLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* ContentLabels.swift */; };
 		B2000015 /* LabelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* LabelPreviewView.swift */; };
+		B2000016 /* HeritageHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* HeritageHTTPClient.swift */; };
+		B2000017 /* HeritageQueries.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000017 /* HeritageQueries.swift */; };
+		B2000018 /* HeritageAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000018 /* HeritageAPIClient.swift */; };
+		B2000019 /* KtorHeritageAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000019 /* KtorHeritageAPIClient.swift */; };
+		B200001A /* NetworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001A /* NetworkTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,6 +111,11 @@
 		B1000013 /* ComponentPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentPreviewView.swift; sourceTree = "<group>"; };
 		B1000014 /* ContentLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentLabels.swift; sourceTree = "<group>"; };
 		B1000015 /* LabelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelPreviewView.swift; sourceTree = "<group>"; };
+		B1000016 /* HeritageHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageHTTPClient.swift; sourceTree = "<group>"; };
+		B1000017 /* HeritageQueries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageQueries.swift; sourceTree = "<group>"; };
+		B1000018 /* HeritageAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageAPIClient.swift; sourceTree = "<group>"; };
+		B1000019 /* KtorHeritageAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KtorHeritageAPIClient.swift; sourceTree = "<group>"; };
+		B100001A /* NetworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				A200000E /* HeritageOnlineTests.swift */,
+				B100001A /* NetworkTests.swift */,
 			);
 			path = HeritageOnlineTests;
 			sourceTree = "<group>";
@@ -235,6 +246,10 @@
 			isa = PBXGroup;
 			children = (
 				A2000003 /* APIConfig.swift */,
+				B1000016 /* HeritageHTTPClient.swift */,
+				B1000017 /* HeritageQueries.swift */,
+				B1000018 /* HeritageAPIClient.swift */,
+				B1000019 /* KtorHeritageAPIClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -528,6 +543,10 @@
 				B2000013 /* ComponentPreviewView.swift in Sources */,
 				B2000014 /* ContentLabels.swift in Sources */,
 				B2000015 /* LabelPreviewView.swift in Sources */,
+				B2000016 /* HeritageHTTPClient.swift in Sources */,
+				B2000017 /* HeritageQueries.swift in Sources */,
+				B2000018 /* HeritageAPIClient.swift in Sources */,
+				B2000019 /* KtorHeritageAPIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -536,6 +555,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A100000E /* HeritageOnlineTests.swift in Sources */,
+				B200001A /* NetworkTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
