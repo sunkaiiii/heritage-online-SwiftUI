@@ -12,10 +12,13 @@ final class DTOTests: XCTestCase {
 
     private func loadFixture(name: String) throws -> Data {
         guard let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "json") else {
-            // 如果找不到 bundle，尝试直接从文件系统加载
-            let path = "HeritageOnlineTests/Fixtures/\(name).json"
-            if let data = FileManager.default.contents(atPath: path) {
-                return data
+            // 如果 bundle 资源尚未生成，使用测试文件位置定位 fixture，避免依赖当前工作目录。
+            let fallbackURL = URL(fileURLWithPath: #filePath)
+                .deletingLastPathComponent()
+                .appendingPathComponent("Fixtures")
+                .appendingPathComponent("\(name).json")
+            if FileManager.default.fileExists(atPath: fallbackURL.path) {
+                return try Data(contentsOf: fallbackURL)
             }
             throw NSError(domain: "DTOTests", code: 404, userInfo: [NSLocalizedDescriptionKey: "Fixture \(name).json not found"])
         }
@@ -25,17 +28,8 @@ final class DTOTests: XCTestCase {
     // MARK: - Fixture-based Tests
 
     func testPagedResultFromFixture() throws {
-        let json = """
-        {
-            "items": [{"id": "1", "category": "news", "title": "测试"}],
-            "page": 1,
-            "pageSize": 20,
-            "total": 100,
-            "hasMore": true
-        }
-        """
-
-        let result = try decoder.decode(PagedResultDTO<ArticleSummaryDTO>.self, from: json.data(using: .utf8)!)
+        let data = try loadFixture(name: "PagedResult")
+        let result = try decoder.decode(PagedResultDTO<ArticleSummaryDTO>.self, from: data)
 
         XCTAssertEqual(result.items.count, 1)
         XCTAssertEqual(result.page, 1)
@@ -45,31 +39,8 @@ final class DTOTests: XCTestCase {
     }
 
     func testArticleDetailFromFixture() throws {
-        let json = """
-        {
-            "id": "1",
-            "category": "news",
-            "title": "测试文章详情",
-            "summary": "这是一篇测试文章的摘要",
-            "publishedAt": "2024-01-15",
-            "coverImage": {
-                "sourceUrl": "https://example.com/image.jpg",
-                "displayUrl": "https://example.com/image_display.jpg"
-            },
-            "sourceName": "测试来源",
-            "author": "测试作者",
-            "contentBlocks": [
-                {"type": "heading", "text": "第一章"},
-                {"type": "text", "text": "正文内容"},
-                {"type": "image", "image": {"sourceUrl": "https://example.com/content_image.jpg"}}
-            ],
-            "relatedArticles": [
-                {"title": "相关文章", "sourceId": "related-1"}
-            ]
-        }
-        """
-
-        let result = try decoder.decode(ArticleDetailDTO.self, from: json.data(using: .utf8)!)
+        let data = try loadFixture(name: "ArticleDetail")
+        let result = try decoder.decode(ArticleDetailDTO.self, from: data)
 
         XCTAssertEqual(result.id, "1")
         XCTAssertEqual(result.title, "测试文章详情")
@@ -82,23 +53,8 @@ final class DTOTests: XCTestCase {
     }
 
     func testHomeFeedFromFixture() throws {
-        let json = """
-        {
-            "banners": [{"id": "banner-1", "sortOrder": 1}],
-            "latestNews": [{"id": "news-1", "category": "news", "title": "最新新闻"}],
-            "latestSpecialTopics": [{"id": "special-1", "category": "specialTopic", "title": "专题文章"}],
-            "latestForumArticles": [{"id": "forum-1", "category": "forum", "title": "论坛文章"}],
-            "featuredDirectoryItems": [{"id": "dir-1", "kind": "nationalProject", "title": "国家级项目"}],
-            "featuredInheritors": [{"id": "inheritor-1", "name": "传承人姓名"}],
-            "summary": {
-                "totalArticles": 1000,
-                "totalDirectoryItems": 500,
-                "totalInheritors": 200
-            }
-        }
-        """
-
-        let result = try decoder.decode(HomeFeedDTO.self, from: json.data(using: .utf8)!)
+        let data = try loadFixture(name: "HomeFeed")
+        let result = try decoder.decode(HomeFeedDTO.self, from: data)
 
         XCTAssertEqual(result.banners.count, 1)
         XCTAssertEqual(result.latestNews.count, 1)
@@ -108,6 +64,57 @@ final class DTOTests: XCTestCase {
         XCTAssertEqual(result.featuredInheritors.count, 1)
         XCTAssertNotNil(result.summary)
         XCTAssertEqual(result.summary?.totalArticles, 1000)
+    }
+
+    func testSearchV2ResponseTotalCountFallback() throws {
+        let json = """
+        {
+            "items": [],
+            "totalCount": 42,
+            "page": 1,
+            "pageSize": 20,
+            "hasMore": true
+        }
+        """
+
+        let result = try decoder.decode(SearchV2ResponseDTO.self, from: json.data(using: .utf8)!)
+
+        XCTAssertEqual(result.total, 42)
+        XCTAssertTrue(result.hasMore)
+    }
+
+    func testTimelineV2ResponseTotalCountFallback() throws {
+        let json = """
+        {
+            "items": [],
+            "totalCount": 12,
+            "page": 1,
+            "pageSize": 20,
+            "hasMore": false
+        }
+        """
+
+        let result = try decoder.decode(TimelineV2ResponseDTO.self, from: json.data(using: .utf8)!)
+
+        XCTAssertEqual(result.total, 12)
+        XCTAssertFalse(result.hasMore)
+    }
+
+    func testTimelineYearBucketTotalCountFallback() throws {
+        let json = """
+        {
+            "year": 2024,
+            "totalCount": 7,
+            "articleCount": 2,
+            "directoryItemCount": 3,
+            "inheritorCount": 2
+        }
+        """
+
+        let result = try decoder.decode(TimelineYearBucketDTO.self, from: json.data(using: .utf8)!)
+
+        XCTAssertEqual(result.year, 2024)
+        XCTAssertEqual(result.total, 7)
     }
 
     // MARK: - Common DTOs Tests
@@ -542,7 +549,8 @@ final class DTOTests: XCTestCase {
 
         let gallery = [
             MediaAssetDTO(sourceUrl: nil, originalUrl: "https://example.com/gallery1.jpg", displayUrl: nil, thumbnailUrl: nil, altText: nil),
-            MediaAssetDTO(sourceUrl: nil, originalUrl: "https://example.com/gallery2.jpg", displayUrl: nil, thumbnailUrl: nil, altText: nil)
+            MediaAssetDTO(sourceUrl: nil, originalUrl: "https://example.com/gallery2.jpg", displayUrl: nil, thumbnailUrl: nil, altText: nil),
+            MediaAssetDTO(sourceUrl: nil, originalUrl: "https://example.com/gallery1.jpg", displayUrl: nil, thumbnailUrl: nil, altText: nil)
         ]
 
         let contentBlocks = [
@@ -552,11 +560,12 @@ final class DTOTests: XCTestCase {
 
         let urls = ImagePreviewUrl.collect(coverImage: coverImage, gallery: gallery, contentBlocks: contentBlocks)
 
-        XCTAssertEqual(urls.count, 4) // cover + 2 gallery + 1 content image
-        XCTAssertTrue(urls.contains("https://example.com/cover.jpg"))
-        XCTAssertTrue(urls.contains("https://example.com/gallery1.jpg"))
-        XCTAssertTrue(urls.contains("https://example.com/gallery2.jpg"))
-        XCTAssertTrue(urls.contains("https://example.com/content.jpg"))
+        XCTAssertEqual(urls, [
+            "https://example.com/cover.jpg",
+            "https://example.com/gallery1.jpg",
+            "https://example.com/gallery2.jpg",
+            "https://example.com/content.jpg"
+        ])
     }
 
     func testImagePreviewUrlNilAsset() throws {

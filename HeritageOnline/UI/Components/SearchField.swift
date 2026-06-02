@@ -5,16 +5,16 @@ struct SearchField: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
     @Binding var text: String
-    let placeholder: String
+    let placeholderKey: LocalizedStringKey
     let onSubmit: (() -> Void)?
 
     init(
         text: Binding<String>,
-        placeholder: String = String(localized: "nav.search"),
+        placeholder: LocalizedStringKey = "nav.search",
         onSubmit: (() -> Void)? = nil
     ) {
         self._text = text
-        self.placeholder = placeholder
+        self.placeholderKey = placeholder
         self.onSubmit = onSubmit
     }
 
@@ -24,7 +24,7 @@ struct SearchField: View {
                 .font(.system(size: 16))
                 .foregroundStyle(colorScheme.onSurfaceVariant)
 
-            TextField(placeholder, text: $text)
+            TextField(placeholderKey, text: $text)
                 .font(HeritageTypography.bodyMedium)
                 .foregroundStyle(colorScheme.onSurface)
                 .textFieldStyle(.plain)

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// 语言模式
 enum LanguageMode: String, CaseIterable, Identifiable {
@@ -11,15 +12,14 @@ enum LanguageMode: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// 本地化显示名称
-    var displayName: String {
+    var localizationKey: LocalizedStringKey {
         switch self {
         case .system:
-            return String(localized: "settings.language.system")
+            return "settings.language.system"
         case .zhHans:
-            return "简体中文"
+            return "settings.language.zhHans"
         case .en:
-            return "English"
+            return "settings.language.en"
         }
     }
 

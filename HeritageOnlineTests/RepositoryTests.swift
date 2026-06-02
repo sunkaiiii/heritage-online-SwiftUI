@@ -111,15 +111,15 @@ final class RepositoryTests: XCTestCase {
         // 配置返回结果
         let expectedArticle = ArticleSummaryDTO(
             id: "test-id",
+            category: "news",
             title: "测试文章",
             summary: "测试摘要",
-            category: "news",
-            imageUrl: nil,
             publishedAt: nil,
+            coverImage: nil,
             sourceUrl: nil
         )
         mock.articlesResult = .success(
-            PagedResultDTO(items: [expectedArticle], page: 1, pageSize: 20, totalCount: 1, hasMore: false)
+            PagedResultDTO(items: [expectedArticle], page: 1, pageSize: 20, total: 1, hasMore: false)
         )
 
         // 调用并验证
@@ -151,42 +151,62 @@ final class RepositoryTests: XCTestCase {
 
         // 测试：当有 articleId 时，应该使用 articleId
         let lookup1 = ArticleDetailLookup(articleId: "article-1", sourceId: "source-1")
-        XCTAssertEqual(lookup1.articleId, "article-1")
-        XCTAssertEqual(lookup1.sourceId, "source-1")
+        _ = try await mock.article(lookup: lookup1)
+        XCTAssertEqual(mock.articleLookupCallCount, 1)
+        XCTAssertEqual(mock.articleCallCount, 1)
+        XCTAssertEqual(mock.articleBySourceIdCallCount, 0)
+        XCTAssertEqual(mock.articleBySourceUrlCallCount, 0)
 
         // 测试：当没有 articleId 但有 sourceId 时，应该使用 sourceId
         let lookup2 = ArticleDetailLookup(sourceId: "source-1")
-        XCTAssertNil(lookup2.articleId)
-        XCTAssertEqual(lookup2.sourceId, "source-1")
+        _ = try await mock.article(lookup: lookup2)
+        XCTAssertEqual(mock.articleLookupCallCount, 2)
+        XCTAssertEqual(mock.articleCallCount, 1)
+        XCTAssertEqual(mock.articleBySourceIdCallCount, 1)
+        XCTAssertEqual(mock.articleBySourceUrlCallCount, 0)
 
         // 测试：当只有 sourceUrl 时，应该使用 sourceUrl
         let lookup3 = ArticleDetailLookup(sourceUrl: "https://example.com")
-        XCTAssertNil(lookup3.articleId)
-        XCTAssertNil(lookup3.sourceId)
-        XCTAssertEqual(lookup3.sourceUrl, "https://example.com")
+        _ = try await mock.article(lookup: lookup3)
+        XCTAssertEqual(mock.articleLookupCallCount, 3)
+        XCTAssertEqual(mock.articleCallCount, 1)
+        XCTAssertEqual(mock.articleBySourceIdCallCount, 1)
+        XCTAssertEqual(mock.articleBySourceUrlCallCount, 1)
     }
 
     func testDirectoryDetailLookupPriority() async throws {
+        let mock = MockHeritageRepository()
+
         // 测试：当有 itemId 时，应该使用 itemId
         let lookup1 = DirectoryDetailLookup(itemId: "dir-1", sourceId: "source-1")
-        XCTAssertEqual(lookup1.itemId, "dir-1")
-        XCTAssertEqual(lookup1.sourceId, "source-1")
+        _ = try await mock.directoryItem(lookup: lookup1)
+        XCTAssertEqual(mock.directoryItemLookupCallCount, 1)
+        XCTAssertEqual(mock.directoryItemCallCount, 1)
+        XCTAssertEqual(mock.directoryItemBySourceIdCallCount, 0)
 
         // 测试：当没有 itemId 但有 sourceId 时，应该使用 sourceId
         let lookup2 = DirectoryDetailLookup(sourceId: "source-1")
-        XCTAssertNil(lookup2.itemId)
-        XCTAssertEqual(lookup2.sourceId, "source-1")
+        _ = try await mock.directoryItem(lookup: lookup2)
+        XCTAssertEqual(mock.directoryItemLookupCallCount, 2)
+        XCTAssertEqual(mock.directoryItemCallCount, 1)
+        XCTAssertEqual(mock.directoryItemBySourceIdCallCount, 1)
     }
 
     func testInheritorDetailLookupPriority() async throws {
+        let mock = MockHeritageRepository()
+
         // 测试：当有 inheritorId 时，应该使用 inheritorId
         let lookup1 = InheritorDetailLookup(inheritorId: "inheritor-1", sourceId: "source-1")
-        XCTAssertEqual(lookup1.inheritorId, "inheritor-1")
-        XCTAssertEqual(lookup1.sourceId, "source-1")
+        _ = try await mock.inheritor(lookup: lookup1)
+        XCTAssertEqual(mock.inheritorLookupCallCount, 1)
+        XCTAssertEqual(mock.inheritorCallCount, 1)
+        XCTAssertEqual(mock.inheritorBySourceIdCallCount, 0)
 
         // 测试：当没有 inheritorId 但有 sourceId 时，应该使用 sourceId
         let lookup2 = InheritorDetailLookup(sourceId: "source-1")
-        XCTAssertNil(lookup2.inheritorId)
-        XCTAssertEqual(lookup2.sourceId, "source-1")
+        _ = try await mock.inheritor(lookup: lookup2)
+        XCTAssertEqual(mock.inheritorLookupCallCount, 2)
+        XCTAssertEqual(mock.inheritorCallCount, 1)
+        XCTAssertEqual(mock.inheritorBySourceIdCallCount, 1)
     }
 }

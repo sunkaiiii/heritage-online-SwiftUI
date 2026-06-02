@@ -124,7 +124,7 @@ struct ArticlesTab: View {
 
     var body: some View {
         NavigationStack {
-            ArticlesListView(onSettingsSelected: onSettingsSelected)
+            ArticlesView(onSettingsSelected: onSettingsSelected)
         }
     }
 }
@@ -190,51 +190,6 @@ struct PlaceholderDetailView: View {
     }
 }
 
-/// 文章列表占位页
-struct ArticlesListView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-    let onSettingsSelected: () -> Void
-
-    var body: some View {
-        PageBackground {
-            VStack {
-                PageHeader(
-                    titleKey: "app.name",
-                    subtitleKey: "page.articles.subtitle",
-                    actions: [
-                        .init(icon: "gear", accessibilityLabelKey: "nav.settings") { onSettingsSelected() },
-                        .init(icon: "arrow.clockwise", accessibilityLabelKey: "action.refresh") { /* 刷新 */ }
-                    ]
-                )
-
-                Spacer()
-
-                Text("page.articles")
-                    .font(HeritageTypography.headlineLarge)
-                    .foregroundStyle(colorScheme.onBackground)
-
-                Text("page.articles.placeholder")
-                    .font(HeritageTypography.bodyMedium)
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
-                    .padding(.top, 8)
-
-                // 占位详情页按钮（用于 Step 7 验收）
-                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.article.detail")) {
-                    Text("action.viewDetail")
-                        .font(HeritageTypography.labelLarge)
-                        .foregroundStyle(colorScheme.primary)
-                        .padding(.top, 16)
-                }
-
-                Spacer()
-            }
-        }
-        .navigationTitle("tab.articles")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
-    }
-}
 
 /// 名录列表占位页
 struct DirectoryListView: View {

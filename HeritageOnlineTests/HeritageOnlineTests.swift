@@ -23,15 +23,14 @@ final class HeritageOnlineTests: XCTestCase {
     }
 
     func testAPIConfigURLConstruction() throws {
-        let config = APIConfig.shared
-        let url = config.url(for: "api/articles", queryItems: [
+        let client = HeritageHTTPClient.shared
+        let url = try client.buildURL(path: "api/articles", queryItems: [
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "pageSize", value: "20")
         ])
-        XCTAssertNotNil(url)
-        XCTAssertTrue(url!.absoluteString.contains("api/articles"))
-        XCTAssertTrue(url!.absoluteString.contains("page=1"))
-        XCTAssertTrue(url!.absoluteString.contains("pageSize=20"))
+        XCTAssertTrue(url.absoluteString.contains("api/articles"))
+        XCTAssertTrue(url.absoluteString.contains("page=1"))
+        XCTAssertTrue(url.absoluteString.contains("pageSize=20"))
     }
 
     // MARK: - ThemeMode Tests
@@ -43,10 +42,10 @@ final class HeritageOnlineTests: XCTestCase {
         XCTAssertTrue(ThemeMode.allCases.contains(.dark))
     }
 
-    func testThemeModeDisplayName() throws {
-        XCTAssertFalse(ThemeMode.system.displayName.isEmpty)
-        XCTAssertFalse(ThemeMode.light.displayName.isEmpty)
-        XCTAssertFalse(ThemeMode.dark.displayName.isEmpty)
+    func testThemeModeLocalizationKey() throws {
+        XCTAssertEqual(ThemeMode.system.id, "system")
+        XCTAssertEqual(ThemeMode.light.id, "light")
+        XCTAssertEqual(ThemeMode.dark.id, "dark")
     }
 
     // MARK: - LanguageMode Tests

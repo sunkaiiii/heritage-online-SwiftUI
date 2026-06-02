@@ -25,7 +25,7 @@ struct HeritageAsyncImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.contentMode = contentMode
         self.onTap = onTap
     }
@@ -39,7 +39,7 @@ struct HeritageAsyncImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = ImagePreviewUrl.listUrl(from: asset)
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.contentMode = contentMode
         self.onTap = onTap
     }
@@ -135,7 +135,7 @@ struct HeritageListImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.width = width
         self.height = height
         self.onTap = onTap
@@ -150,7 +150,7 @@ struct HeritageListImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = ImagePreviewUrl.listUrl(from: asset)
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.width = width
         self.height = height
         self.onTap = onTap
@@ -193,7 +193,7 @@ struct HeritageDetailImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.contentMode = contentMode
         self.onTap = onTap
     }
@@ -206,7 +206,7 @@ struct HeritageDetailImage: View {
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = ImagePreviewUrl.previewUrl(from: asset)
-        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.placeholderText = placeholderText ?? "E"
         self.contentMode = contentMode
         self.onTap = onTap
     }

@@ -9,6 +9,20 @@ struct MediaAssetDTO: Codable, Sendable {
     let thumbnailUrl: String?
     let altText: String?
 
+    init(
+        sourceUrl: String?,
+        originalUrl: String?,
+        displayUrl: String?,
+        thumbnailUrl: String?,
+        altText: String?
+    ) {
+        self.sourceUrl = sourceUrl
+        self.originalUrl = originalUrl
+        self.displayUrl = displayUrl
+        self.thumbnailUrl = thumbnailUrl
+        self.altText = altText
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         sourceUrl = try container.decodeIfPresent(String.self, forKey: .sourceUrl)

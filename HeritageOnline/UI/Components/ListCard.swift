@@ -60,7 +60,7 @@ struct ListCard: View {
                     Text(subtitle)
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(colorScheme.onSurfaceVariant)
-                        .lineLimit(2)
+                        .lineLimit(3)
                 }
 
                 if let date {

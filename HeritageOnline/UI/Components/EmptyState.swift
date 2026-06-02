@@ -5,13 +5,13 @@ struct EmptyState: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
     let icon: String
-    let title: String
-    let message: String?
+    let titleKey: LocalizedStringKey
+    let messageKey: LocalizedStringKey?
 
-    init(icon: String = "tray", title: String = String(localized: "empty.noContent"), message: String? = nil) {
+    init(icon: String = "tray", title: LocalizedStringKey = "empty.noContent", message: LocalizedStringKey? = nil) {
         self.icon = icon
-        self.title = title
-        self.message = message
+        self.titleKey = title
+        self.messageKey = message
     }
 
     var body: some View {
@@ -20,12 +20,12 @@ struct EmptyState: View {
                 .font(.system(size: 48))
                 .foregroundStyle(colorScheme.onSurfaceVariant)
 
-            Text(title)
+            Text(titleKey)
                 .font(HeritageTypography.titleMedium)
                 .foregroundStyle(colorScheme.onSurface)
 
-            if let message {
-                Text(message)
+            if let messageKey {
+                Text(messageKey)
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .multilineTextAlignment(.center)

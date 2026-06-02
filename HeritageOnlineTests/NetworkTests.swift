@@ -60,6 +60,22 @@ final class NetworkTests: XCTestCase {
         XCTAssertFalse(url4.absoluteString.contains("keywords"))
     }
 
+    func testBuildURLWithPathSegmentsEncodesDynamicSegmentsOnce() throws {
+        let client = HeritageHTTPClient.shared
+
+        let slashURL = try client.buildURL(pathSegments: ["api", "articles", "a/b"])
+        XCTAssertTrue(slashURL.absoluteString.contains("/api/articles/a%2Fb"))
+        XCTAssertFalse(slashURL.absoluteString.contains("%252F"))
+
+        let chineseURL = try client.buildURL(pathSegments: ["api", "articles", "北京市 非遗"])
+        XCTAssertTrue(chineseURL.absoluteString.contains("%E5%8C%97%E4%BA%AC%E5%B8%82%20%E9%9D%9E%E9%81%97"))
+        XCTAssertFalse(chineseURL.absoluteString.contains("%25E5"))
+
+        let specialURL = try client.buildURL(pathSegments: ["api", "articles", "x?y#z"])
+        XCTAssertTrue(specialURL.absoluteString.contains("/api/articles/x%3Fy%23z"))
+        XCTAssertFalse(specialURL.absoluteString.contains("%253F"))
+    }
+
     // MARK: - QueryBuilder Tests
 
     func testQueryBuilder() throws {

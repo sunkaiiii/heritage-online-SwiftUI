@@ -3,8 +3,7 @@ import Foundation
 
 /// Mock Heritage Repository
 /// 用于单元测试，可以替换真实实现
-@unchecked Sendable
-final class MockHeritageRepository: HeritageRepository {
+final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
     // MARK: - Mock 数据
 
     var homeBannersResult: Result<[HomeBannerDTO], Error> = .success([])
@@ -175,11 +174,11 @@ final class MockHeritageRepository: HeritageRepository {
         lastArticleLookup = lookup
         // 模拟优先级逻辑
         if let articleId = lookup.articleId, !articleId.isEmpty {
-            return try article(id: articleId)
+            return try await article(id: articleId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try articleBySourceId(sourceId: sourceId, category: lookup.category)
+            return try await articleBySourceId(sourceId: sourceId, category: lookup.category)
         } else if let sourceUrl = lookup.sourceUrl, !sourceUrl.isEmpty {
-            return try articleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
+            return try await articleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
         } else {
             throw NetworkError.badRequest
         }
@@ -209,9 +208,9 @@ final class MockHeritageRepository: HeritageRepository {
         lastDirectoryLookup = lookup
         // 模拟优先级逻辑
         if let itemId = lookup.itemId, !itemId.isEmpty {
-            return try directoryItem(id: itemId)
+            return try await directoryItem(id: itemId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try directoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
+            return try await directoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
         } else {
             throw NetworkError.badRequest
         }
@@ -241,9 +240,9 @@ final class MockHeritageRepository: HeritageRepository {
         lastInheritorLookup = lookup
         // 模拟优先级逻辑
         if let inheritorId = lookup.inheritorId, !inheritorId.isEmpty {
-            return try inheritor(id: inheritorId)
+            return try await inheritor(id: inheritorId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try inheritorBySourceId(sourceId: sourceId)
+            return try await inheritorBySourceId(sourceId: sourceId)
         } else {
             throw NetworkError.badRequest
         }

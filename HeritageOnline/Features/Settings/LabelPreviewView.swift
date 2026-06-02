@@ -15,7 +15,7 @@ struct LabelPreviewView: View {
                 section("语言切换") {
                     Picker("语言", selection: $settings.languageMode) {
                         ForEach(LanguageMode.allCases) { mode in
-                            Text(mode.displayName).tag(mode)
+                            Text(mode.localizationKey).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -24,72 +24,72 @@ struct LabelPreviewView: View {
                 // MARK: - 内容类型
                 section("内容类型 (contentType)") {
                     labelTable([
-                        ("article", ContentLabels.localizedContentType("article")),
-                        ("directoryItem", ContentLabels.localizedContentType("directoryItem")),
-                        ("inheritor", ContentLabels.localizedContentType("inheritor")),
-                        ("collection", ContentLabels.localizedContentType("collection")),
-                        ("topic", ContentLabels.localizedContentType("topic")),
-                        ("(未知值)", ContentLabels.localizedContentType("unknownType")),
+                        ("article", ContentLabels.contentTypeKey("article")),
+                        ("directoryItem", ContentLabels.contentTypeKey("directoryItem")),
+                        ("inheritor", ContentLabels.contentTypeKey("inheritor")),
+                        ("collection", ContentLabels.contentTypeKey("collection")),
+                        ("topic", ContentLabels.contentTypeKey("topic")),
+                        ("(未知值)", ContentLabels.contentTypeKey("unknownType")),
                     ])
                 }
 
                 // MARK: - 文章分类
                 section("文章分类 (articleCategory)") {
                     labelTable([
-                        ("news", ContentLabels.localizedArticleCategory("news") ?? ""),
-                        ("forum", ContentLabels.localizedArticleCategory("forum") ?? ""),
-                        ("specialTopic", ContentLabels.localizedArticleCategory("specialTopic") ?? ""),
-                        ("(空值)", ContentLabels.localizedArticleCategory(nil) ?? "(nil)"),
-                        ("(未知值)", ContentLabels.localizedArticleCategory("unknown") ?? ""),
+                        ("news", ContentLabels.articleCategoryKey("news") ?? ""),
+                        ("forum", ContentLabels.articleCategoryKey("forum") ?? ""),
+                        ("specialTopic", ContentLabels.articleCategoryKey("specialTopic") ?? ""),
+                        ("(空值)", ContentLabels.articleCategoryKey(nil) ?? "(nil)"),
+                        ("(未知值)", ContentLabels.articleCategoryKey("unknown") ?? ""),
                     ])
                 }
 
                 // MARK: - 名录种类
                 section("名录种类 (directoryKind)") {
                     labelTable([
-                        ("nationalProject", ContentLabels.localizedDirectoryKind("nationalProject") ?? ""),
-                        ("culturalEcoZone", ContentLabels.localizedDirectoryKind("culturalEcoZone") ?? ""),
-                        ("productiveProtectionBase", ContentLabels.localizedDirectoryKind("productiveProtectionBase") ?? ""),
-                        ("unescoEntry", ContentLabels.localizedDirectoryKind("unescoEntry") ?? ""),
-                        ("chinaUnescoEntry", ContentLabels.localizedDirectoryKind("chinaUnescoEntry") ?? ""),
-                        ("contractingState", ContentLabels.localizedDirectoryKind("contractingState") ?? ""),
-                        ("(空值)", ContentLabels.localizedDirectoryKind(nil) ?? "(nil)"),
-                        ("(未知值)", ContentLabels.localizedDirectoryKind("unknown") ?? ""),
+                        ("nationalProject", ContentLabels.directoryKindKey("nationalProject") ?? ""),
+                        ("culturalEcoZone", ContentLabels.directoryKindKey("culturalEcoZone") ?? ""),
+                        ("productiveProtectionBase", ContentLabels.directoryKindKey("productiveProtectionBase") ?? ""),
+                        ("unescoEntry", ContentLabels.directoryKindKey("unescoEntry") ?? ""),
+                        ("chinaUnescoEntry", ContentLabels.directoryKindKey("chinaUnescoEntry") ?? ""),
+                        ("contractingState", ContentLabels.directoryKindKey("contractingState") ?? ""),
+                        ("(空值)", ContentLabels.directoryKindKey(nil) ?? "(nil)"),
+                        ("(未知值)", ContentLabels.directoryKindKey("unknown") ?? ""),
                     ])
                 }
 
                 // MARK: - 阅读路径来源
                 section("阅读路径来源 (readingPathSource)") {
                     labelTable([
-                        ("blendedRecommendation", ContentLabels.localizedReadingPathSource("blendedRecommendation")),
-                        ("related", ContentLabels.localizedReadingPathSource("related")),
-                        ("recommendation", ContentLabels.localizedReadingPathSource("recommendation")),
-                        ("semanticRecommendation", ContentLabels.localizedReadingPathSource("semanticRecommendation")),
-                        ("graph", ContentLabels.localizedReadingPathSource("graph")),
-                        ("list", ContentLabels.localizedReadingPathSource("list")),
-                        ("(未知值)", ContentLabels.localizedReadingPathSource("unknown")),
+                        ("blendedRecommendation", ContentLabels.readingPathSourceKey("blendedRecommendation")),
+                        ("related", ContentLabels.readingPathSourceKey("related")),
+                        ("recommendation", ContentLabels.readingPathSourceKey("recommendation")),
+                        ("semanticRecommendation", ContentLabels.readingPathSourceKey("semanticRecommendation")),
+                        ("graph", ContentLabels.readingPathSourceKey("graph")),
+                        ("list", ContentLabels.readingPathSourceKey("list")),
+                        ("(未知值)", ContentLabels.readingPathSourceKey("unknown")),
                     ])
                 }
 
                 // MARK: - 搜索结果类型
                 section("搜索结果类型 (searchResultType)") {
                     labelTable([
-                        ("article", ContentLabels.localizedSearchResultType("article") ?? ""),
-                        ("directoryItem", ContentLabels.localizedSearchResultType("directoryItem") ?? ""),
-                        ("inheritor", ContentLabels.localizedSearchResultType("inheritor") ?? ""),
-                        ("(空值)", ContentLabels.localizedSearchResultType(nil) ?? "(nil)"),
+                        ("article", ContentLabels.searchResultTypeKey("article") ?? ""),
+                        ("directoryItem", ContentLabels.searchResultTypeKey("directoryItem") ?? ""),
+                        ("inheritor", ContentLabels.searchResultTypeKey("inheritor") ?? ""),
+                        ("(空值)", ContentLabels.searchResultTypeKey(nil) ?? "(nil)"),
                     ])
                 }
 
                 // MARK: - 发现类型
                 section("发现类型 (discoveryType)") {
                     labelTable([
-                        ("today", ContentLabels.localizedDiscoveryType("today") ?? ""),
-                        ("trending", ContentLabels.localizedDiscoveryType("trending") ?? ""),
-                        ("weekly", ContentLabels.localizedDiscoveryType("weekly") ?? ""),
-                        ("serendipity", ContentLabels.localizedDiscoveryType("serendipity") ?? ""),
-                        ("deepDive", ContentLabels.localizedDiscoveryType("deepDive") ?? ""),
-                        ("(未知值)", ContentLabels.localizedDiscoveryType("unknown") ?? ""),
+                        ("today", ContentLabels.discoveryTypeKey("today") ?? ""),
+                        ("trending", ContentLabels.discoveryTypeKey("trending") ?? ""),
+                        ("weekly", ContentLabels.discoveryTypeKey("weekly") ?? ""),
+                        ("serendipity", ContentLabels.discoveryTypeKey("serendipity") ?? ""),
+                        ("deepDive", ContentLabels.discoveryTypeKey("deepDive") ?? ""),
+                        ("(未知值)", ContentLabels.discoveryTypeKey("unknown") ?? ""),
                     ])
                 }
             }
@@ -108,7 +108,7 @@ struct LabelPreviewView: View {
         }
     }
 
-    private func labelTable(_ items: [(wireValue: String, displayValue: String)]) -> some View {
+    private func labelTable(_ items: [(wireValue: String, displayKey: String)]) -> some View {
         ContentCard {
             VStack(alignment: .leading, spacing: 8) {
                 ForEach(items, id: \.wireValue) { item in
@@ -118,7 +118,7 @@ struct LabelPreviewView: View {
                             .foregroundStyle(colorScheme.primary)
                             .frame(width: 140, alignment: .leading)
 
-                        Text(item.displayValue)
+                        Text(LocalizedStringKey(item.displayKey))
                             .font(HeritageTypography.bodyMedium)
                             .foregroundStyle(colorScheme.onSurface)
 

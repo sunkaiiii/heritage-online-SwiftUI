@@ -17,7 +17,7 @@ struct ThemePreviewView: View {
                 section("主题切换") {
                     Picker("主题", selection: $settings.themeMode) {
                         ForEach(ThemeMode.allCases) { mode in
-                            Text(mode.displayName).tag(mode)
+                            Text(mode.localizationKey).tag(mode)
                         }
                     }
                     .pickerStyle(.segmented)

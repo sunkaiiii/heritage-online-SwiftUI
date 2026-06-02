@@ -25,7 +25,7 @@ struct SettingsView: View {
                                 .foregroundStyle(colorScheme.onBackground)
                         }
 
-                        Text(String(localized: "page.settings"))
+                        Text("page.settings")
                             .font(HeritageTypography.headlineLarge)
                             .foregroundStyle(colorScheme.onBackground)
 
@@ -36,12 +36,12 @@ struct SettingsView: View {
 
                     // 外观设置
                     SettingsSection(
-                        title: String(localized: "settings.appearance"),
-                        groupTitle: String(localized: "settings.theme")
+                        titleKey: "settings.appearance",
+                        groupTitleKey: "settings.theme"
                     ) {
                         ForEach(Array(ThemeMode.allCases.enumerated()), id: \.element) { index, mode in
                             SettingsOptionRow(
-                                label: mode.displayName,
+                                labelKey: mode.localizationKey,
                                 selected: mode == settings.themeMode,
                                 onClick: { settings.themeMode = mode }
                             )
@@ -55,12 +55,12 @@ struct SettingsView: View {
 
                     // 语言设置
                     SettingsSection(
-                        title: String(localized: "settings.language"),
-                        groupTitle: String(localized: "settings.language")
+                        titleKey: "settings.language",
+                        groupTitleKey: "settings.language"
                     ) {
                         ForEach(Array(LanguageMode.allCases.enumerated()), id: \.element) { index, mode in
                             SettingsOptionRow(
-                                label: mode.displayName,
+                                labelKey: mode.localizationKey,
                                 selected: mode == settings.languageMode,
                                 onClick: { settings.languageMode = mode }
                             )
@@ -75,7 +75,7 @@ struct SettingsView: View {
                     // 我的页入口
                     ContentCard(onClick: onMyPageClick) {
                         HStack {
-                            Text(String(localized: "settings.favoritesAndHistory"))
+                            Text("settings.favoritesAndHistory")
                                 .font(HeritageTypography.bodyLarge)
                                 .foregroundStyle(colorScheme.onSurface)
 
@@ -100,14 +100,14 @@ struct SettingsView: View {
 private struct SettingsSection<Content: View>: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    let title: String
-    let groupTitle: String
+    let titleKey: LocalizedStringKey
+    let groupTitleKey: LocalizedStringKey
     @ViewBuilder let content: () -> Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             // 区块标题
-            Text(title)
+            Text(titleKey)
                 .font(HeritageTypography.titleLarge)
                 .foregroundStyle(colorScheme.onBackground)
 
@@ -115,7 +115,7 @@ private struct SettingsSection<Content: View>: View {
             ContentCard {
                 VStack(alignment: .leading, spacing: 0) {
                     // 组标题
-                    Text(groupTitle)
+                    Text(groupTitleKey)
                         .font(HeritageTypography.titleMedium)
                         .foregroundStyle(colorScheme.onSurfaceVariant)
                         .padding(.horizontal, 14)
@@ -137,14 +137,14 @@ private struct SettingsSection<Content: View>: View {
 private struct SettingsOptionRow: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    let label: String
+    let labelKey: LocalizedStringKey
     let selected: Bool
     let onClick: () -> Void
 
     var body: some View {
         Button(action: onClick) {
             HStack {
-                Text(label)
+                Text(labelKey)
                     .font(HeritageTypography.bodyLarge)
                     .foregroundStyle(colorScheme.onSurface)
 

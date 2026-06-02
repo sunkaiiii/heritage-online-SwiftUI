@@ -1,171 +1,144 @@
 import Foundation
 
-/// 内容标签本地化工具
-/// 将后端 wire value 映射为本地化显示文案
-/// 完全对齐 Android ContentLabels.kt
+/// 内容标签本地化 key 工具
+/// 将后端 wire value 映射为本地化 key；未知值原样返回。
 enum ContentLabels {
     // MARK: - Content Types
 
-    /// 将内容类型 wire value 映射为本地化显示文案
-    /// 覆盖 article / directoryItem / inheritor / collection / topic
-    /// 未知值原样返回，不崩溃
-    static func localizedContentType(_ type: String?) -> String {
+    static func contentTypeKey(_ type: String?) -> String {
         guard let type else { return "" }
         switch type {
-        case "article":
-            return String(localized: "contentType.article")
-        case "directoryItem":
-            return String(localized: "contentType.directoryItem")
-        case "inheritor":
-            return String(localized: "contentType.inheritor")
-        case "collection":
-            return String(localized: "contentType.collection")
-        case "topic":
-            return String(localized: "contentType.topic")
-        default:
-            return type
+        case "article": return "contentType.article"
+        case "directoryItem": return "contentType.directoryItem"
+        case "inheritor": return "contentType.inheritor"
+        case "collection": return "contentType.collection"
+        case "topic": return "contentType.topic"
+        default: return type
         }
+    }
+
+    // 兼容旧调用点；新 UI 应使用 key 并在 View 层渲染。
+    static func localizedContentType(_ type: String?) -> String {
+        contentTypeKey(type)
     }
 
     // MARK: - Article Categories
 
-    /// 将文章分类 wire value 映射为本地化显示文案
-    /// 覆盖 news / forum / specialTopic
-    /// 未知值返回原值
-    static func localizedArticleCategory(_ category: String?) -> String? {
+    static func articleCategoryKey(_ category: String?) -> String? {
         guard let category, !category.isEmpty else { return nil }
         switch category {
-        case "news":
-            return String(localized: "articleCategory.news")
-        case "forum":
-            return String(localized: "articleCategory.forum")
-        case "specialTopic":
-            return String(localized: "articleCategory.specialTopic")
-        default:
-            return category
+        case "news": return "articleCategory.news"
+        case "forum": return "articleCategory.forum"
+        case "specialTopic": return "articleCategory.specialTopic"
+        default: return category
         }
+    }
+
+    static func localizedArticleCategory(_ category: String?) -> String? {
+        articleCategoryKey(category)
     }
 
     // MARK: - Directory Kinds
 
-    /// 将名录种类 wire value 映射为本地化显示文案
-    /// 覆盖 nationalProject / culturalEcoZone / productiveProtectionBase / unescoEntry / chinaUnescoEntry / contractingState
-    /// 未知值返回原值
-    static func localizedDirectoryKind(_ kind: String?) -> String? {
+    static func directoryKindKey(_ kind: String?) -> String? {
         guard let kind, !kind.isEmpty else { return nil }
         switch kind {
-        case "nationalProject":
-            return String(localized: "directoryKind.nationalProject")
-        case "culturalEcoZone":
-            return String(localized: "directoryKind.culturalEcoZone")
-        case "productiveProtectionBase":
-            return String(localized: "directoryKind.productiveProtectionBase")
-        case "unescoEntry":
-            return String(localized: "directoryKind.unescoEntry")
-        case "chinaUnescoEntry":
-            return String(localized: "directoryKind.chinaUnescoEntry")
-        case "contractingState":
-            return String(localized: "directoryKind.contractingState")
-        default:
-            return kind
+        case "nationalProject": return "directoryKind.nationalProject"
+        case "culturalEcoZone": return "directoryKind.culturalEcoZone"
+        case "productiveProtectionBase": return "directoryKind.productiveProtectionBase"
+        case "unescoEntry": return "directoryKind.unescoEntry"
+        case "chinaUnescoEntry": return "directoryKind.chinaUnescoEntry"
+        case "contractingState": return "directoryKind.contractingState"
+        default: return kind
         }
+    }
+
+    static func localizedDirectoryKind(_ kind: String?) -> String? {
+        directoryKindKey(kind)
     }
 
     // MARK: - Reading Path Sources
 
-    /// 将阅读路径来源 wire value 映射为本地化显示文案
-    /// 覆盖 blendedRecommendation / related / recommendation / semanticRecommendation / graph / list
-    /// 未知值返回原值
-    static func localizedReadingPathSource(_ source: String) -> String {
+    static func readingPathSourceKey(_ source: String) -> String {
         switch source {
-        case "blendedRecommendation":
-            return String(localized: "readingPathSource.blendedRecommendation")
-        case "related":
-            return String(localized: "readingPathSource.related")
-        case "recommendation":
-            return String(localized: "readingPathSource.recommendation")
-        case "semanticRecommendation":
-            return String(localized: "readingPathSource.semanticRecommendation")
-        case "graph":
-            return String(localized: "readingPathSource.graph")
-        case "list":
-            return String(localized: "readingPathSource.list")
-        default:
-            return source
+        case "blendedRecommendation": return "readingPathSource.blendedRecommendation"
+        case "related": return "readingPathSource.related"
+        case "recommendation": return "readingPathSource.recommendation"
+        case "semanticRecommendation": return "readingPathSource.semanticRecommendation"
+        case "graph": return "readingPathSource.graph"
+        case "list": return "readingPathSource.list"
+        default: return source
         }
+    }
+
+    static func localizedReadingPathSource(_ source: String) -> String {
+        readingPathSourceKey(source)
     }
 
     // MARK: - Search Result Types
 
-    /// 将搜索结果类型 wire value 映射为本地化显示文案
-    static func localizedSearchResultType(_ type: String?) -> String? {
+    static func searchResultTypeKey(_ type: String?) -> String? {
         guard let type, !type.isEmpty else { return nil }
         switch type {
-        case "article":
-            return String(localized: "contentType.article")
-        case "directoryItem":
-            return String(localized: "contentType.directoryItem")
-        case "inheritor":
-            return String(localized: "contentType.inheritor")
-        default:
-            return type
+        case "article": return "contentType.article"
+        case "directoryItem": return "contentType.directoryItem"
+        case "inheritor": return "contentType.inheritor"
+        default: return type
         }
+    }
+
+    static func localizedSearchResultType(_ type: String?) -> String? {
+        searchResultTypeKey(type)
     }
 
     // MARK: - Timeline Types
 
-    /// 将时间线类型 wire value 映射为本地化显示文案
-    static func localizedTimelineType(_ type: String?) -> String? {
+    static func timelineTypeKey(_ type: String?) -> String? {
         guard let type, !type.isEmpty else { return nil }
         switch type {
-        case "article":
-            return String(localized: "contentType.article")
-        case "directoryItem":
-            return String(localized: "contentType.directoryItem")
-        case "inheritor":
-            return String(localized: "contentType.inheritor")
-        default:
-            return type
+        case "article": return "contentType.article"
+        case "directoryItem": return "contentType.directoryItem"
+        case "inheritor": return "contentType.inheritor"
+        default: return type
         }
+    }
+
+    static func localizedTimelineType(_ type: String?) -> String? {
+        timelineTypeKey(type)
     }
 
     // MARK: - Discovery Types
 
-    /// 将发现类型 wire value 映射为本地化显示文案
-    static func localizedDiscoveryType(_ type: String?) -> String? {
+    static func discoveryTypeKey(_ type: String?) -> String? {
         guard let type, !type.isEmpty else { return nil }
         switch type {
-        case "today":
-            return String(localized: "discovery.today")
-        case "trending":
-            return String(localized: "discovery.trending")
-        case "weekly":
-            return String(localized: "discovery.weekly")
-        case "serendipity":
-            return String(localized: "discovery.serendipity")
-        case "deepDive":
-            return String(localized: "discovery.deepDive")
-        default:
-            return type
+        case "today": return "discovery.today"
+        case "trending": return "discovery.trending"
+        case "weekly": return "discovery.weekly"
+        case "serendipity": return "discovery.serendipity"
+        case "deepDive": return "discovery.deepDive"
+        default: return type
         }
+    }
+
+    static func localizedDiscoveryType(_ type: String?) -> String? {
+        discoveryTypeKey(type)
     }
 
     // MARK: - Explore Topic Types
 
-    /// 将探索主题类型 wire value 映射为本地化显示文案
-    static func localizedExploreTopicType(_ type: String?) -> String? {
+    static func exploreTopicTypeKey(_ type: String?) -> String? {
         guard let type, !type.isEmpty else { return nil }
         switch type {
-        case "region":
-            return String(localized: "stats.regions")
-        case "category":
-            return String(localized: "stats.categories")
-        case "year":
-            return String(localized: "stats.year")
-        case "kind":
-            return String(localized: "stats.kind")
-        default:
-            return type
+        case "region": return "stats.regions"
+        case "category": return "stats.categories"
+        case "year": return "stats.year"
+        case "kind": return "stats.kind"
+        default: return type
         }
+    }
+
+    static func localizedExploreTopicType(_ type: String?) -> String? {
+        exploreTopicTypeKey(type)
     }
 }

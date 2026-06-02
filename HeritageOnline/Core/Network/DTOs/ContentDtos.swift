@@ -15,6 +15,16 @@ struct ArticleContentBlockDTO: Codable, Sendable {
     let text: String?
     let image: MediaAssetDTO?
 
+    init(
+        type: ArticleContentBlockType,
+        text: String?,
+        image: MediaAssetDTO?
+    ) {
+        self.type = type
+        self.text = text
+        self.image = image
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = try container.decodeIfPresent(ArticleContentBlockType.self, forKey: .type) ?? .text

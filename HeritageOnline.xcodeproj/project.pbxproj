@@ -59,6 +59,11 @@
 		B2000023 /* ImagePreviewUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000023 /* ImagePreviewUrl.swift */; };
 		B2000024 /* ImagePreviewOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000024 /* ImagePreviewOverlay.swift */; };
 		B2000025 /* HeritageAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000025 /* HeritageAsyncImage.swift */; };
+		B2000030 /* PagedResult.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000030 /* PagedResult.json */; };
+		B2000031 /* HomeFeed.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000031 /* HomeFeed.json */; };
+		B2000032 /* ArticleDetail.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000032 /* ArticleDetail.json */; };
+		B2000040 /* ArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* ArticlesViewModel.swift */; };
+		B2000041 /* ArticlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000041 /* ArticlesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +141,11 @@
 		B1000023 /* ImagePreviewUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewUrl.swift; sourceTree = "<group>"; };
 		B1000024 /* ImagePreviewOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewOverlay.swift; sourceTree = "<group>"; };
 		B1000025 /* HeritageAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageAsyncImage.swift; sourceTree = "<group>"; };
+		B1000030 /* PagedResult.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PagedResult.json; sourceTree = "<group>"; };
+		B1000031 /* HomeFeed.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HomeFeed.json; sourceTree = "<group>"; };
+		B1000032 /* ArticleDetail.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ArticleDetail.json; sourceTree = "<group>"; };
+		B1000040 /* ArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesViewModel.swift; sourceTree = "<group>"; };
+		B1000041 /* ArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,8 +204,19 @@
 				B100001D /* DTOTests.swift */,
 				B1000020 /* MockHeritageRepository.swift */,
 				B1000021 /* RepositoryTests.swift */,
+				B3000030 /* Fixtures */,
 			);
 			path = HeritageOnlineTests;
+			sourceTree = "<group>";
+		};
+		B3000030 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				B1000030 /* PagedResult.json */,
+				B1000031 /* HomeFeed.json */,
+				B1000032 /* ArticleDetail.json */,
+			);
+			path = Fixtures;
 			sourceTree = "<group>";
 		};
 		A5000004 /* HeritageOnlineUITests */ = {
@@ -333,6 +354,8 @@
 		A500000F /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				B1000040 /* ArticlesViewModel.swift */,
+				B1000041 /* ArticlesView.swift */,
 			);
 			path = Articles;
 			sourceTree = "<group>";
@@ -468,6 +491,7 @@
 			buildPhases = (
 				A7000003 /* Sources */,
 				A4000002 /* Frameworks */,
+				A7000005 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -544,10 +568,20 @@
 		A7000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
+				files = (
+					A100000B /* Assets.xcassets in Resources */,
+					A100000C /* en.lproj in Resources */,
+					A100000D /* zh-Hans.lproj in Resources */,
+				);
+				runOnlyForDeploymentPostprocessing = 0;
+			};
+		A7000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
 			files = (
-				A100000B /* Assets.xcassets in Resources */,
-				A100000C /* en.lproj in Resources */,
-				A100000D /* zh-Hans.lproj in Resources */,
+				B2000030 /* PagedResult.json in Resources */,
+				B2000031 /* HomeFeed.json in Resources */,
+				B2000032 /* ArticleDetail.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +610,6 @@
 				B2000006 /* ContentCard.swift in Sources */,
 				B2000007 /* MetaChip.swift in Sources */,
 				B2000008 /* ImagePlaceholder.swift in Sources */,
-				B2000009 /* ListImage.swift in Sources */,
 				B200000A /* ListCard.swift in Sources */,
 				B200000B /* FactCard.swift in Sources */,
 				B200000C /* ReferenceCard.swift in Sources */,
@@ -601,6 +634,8 @@
 				B2000023 /* ImagePreviewUrl.swift in Sources */,
 				B2000024 /* ImagePreviewOverlay.swift in Sources */,
 				B2000025 /* HeritageAsyncImage.swift in Sources */,
+				B2000040 /* ArticlesViewModel.swift in Sources */,
+				B2000041 /* ArticlesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@ struct LoadingPlaceholder: View {
             ProgressView()
                 .tint(colorScheme.primary)
 
-            Text(String(localized: "loading.default"))
+            Text("loading.default")
                 .font(HeritageTypography.bodyMedium)
                 .foregroundStyle(colorScheme.onSurfaceVariant)
         }

@@ -160,3 +160,13 @@
 "context.collections" = "合集";
 "context.exploreTopics" = "探索主题";
 "context.graph" = "关系图谱";
+
+/* Articles Page */
+"articles.latest" = "最新文章";
+"articles.searchPlaceholder" = "标题或关键词";
+"articles.filter.year" = "年份";
+"articles.filter.yearPlaceholder" = "例如 2024";
+"articles.empty.default" = "暂无文章";
+"articles.empty.search" = "未找到匹配的文章";
+"articles.empty.searchHint" = "尝试不同的关键词或筛选条件";
+"articles.filter.invalidYear" = "请输入有效的4位年份";

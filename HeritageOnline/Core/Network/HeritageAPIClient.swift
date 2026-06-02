@@ -484,7 +484,7 @@ struct SearchV2ResponseDTO: Decodable, Sendable {
     let query: String?
 
     enum CodingKeys: String, CodingKey {
-        case items, total, page, pageSize, hasMore, facets, query
+        case items, total, totalCount, page, pageSize, hasMore, facets, query
     }
 
     init(items: [SearchResultItemDTO], total: Int, page: Int, pageSize: Int, hasMore: Bool, facets: SearchFacetsDTO?, query: String?) {
@@ -500,8 +500,9 @@ struct SearchV2ResponseDTO: Decodable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         items = try container.decodeIfPresent([SearchResultItemDTO].self, forKey: .items) ?? []
-        // 兼容 total 和 totalCount
-        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+        total = try container.decodeIfPresent(Int.self, forKey: .total)
+            ?? container.decodeIfPresent(Int.self, forKey: .totalCount)
+            ?? 0
         page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
         pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
         hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
@@ -557,7 +558,7 @@ struct TimelineV2ResponseDTO: Decodable, Sendable {
     let facets: TimelineFacetsDTO?
 
     enum CodingKeys: String, CodingKey {
-        case items, total, page, pageSize, hasMore, facets
+        case items, total, totalCount, page, pageSize, hasMore, facets
     }
 
     init(items: [TimelineItemDTO], total: Int, page: Int, pageSize: Int, hasMore: Bool, facets: TimelineFacetsDTO?) {
@@ -572,7 +573,9 @@ struct TimelineV2ResponseDTO: Decodable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         items = try container.decodeIfPresent([TimelineItemDTO].self, forKey: .items) ?? []
-        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+        total = try container.decodeIfPresent(Int.self, forKey: .total)
+            ?? container.decodeIfPresent(Int.self, forKey: .totalCount)
+            ?? 0
         page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
         pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
         hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
@@ -614,7 +617,7 @@ struct TimelineYearBucketDTO: Decodable, Sendable {
     let inheritorCount: Int?
 
     enum CodingKeys: String, CodingKey {
-        case year, total, articleCount, directoryItemCount, inheritorCount
+        case year, total, totalCount, articleCount, directoryItemCount, inheritorCount
     }
 
     init(year: Int, total: Int, articleCount: Int?, directoryItemCount: Int?, inheritorCount: Int?) {
@@ -628,8 +631,9 @@ struct TimelineYearBucketDTO: Decodable, Sendable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         year = try container.decode(Int.self, forKey: .year)
-        // 兼容 total 和 totalCount
-        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+        total = try container.decodeIfPresent(Int.self, forKey: .total)
+            ?? container.decodeIfPresent(Int.self, forKey: .totalCount)
+            ?? 0
         articleCount = try container.decodeIfPresent(Int.self, forKey: .articleCount)
         directoryItemCount = try container.decodeIfPresent(Int.self, forKey: .directoryItemCount)
         inheritorCount = try container.decodeIfPresent(Int.self, forKey: .inheritorCount)

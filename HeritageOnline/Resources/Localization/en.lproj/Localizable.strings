@@ -160,3 +160,13 @@
 "context.collections" = "Collections";
 "context.exploreTopics" = "Explore Topics";
 "context.graph" = "Graph";
+
+/* Articles Page */
+"articles.latest" = "Latest Articles";
+"articles.searchPlaceholder" = "Title or keywords";
+"articles.filter.year" = "Year";
+"articles.filter.yearPlaceholder" = "e.g. 2024";
+"articles.empty.default" = "No articles yet";
+"articles.empty.search" = "No matching articles found";
+"articles.empty.searchHint" = "Try different keywords or filters";
+"articles.filter.invalidYear" = "Please enter a valid 4-digit year";

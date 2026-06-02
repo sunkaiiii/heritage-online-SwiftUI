@@ -139,11 +139,12 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
             throw NetworkError.invalidBaseURL
         }
 
-        // 拼接路径，确保路径编码安全
-        let encodedPath = path.split(separator: "/").map { Self.pathSegment(String($0)) }.joined(separator: "/")
-        components.path = components.path.hasSuffix("/")
-            ? components.path + encodedPath
-            : components.path + "/" + encodedPath
+        // 拼接路径，使用 percentEncodedPath 避免 URLComponents 二次编码。
+        let encodedSegments = path.split(separator: "/").map { Self.pathSegment(String($0)) }
+        components.percentEncodedPath = Self.joinedPercentEncodedPath(
+            basePath: components.percentEncodedPath,
+            encodedSegments: encodedSegments
+        )
 
         // 添加查询参数（过滤空值）
         let validQueryItems = queryItems.filter { $0.value != nil && !$0.value!.isEmpty }
@@ -169,12 +170,12 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
             throw NetworkError.invalidBaseURL
         }
 
-        // 每个段独立编码
+        // 每个段独立编码，使用 percentEncodedPath 避免 URLComponents 二次编码。
         let encodedSegments = segments.map { Self.pathSegment($0) }
-        let encodedPath = encodedSegments.joined(separator: "/")
-        components.path = components.path.hasSuffix("/")
-            ? components.path + encodedPath
-            : components.path + "/" + encodedPath
+        components.percentEncodedPath = Self.joinedPercentEncodedPath(
+            basePath: components.percentEncodedPath,
+            encodedSegments: encodedSegments
+        )
 
         // 添加查询参数（过滤空值）
         let validQueryItems = queryItems.filter { $0.value != nil && !$0.value!.isEmpty }
@@ -200,6 +201,16 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
         let allowed = CharacterSet.alphanumerics
             .union(CharacterSet(charactersIn: "-._~"))
         return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value
+    }
+
+    private static func joinedPercentEncodedPath(basePath: String, encodedSegments: [String]) -> String {
+        let suffix = encodedSegments.filter { !$0.isEmpty }.joined(separator: "/")
+        guard !suffix.isEmpty else {
+            return basePath.isEmpty ? "/" : basePath
+        }
+
+        let normalizedBase = basePath == "/" ? "" : basePath.trimmingTrailingSlashes()
+        return normalizedBase.isEmpty ? "/" + suffix : normalizedBase + "/" + suffix
     }
 
     // MARK: - 响应验证
@@ -411,3 +422,13 @@ extension HeritageHTTPClient {
     }
 }
 #endif
+
+private extension String {
+    func trimmingTrailingSlashes() -> String {
+        var value = self
+        while value.hasSuffix("/") {
+            value.removeLast()
+        }
+        return value
+    }
+}

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// 主题模式
 enum ThemeMode: String, CaseIterable, Identifiable {
@@ -11,15 +12,14 @@ enum ThemeMode: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// 本地化显示名称
-    var displayName: String {
+    var localizationKey: LocalizedStringKey {
         switch self {
         case .system:
-            return String(localized: "settings.theme.system")
+            return "settings.theme.system"
         case .light:
-            return String(localized: "settings.theme.light")
+            return "settings.theme.light"
         case .dark:
-            return String(localized: "settings.theme.dark")
+            return "settings.theme.dark"
         }
     }
 }
