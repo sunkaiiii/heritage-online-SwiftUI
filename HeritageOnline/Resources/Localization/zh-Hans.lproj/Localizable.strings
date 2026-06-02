@@ -57,11 +57,20 @@
 
 /* Page Titles */
 "page.articles" = "文章";
+"page.articles.subtitle" = "非遗新闻、论坛与专题";
+"page.articles.placeholder" = "文章列表将在此显示";
 "page.directory" = "非遗名录";
+"page.directory.subtitle" = "国家级项目、文化生态区等";
+"page.directory.placeholder" = "名录列表将在此显示";
 "page.inheritors" = "代表性传承人";
+"page.inheritors.subtitle" = "非遗项目代表性传承人";
+"page.inheritors.placeholder" = "传承人列表将在此显示";
 "page.discovery" = "发现";
+"page.discovery.subtitle" = "探索、学习路径与精选合集";
+"page.discovery.placeholder" = "发现页将在此显示";
 "page.settings" = "设置";
 "page.my" = "我的";
+"page.my.placeholder" = "收藏、最近浏览、阅读路径";
 "page.search" = "搜索";
 "page.timeline" = "时间线";
 "page.regionAtlas" = "地区图谱";

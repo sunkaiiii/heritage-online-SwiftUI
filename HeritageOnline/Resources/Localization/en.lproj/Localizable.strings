@@ -57,11 +57,20 @@
 
 /* Page Titles */
 "page.articles" = "Articles";
+"page.articles.subtitle" = "Heritage news, forums and specials";
+"page.articles.placeholder" = "Article list will be displayed here";
 "page.directory" = "Heritage Directory";
+"page.directory.subtitle" = "National projects, cultural eco zones, etc.";
+"page.directory.placeholder" = "Directory list will be displayed here";
 "page.inheritors" = "Representative Inheritors";
+"page.inheritors.subtitle" = "Representative inheritors of heritage projects";
+"page.inheritors.placeholder" = "Inheritor list will be displayed here";
 "page.discovery" = "Discovery";
+"page.discovery.subtitle" = "Explore, learning paths and featured collections";
+"page.discovery.placeholder" = "Discovery page will be displayed here";
 "page.settings" = "Settings";
 "page.my" = "My";
+"page.my.placeholder" = "Favorites, recently viewed, reading path";
 "page.search" = "Search";
 "page.timeline" = "Timeline";
 "page.regionAtlas" = "Region Atlas";
