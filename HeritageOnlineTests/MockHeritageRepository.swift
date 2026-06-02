@@ -7,24 +7,24 @@ final class MockHeritageRepository: HeritageRepository {
     // MARK: - Mock 数据
 
     var homeBannersResult: Result<[HomeBannerDTO], Error> = .success([])
-    var homeFeedResult: Result<HomeFeedDTO, Error> = .success(HomeFeedDTO(banners: nil, articles: nil))
+    var homeFeedResult: Result<HomeFeedDTO, Error> = .success(HomeFeedDTO(banners: [], articles: []))
     var articlesResult: Result<PagedResultDTO<ArticleSummaryDTO>, Error> = .success(
         PagedResultDTO(items: [], page: 1, pageSize: 20, totalCount: 0, hasMore: false)
     )
     var articleResult: Result<ArticleDetailDTO, Error> = .success(
-        ArticleDetailDTO(id: "test", title: nil, summary: nil, category: nil, imageUrl: nil, publishedAt: nil, sourceUrl: nil, author: nil, content: nil, contentBlocks: nil)
+        ArticleDetailDTO(id: "test", title: nil, summary: nil, category: nil, imageUrl: nil, publishedAt: nil, sourceUrl: nil, author: nil, content: nil, contentBlocks: [])
     )
     var directoryItemsResult: Result<PagedResultDTO<DirectoryItemSummaryDTO>, Error> = .success(
         PagedResultDTO(items: [], page: 1, pageSize: 20, totalCount: 0, hasMore: false)
     )
     var directoryItemResult: Result<DirectoryItemDetailDTO, Error> = .success(
-        DirectoryItemDetailDTO(id: "test", title: nil, summary: nil, kind: nil, category: nil, region: nil, imageUrl: nil, projectCode: nil, batch: nil, publishedYear: nil, content: nil, contentBlocks: nil)
+        DirectoryItemDetailDTO(id: "test", title: nil, summary: nil, kind: nil, category: nil, region: nil, imageUrl: nil, projectCode: nil, batch: nil, publishedYear: nil, content: nil, contentBlocks: [])
     )
     var inheritorsResult: Result<PagedResultDTO<InheritorSummaryDTO>, Error> = .success(
         PagedResultDTO(items: [], page: 1, pageSize: 20, totalCount: 0, hasMore: false)
     )
     var inheritorResult: Result<InheritorDetailDTO, Error> = .success(
-        InheritorDetailDTO(id: "test", name: nil, projectName: nil, gender: nil, ethnicity: nil, category: nil, region: nil, imageUrl: nil, description: nil, contentBlocks: nil)
+        InheritorDetailDTO(id: "test", name: nil, projectName: nil, gender: nil, ethnicity: nil, category: nil, region: nil, imageUrl: nil, description: nil, contentBlocks: [])
     )
     var searchV2Result: Result<SearchV2ResponseDTO, Error> = .success(
         SearchV2ResponseDTO(items: [], totalCount: 0, page: 1, pageSize: 20, hasMore: false)
@@ -35,13 +35,13 @@ final class MockHeritageRepository: HeritageRepository {
     )
     var timelineYearsResult: Result<[TimelineYearBucketDTO], Error> = .success([])
     var articleContextResult: Result<DetailContextDTO, Error> = .success(
-        DetailContextDTO(related: nil, recommendations: nil, semanticRecommendations: nil, collections: nil, exploreTopics: nil)
+        DetailContextDTO(related: [], recommendations: [], semanticRecommendations: [], collections: [], exploreTopics: [])
     )
     var directoryItemContextResult: Result<DetailContextDTO, Error> = .success(
-        DetailContextDTO(related: nil, recommendations: nil, semanticRecommendations: nil, collections: nil, exploreTopics: nil)
+        DetailContextDTO(related: [], recommendations: [], semanticRecommendations: [], collections: [], exploreTopics: [])
     )
     var inheritorContextResult: Result<DetailContextDTO, Error> = .success(
-        DetailContextDTO(related: nil, recommendations: nil, semanticRecommendations: nil, collections: nil, exploreTopics: nil)
+        DetailContextDTO(related: [], recommendations: [], semanticRecommendations: [], collections: [], exploreTopics: [])
     )
 
     // MARK: - 调用记录

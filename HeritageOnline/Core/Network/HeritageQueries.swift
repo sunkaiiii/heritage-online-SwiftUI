@@ -25,7 +25,7 @@ struct ArticleQuery: Sendable {
 }
 
 /// 文章分类
-enum ArticleCategory: String, Sendable {
+enum ArticleCategory: String, Codable, Sendable {
     case news
     case forum
     case specialTopic

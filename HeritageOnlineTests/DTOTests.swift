@@ -260,8 +260,8 @@ final class DTOTests: XCTestCase {
 
         let result = try decoder.decode(HomeFeedDTO.self, from: json.data(using: .utf8)!)
 
-        XCTAssertEqual(result.banners?.count, 1)
-        XCTAssertEqual(result.articles?.count, 1)
+        XCTAssertEqual(result.banners.count, 1)
+        XCTAssertEqual(result.articles.count, 1)
     }
 
     // MARK: - Edge Cases Tests
@@ -303,14 +303,27 @@ final class DTOTests: XCTestCase {
         """
 
         let result = try decoder.decode(ArticleDetailDTO.self, from: json.data(using: .utf8)!)
-        XCTAssertNil(result.contentBlocks)
+        XCTAssertEqual(result.contentBlocks.count, 0) // 现在是非可选，默认空数组
     }
 
     func testArticleCategoryEnum() throws {
-        // 测试 JSON 解析
-        let json = "\"news\""
-        let result = try decoder.decode(String.self, from: json.data(using: .utf8)!)
-        XCTAssertEqual(result, "news")
+        // 测试 ArticleCategory enum JSON 解码
+        let newsJson = "\"news\""
+        let newsResult = try decoder.decode(ArticleCategory.self, from: newsJson.data(using: .utf8)!)
+        XCTAssertEqual(newsResult, .news)
+
+        let forumJson = "\"forum\""
+        let forumResult = try decoder.decode(ArticleCategory.self, from: forumJson.data(using: .utf8)!)
+        XCTAssertEqual(forumResult, .forum)
+
+        let specialTopicJson = "\"specialTopic\""
+        let specialTopicResult = try decoder.decode(ArticleCategory.self, from: specialTopicJson.data(using: .utf8)!)
+        XCTAssertEqual(specialTopicResult, .specialTopic)
+
+        // 测试所有 wireName
+        XCTAssertEqual(ArticleCategory.news.wireName, "news")
+        XCTAssertEqual(ArticleCategory.forum.wireName, "forum")
+        XCTAssertEqual(ArticleCategory.specialTopic.wireName, "specialTopic")
     }
 
     // MARK: - Search DTOs Tests
