@@ -17,6 +17,8 @@ struct MetaChip: View {
         Text(text)
             .font(HeritageTypography.labelLarge)
             .foregroundStyle(isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant)
+            .lineLimit(1)
+            .truncationMode(.tail)
             .padding(.horizontal, 10)
             .padding(.vertical, 5)
             .background(isSelected ? colorScheme.primaryContainer : colorScheme.surfaceContainerHigh)

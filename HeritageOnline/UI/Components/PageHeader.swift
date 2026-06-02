@@ -32,6 +32,8 @@ struct PageHeader: View {
                     Text(subtitle)
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(colorScheme.onSurfaceVariant)
+                        .lineLimit(2)
+                        .truncationMode(.tail)
                 }
             }
 

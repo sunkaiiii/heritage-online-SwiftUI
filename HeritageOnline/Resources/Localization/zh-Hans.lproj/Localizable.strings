@@ -31,6 +31,8 @@
 "contentType.article" = "文章";
 "contentType.directoryItem" = "名录";
 "contentType.inheritor" = "传承人";
+"contentType.collection" = "合集";
+"contentType.topic" = "探索主题";
 
 /* Article Categories */
 "articleCategory.news" = "新闻";
@@ -127,3 +129,13 @@
 "stats.inheritors" = "传承人";
 "stats.regions" = "地区";
 "stats.categories" = "分类";
+"stats.year" = "年份";
+"stats.kind" = "种类";
+
+/* Context Sections */
+"context.related" = "相关内容";
+"context.recommendations" = "推荐";
+"context.semanticRecommendations" = "相似推荐";
+"context.collections" = "合集";
+"context.exploreTopics" = "探索主题";
+"context.graph" = "关系图谱";

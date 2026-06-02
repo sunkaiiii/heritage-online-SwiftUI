@@ -31,6 +31,8 @@
 "contentType.article" = "Article";
 "contentType.directoryItem" = "Directory";
 "contentType.inheritor" = "Inheritor";
+"contentType.collection" = "Collection";
+"contentType.topic" = "Explore Topic";
 
 /* Article Categories */
 "articleCategory.news" = "News";
@@ -127,3 +129,13 @@
 "stats.inheritors" = "Inheritors";
 "stats.regions" = "Regions";
 "stats.categories" = "Categories";
+"stats.year" = "Year";
+"stats.kind" = "Kind";
+
+/* Context Sections */
+"context.related" = "Related";
+"context.recommendations" = "Recommendations";
+"context.semanticRecommendations" = "Similar";
+"context.collections" = "Collections";
+"context.exploreTopics" = "Explore Topics";
+"context.graph" = "Graph";

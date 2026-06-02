@@ -2,6 +2,7 @@ import SwiftUI
 
 /// 事实卡片组件
 /// label/value 两列事实表
+/// 完全对齐 Android HeritageFactCard
 struct FactCard: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
@@ -17,10 +18,10 @@ struct FactCard: View {
         ContentCard {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(items) { item in
-                    HStack(alignment: .top) {
+                    HStack(alignment: .top, spacing: 12) {
                         Text(item.label)
                             .font(HeritageTypography.labelLarge)
-                            .foregroundStyle(colorScheme.onSurfaceVariant)
+                            .foregroundStyle(colorScheme.primary)
                             .frame(width: 80, alignment: .leading)
 
                         Text(item.value)
@@ -31,7 +32,7 @@ struct FactCard: View {
                     }
                 }
             }
-            .padding(16)
+            .padding(14)
         }
     }
 }

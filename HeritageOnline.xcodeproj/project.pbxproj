@@ -41,6 +41,9 @@
 		B2000010 /* LoadingPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* LoadingPlaceholder.swift */; };
 		B2000011 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000011 /* EmptyState.swift */; };
 		B2000012 /* ThemePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* ThemePreviewView.swift */; };
+		B2000013 /* ComponentPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* ComponentPreviewView.swift */; };
+		B2000014 /* ContentLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* ContentLabels.swift */; };
+		B2000015 /* LabelPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* LabelPreviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +103,9 @@
 		B1000010 /* LoadingPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingPlaceholder.swift; sourceTree = "<group>"; };
 		B1000011 /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
 		B1000012 /* ThemePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreviewView.swift; sourceTree = "<group>"; };
+		B1000013 /* ComponentPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentPreviewView.swift; sourceTree = "<group>"; };
+		B1000014 /* ContentLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentLabels.swift; sourceTree = "<group>"; };
+		B1000015 /* LabelPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelPreviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +316,8 @@
 			isa = PBXGroup;
 			children = (
 				B1000012 /* ThemePreviewView.swift */,
+				B1000013 /* ComponentPreviewView.swift */,
+				B1000015 /* LabelPreviewView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -359,6 +367,7 @@
 		A5000019 /* Text */ = {
 			isa = PBXGroup;
 			children = (
+				B1000014 /* ContentLabels.swift */,
 			);
 			path = Text;
 			sourceTree = "<group>";
@@ -516,6 +525,9 @@
 				B2000010 /* LoadingPlaceholder.swift in Sources */,
 				B2000011 /* EmptyState.swift in Sources */,
 				B2000012 /* ThemePreviewView.swift in Sources */,
+				B2000013 /* ComponentPreviewView.swift in Sources */,
+				B2000014 /* ContentLabels.swift in Sources */,
+				B2000015 /* LabelPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
