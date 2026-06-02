@@ -1,0 +1,784 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001 /* HeritageOnlineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* HeritageOnlineApp.swift */; };
+		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
+		A1000003 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* APIConfig.swift */; };
+		A1000004 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* AppError.swift */; };
+		A1000005 /* ThemeMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005 /* ThemeMode.swift */; };
+		A1000006 /* LanguageMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006 /* LanguageMode.swift */; };
+		A1000007 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007 /* SettingsManager.swift */; };
+		A1000008 /* HeritageColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008 /* HeritageColors.swift */; };
+		A1000009 /* HeritageTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000009 /* HeritageTypography.swift */; };
+		A100000A /* HeritageShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000A /* HeritageShapes.swift */; };
+		A100000B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A200000B /* Assets.xcassets */; };
+		A100000C /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A200000C /* en.lproj */; };
+		A100000D /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A200000D /* zh-Hans.lproj */; };
+		A100000E /* HeritageOnlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000E /* HeritageOnlineTests.swift */; };
+		A100000F /* HeritageOnlineUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000F /* HeritageOnlineUITests.swift */; };
+		A1000010 /* HeritageOnlineUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* HeritageOnlineUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6000001;
+			remoteInfo = HeritageOnline;
+		};
+		AA000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6000001;
+			remoteInfo = HeritageOnline;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A2000001 /* HeritageOnlineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageOnlineApp.swift; sourceTree = "<group>"; };
+		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2000003 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
+		A2000004 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		A2000005 /* ThemeMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeMode.swift; sourceTree = "<group>"; };
+		A2000006 /* LanguageMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageMode.swift; sourceTree = "<group>"; };
+		A2000007 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		A2000008 /* HeritageColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageColors.swift; sourceTree = "<group>"; };
+		A2000009 /* HeritageTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageTypography.swift; sourceTree = "<group>"; };
+		A200000A /* HeritageShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageShapes.swift; sourceTree = "<group>"; };
+		A200000B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A200000C /* en.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = en.lproj; sourceTree = "<group>"; };
+		A200000D /* zh-Hans.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "zh-Hans.lproj"; sourceTree = "<group>"; };
+		A200000E /* HeritageOnlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageOnlineTests.swift; sourceTree = "<group>"; };
+		A200000F /* HeritageOnlineUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageOnlineUITests.swift; sourceTree = "<group>"; };
+		A2000010 /* HeritageOnlineUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageOnlineUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A2000011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000012 /* Info-macOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOS.plist"; sourceTree = "<group>"; };
+		A3000001 /* HeritageOnline.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeritageOnline.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3000002 /* HeritageOnlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeritageOnlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3000003 /* HeritageOnlineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HeritageOnlineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A5000001 = {
+			isa = PBXGroup;
+			children = (
+				A5000002 /* HeritageOnline */,
+				A5000003 /* HeritageOnlineTests */,
+				A5000004 /* HeritageOnlineUITests */,
+				A5000005 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A5000002 /* HeritageOnline */ = {
+			isa = PBXGroup;
+			children = (
+				A2000001 /* HeritageOnlineApp.swift */,
+				A2000002 /* ContentView.swift */,
+				A5000006 /* Core */,
+				A5000007 /* Features */,
+				A5000008 /* UI */,
+				A5000009 /* Resources */,
+			);
+			path = HeritageOnline;
+			sourceTree = "<group>";
+		};
+		A5000003 /* HeritageOnlineTests */ = {
+			isa = PBXGroup;
+			children = (
+				A200000E /* HeritageOnlineTests.swift */,
+			);
+			path = HeritageOnlineTests;
+			sourceTree = "<group>";
+		};
+		A5000004 /* HeritageOnlineUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A200000F /* HeritageOnlineUITests.swift */,
+				A2000010 /* HeritageOnlineUITestsLaunchTests.swift */,
+			);
+			path = HeritageOnlineUITests;
+			sourceTree = "<group>";
+		};
+		A5000005 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3000001 /* HeritageOnline.app */,
+				A3000002 /* HeritageOnlineTests.xctest */,
+				A3000003 /* HeritageOnlineUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A5000006 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A500000A /* Network */,
+				A500000B /* Data */,
+				A500000C /* Saved */,
+				A500000D /* Settings */,
+				A500000E /* Image */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A5000007 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A500000F /* Articles */,
+				A5000010 /* Directory */,
+				A5000011 /* Inheritors */,
+				A5000012 /* Discovery */,
+				A5000013 /* Search */,
+				A5000014 /* My */,
+				A5000015 /* Settings */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A5000008 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A5000016 /* Theme */,
+				A5000017 /* Components */,
+				A5000018 /* Error */,
+				A5000019 /* Text */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A5000009 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A200000B /* Assets.xcassets */,
+				A500001A /* Localization */,
+				A2000011 /* Info.plist */,
+				A2000012 /* Info-macOS.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A500000A /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				A2000003 /* APIConfig.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		A500000B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A500000C /* Saved */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Saved;
+			sourceTree = "<group>";
+		};
+		A500000D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A2000005 /* ThemeMode.swift */,
+				A2000006 /* LanguageMode.swift */,
+				A2000007 /* SettingsManager.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A500000E /* Image */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		A500000F /* Articles */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Articles;
+			sourceTree = "<group>";
+		};
+		A5000010 /* Directory */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Directory;
+			sourceTree = "<group>";
+		};
+		A5000011 /* Inheritors */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Inheritors;
+			sourceTree = "<group>";
+		};
+		A5000012 /* Discovery */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Discovery;
+			sourceTree = "<group>";
+		};
+		A5000013 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		A5000014 /* My */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = My;
+			sourceTree = "<group>";
+		};
+		A5000015 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A5000016 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A2000008 /* HeritageColors.swift */,
+				A2000009 /* HeritageTypography.swift */,
+				A200000A /* HeritageShapes.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A5000017 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A5000018 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				A2000004 /* AppError.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
+		A5000019 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Text;
+			sourceTree = "<group>";
+		};
+		A500001A /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				A200000C /* en.lproj */,
+				A200000D /* zh-Hans.lproj */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A6000001 /* HeritageOnline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000001 /* Build configuration list for PBXNativeTarget "HeritageOnline" */;
+			buildPhases = (
+				A7000001 /* Sources */,
+				A4000001 /* Frameworks */,
+				A7000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HeritageOnline;
+			productName = HeritageOnline;
+			productReference = A3000001 /* HeritageOnline.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A6000002 /* HeritageOnlineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000002 /* Build configuration list for PBXNativeTarget "HeritageOnlineTests" */;
+			buildPhases = (
+				A7000003 /* Sources */,
+				A4000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9000001 /* PBXTargetDependency */,
+			);
+			name = HeritageOnlineTests;
+			productName = HeritageOnlineTests;
+			productReference = A3000002 /* HeritageOnlineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A6000003 /* HeritageOnlineUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000003 /* Build configuration list for PBXNativeTarget "HeritageOnlineUITests" */;
+			buildPhases = (
+				A7000004 /* Sources */,
+				A4000003 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A9000002 /* PBXTargetDependency */,
+			);
+			name = HeritageOnlineUITests;
+			productName = HeritageOnlineUITests;
+			productReference = A3000003 /* HeritageOnlineUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A0000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					A6000001 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					A6000002 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A6000001;
+					};
+					A6000003 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A6000001;
+					};
+				};
+			};
+			buildConfigurationList = A8000004 /* Build configuration list for PBXProject "HeritageOnline" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = "zh-Hans";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				"zh-Hans",
+				Base,
+			);
+			mainGroup = A5000001;
+			productRefGroup = A5000005 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A6000001 /* HeritageOnline */,
+				A6000002 /* HeritageOnlineTests */,
+				A6000003 /* HeritageOnlineUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A7000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000B /* Assets.xcassets in Resources */,
+				A100000C /* en.lproj in Resources */,
+				A100000D /* zh-Hans.lproj in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A7000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* HeritageOnlineApp.swift in Sources */,
+				A1000002 /* ContentView.swift in Sources */,
+				A1000003 /* APIConfig.swift in Sources */,
+				A1000004 /* AppError.swift in Sources */,
+				A1000005 /* ThemeMode.swift in Sources */,
+				A1000006 /* LanguageMode.swift in Sources */,
+				A1000007 /* SettingsManager.swift in Sources */,
+				A1000008 /* HeritageColors.swift in Sources */,
+				A1000009 /* HeritageTypography.swift in Sources */,
+				A100000A /* HeritageShapes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000E /* HeritageOnlineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A7000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000F /* HeritageOnlineUITests.swift in Sources */,
+				A1000010 /* HeritageOnlineUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A9000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6000001 /* HeritageOnline */;
+			targetProxy = AA000001 /* PBXContainerItemProxy */;
+		};
+		A9000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6000001 /* HeritageOnline */;
+			targetProxy = AA000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AB000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AB000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AB000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HeritageOnline/HeritageOnline.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = YNQ45Z475P;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HeritageOnline/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "E迹";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AB000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HeritageOnline/HeritageOnline.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = YNQ45Z475P;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HeritageOnline/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "E迹";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AB000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeritageOnline.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HeritageOnline";
+			};
+			name = Debug;
+		};
+		AB000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeritageOnline.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HeritageOnline";
+			};
+			name = Release;
+		};
+		AB000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = HeritageOnline;
+			};
+			name = Debug;
+		};
+		AB000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckylife.heritage.modern.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = HeritageOnline;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A8000001 /* Build configuration list for PBXNativeTarget "HeritageOnline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB000003 /* Debug */,
+				AB000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000002 /* Build configuration list for PBXNativeTarget "HeritageOnlineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB000005 /* Debug */,
+				AB000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000003 /* Build configuration list for PBXNativeTarget "HeritageOnlineUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB000007 /* Debug */,
+				AB000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000004 /* Build configuration list for PBXProject "HeritageOnline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB000001 /* Debug */,
+				AB000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A0000001 /* Project object */;
+}

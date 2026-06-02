@@ -1,0 +1,129 @@
+/* App Name */
+"app.name" = "Heritage Online";
+
+/* Tab Bar */
+"tab.articles" = "Articles";
+"tab.directory" = "Directory";
+"tab.inheritors" = "Inheritors";
+"tab.discovery" = "Discovery";
+
+/* Navigation */
+"nav.back" = "Back";
+"nav.cancel" = "Cancel";
+"nav.done" = "Done";
+"nav.search" = "Search";
+"nav.filter" = "Filter";
+"nav.settings" = "Settings";
+"nav.my" = "My";
+
+/* Common Actions */
+"action.retry" = "Retry";
+"action.refresh" = "Refresh";
+"action.viewOriginal" = "View Original";
+"action.favorite" = "Favorite";
+"action.unfavorite" = "Unfavorite";
+"action.clear" = "Clear";
+"action.delete" = "Delete";
+"action.apply" = "Apply";
+"action.reset" = "Reset";
+
+/* Content Types */
+"contentType.article" = "Article";
+"contentType.directoryItem" = "Directory";
+"contentType.inheritor" = "Inheritor";
+
+/* Article Categories */
+"articleCategory.news" = "News";
+"articleCategory.forum" = "Forum";
+"articleCategory.specialTopic" = "Specials";
+
+/* Directory Kinds */
+"directoryKind.nationalProject" = "National Project";
+"directoryKind.culturalEcoZone" = "Cultural Eco Zone";
+"directoryKind.productiveProtectionBase" = "Protection Base";
+"directoryKind.unescoEntry" = "UNESCO";
+"directoryKind.chinaUnescoEntry" = "China UNESCO";
+"directoryKind.contractingState" = "Contracting State";
+
+/* Reading Path Sources */
+"readingPathSource.blendedRecommendation" = "Recommendation";
+"readingPathSource.related" = "Related";
+"readingPathSource.recommendation" = "Recommended";
+"readingPathSource.semanticRecommendation" = "Similar";
+"readingPathSource.graph" = "Graph";
+"readingPathSource.list" = "List";
+
+/* Page Titles */
+"page.articles" = "Articles";
+"page.directory" = "Heritage Directory";
+"page.inheritors" = "Representative Inheritors";
+"page.discovery" = "Discovery";
+"page.settings" = "Settings";
+"page.my" = "My";
+"page.search" = "Search";
+"page.timeline" = "Timeline";
+"page.regionAtlas" = "Region Atlas";
+"page.taxonomy" = "Taxonomy";
+"page.stories" = "Data Stories";
+"page.compare" = "Compare";
+
+/* Settings */
+"settings.appearance" = "Appearance";
+"settings.theme" = "Theme";
+"settings.theme.system" = "System";
+"settings.theme.light" = "Light";
+"settings.theme.dark" = "Dark";
+"settings.language" = "Language";
+"settings.language.system" = "System";
+"settings.language.zhHans" = "简体中文";
+"settings.language.en" = "English";
+"settings.favoritesAndHistory" = "Favorites & History";
+
+/* My Page */
+"my.favorites" = "Favorites";
+"my.recentlyViewed" = "Recently Viewed";
+"my.readingPath" = "Reading Path";
+"my.empty.favorites" = "No favorites yet";
+"my.empty.recentlyViewed" = "No recently viewed items";
+"my.empty.readingPath" = "No reading path recorded";
+
+/* Error Messages */
+"error.network" = "Network connection error. Please check your connection.";
+"error.timeout" = "Request timed out. Please try again later.";
+"error.server" = "Service temporarily unavailable. Please try again later.";
+"error.notFound" = "Content not found.";
+"error.unknown" = "Failed to load. Please try again.";
+"error.invalidYear" = "Please enter a valid 4-digit year";
+
+/* Empty States */
+"empty.noContent" = "No content available";
+"empty.noResults" = "No results found";
+"empty.searchHint" = "Try different keywords or filters";
+
+/* Loading */
+"loading.default" = "Loading...";
+"loading.searching" = "Searching...";
+"loading.exploring" = "Exploring...";
+
+/* Discovery */
+"discovery.today" = "Today's Discovery";
+"discovery.trending" = "Trending";
+"discovery.weekly" = "Weekly Highlights";
+"discovery.topics" = "Explore Topics";
+"discovery.learningPaths" = "Learning Paths";
+"discovery.collections" = "Featured Collections";
+"discovery.regionAtlas" = "Region Atlas";
+"discovery.timeline" = "Timeline";
+"discovery.taxonomy" = "Taxonomy";
+"discovery.stories" = "Data Stories";
+"discovery.serendipity" = "Serendipity";
+"discovery.deepDive" = "Deep Dive";
+"discovery.tryLuck" = "Try Your Luck";
+
+/* Statistics */
+"stats.total" = "Total";
+"stats.articles" = "Articles";
+"stats.directoryItems" = "Directory Items";
+"stats.inheritors" = "Inheritors";
+"stats.regions" = "Regions";
+"stats.categories" = "Categories";

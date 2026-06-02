@@ -1,0 +1,129 @@
+/* App Name */
+"app.name" = "E迹";
+
+/* Tab Bar */
+"tab.articles" = "文章";
+"tab.directory" = "名录";
+"tab.inheritors" = "传承人";
+"tab.discovery" = "发现";
+
+/* Navigation */
+"nav.back" = "返回";
+"nav.cancel" = "取消";
+"nav.done" = "完成";
+"nav.search" = "搜索";
+"nav.filter" = "筛选";
+"nav.settings" = "设置";
+"nav.my" = "我的";
+
+/* Common Actions */
+"action.retry" = "重试";
+"action.refresh" = "刷新";
+"action.viewOriginal" = "查看原文";
+"action.favorite" = "收藏";
+"action.unfavorite" = "取消收藏";
+"action.clear" = "清空";
+"action.delete" = "删除";
+"action.apply" = "应用";
+"action.reset" = "重置";
+
+/* Content Types */
+"contentType.article" = "文章";
+"contentType.directoryItem" = "名录";
+"contentType.inheritor" = "传承人";
+
+/* Article Categories */
+"articleCategory.news" = "新闻";
+"articleCategory.forum" = "论坛";
+"articleCategory.specialTopic" = "专题";
+
+/* Directory Kinds */
+"directoryKind.nationalProject" = "国家级项目";
+"directoryKind.culturalEcoZone" = "文化生态区";
+"directoryKind.productiveProtectionBase" = "保护基地";
+"directoryKind.unescoEntry" = "UNESCO";
+"directoryKind.chinaUnescoEntry" = "中国 UNESCO";
+"directoryKind.contractingState" = "缔约国";
+
+/* Reading Path Sources */
+"readingPathSource.blendedRecommendation" = "推荐";
+"readingPathSource.related" = "相关";
+"readingPathSource.recommendation" = "推荐";
+"readingPathSource.semanticRecommendation" = "相似";
+"readingPathSource.graph" = "图谱";
+"readingPathSource.list" = "列表";
+
+/* Page Titles */
+"page.articles" = "文章";
+"page.directory" = "非遗名录";
+"page.inheritors" = "代表性传承人";
+"page.discovery" = "发现";
+"page.settings" = "设置";
+"page.my" = "我的";
+"page.search" = "搜索";
+"page.timeline" = "时间线";
+"page.regionAtlas" = "地区图谱";
+"page.taxonomy" = "主题库";
+"page.stories" = "数据故事";
+"page.compare" = "对比";
+
+/* Settings */
+"settings.appearance" = "外观";
+"settings.theme" = "主题";
+"settings.theme.system" = "跟随系统";
+"settings.theme.light" = "浅色";
+"settings.theme.dark" = "暗色";
+"settings.language" = "语言";
+"settings.language.system" = "跟随系统";
+"settings.language.zhHans" = "简体中文";
+"settings.language.en" = "English";
+"settings.favoritesAndHistory" = "收藏与最近浏览";
+
+/* My Page */
+"my.favorites" = "收藏";
+"my.recentlyViewed" = "最近浏览";
+"my.readingPath" = "阅读路径";
+"my.empty.favorites" = "暂无收藏";
+"my.empty.recentlyViewed" = "暂无最近浏览";
+"my.empty.readingPath" = "暂无阅读路径";
+
+/* Error Messages */
+"error.network" = "网络连接错误，请检查网络连接。";
+"error.timeout" = "请求超时，请稍后重试。";
+"error.server" = "服务暂时不可用，请稍后重试。";
+"error.notFound" = "内容不存在。";
+"error.unknown" = "加载失败，请重试。";
+"error.invalidYear" = "请输入有效的4位年份";
+
+/* Empty States */
+"empty.noContent" = "暂无内容";
+"empty.noResults" = "未找到结果";
+"empty.searchHint" = "尝试不同的关键词或筛选条件";
+
+/* Loading */
+"loading.default" = "加载中...";
+"loading.searching" = "搜索中...";
+"loading.exploring" = "探索中...";
+
+/* Discovery */
+"discovery.today" = "今日发现";
+"discovery.trending" = "正在被看见";
+"discovery.weekly" = "本周非遗包";
+"discovery.topics" = "今日探索";
+"discovery.learningPaths" = "学习路径";
+"discovery.collections" = "精选合集";
+"discovery.regionAtlas" = "地区图谱";
+"discovery.timeline" = "时间线";
+"discovery.taxonomy" = "主题库";
+"discovery.stories" = "数据故事";
+"discovery.serendipity" = "随便看看";
+"discovery.deepDive" = "深度探索";
+"discovery.tryLuck" = "随便看看";
+
+/* Statistics */
+"stats.total" = "总计";
+"stats.articles" = "文章";
+"stats.directoryItems" = "名录";
+"stats.inheritors" = "传承人";
+"stats.regions" = "地区";
+"stats.categories" = "分类";
