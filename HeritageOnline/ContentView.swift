@@ -342,49 +342,7 @@ struct DiscoveryView: View {
     }
 }
 
-// MARK: - 设置页占位
-
-struct SettingsView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-    let onBack: () -> Void
-    let onMyPageClick: () -> Void
-
-    var body: some View {
-        NavigationStack {
-            PageBackground {
-                VStack {
-                    PageHeader(title: String(localized: "page.settings"))
-
-                    Spacer()
-
-                    Text(String(localized: "page.settings"))
-                        .font(HeritageTypography.headlineLarge)
-                        .foregroundStyle(colorScheme.onBackground)
-
-                    Button(String(localized: "settings.favoritesAndHistory")) {
-                        onMyPageClick()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(colorScheme.primary)
-                    .padding(.top, 16)
-
-                    Spacer()
-                }
-            }
-            .navigationTitle(String(localized: "page.settings"))
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(String(localized: "nav.back")) {
-                        onBack()
-                    }
-                }
-            }
-            #endif
-        }
-    }
-}
+// MARK: - 设置页（使用独立的 SettingsView）
 
 // MARK: - 我的页占位
 

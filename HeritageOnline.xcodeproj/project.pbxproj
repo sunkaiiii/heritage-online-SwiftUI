@@ -56,6 +56,10 @@
 		B200001F /* DefaultHeritageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100001F /* DefaultHeritageRepository.swift */; };
 		B2000020 /* MockHeritageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* MockHeritageRepository.swift */; };
 		B2000021 /* RepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* RepositoryTests.swift */; };
+		B2000022 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000022 /* SettingsView.swift */; };
+		B2000023 /* ImagePreviewUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000023 /* ImagePreviewUrl.swift */; };
+		B2000024 /* ImagePreviewOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000024 /* ImagePreviewOverlay.swift */; };
+		B2000025 /* HeritageAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000025 /* HeritageAsyncImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +134,10 @@
 		B100001F /* DefaultHeritageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultHeritageRepository.swift; sourceTree = "<group>"; };
 		B1000020 /* MockHeritageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHeritageRepository.swift; sourceTree = "<group>"; };
 		B1000021 /* RepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTests.swift; sourceTree = "<group>"; };
+		B1000022 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B1000023 /* ImagePreviewUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewUrl.swift; sourceTree = "<group>"; };
+		B1000024 /* ImagePreviewOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewOverlay.swift; sourceTree = "<group>"; };
+		B1000025 /* HeritageAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeritageAsyncImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,8 +252,18 @@
 				A5000017 /* Components */,
 				A5000018 /* Error */,
 				A5000019 /* Text */,
+				B3000002 /* Preview */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		B3000002 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				B1000023 /* ImagePreviewUrl.swift */,
+				B1000024 /* ImagePreviewOverlay.swift */,
+			);
+			path = Preview;
 			sourceTree = "<group>";
 		};
 		A5000009 /* Resources */ = {
@@ -362,6 +380,7 @@
 				B1000012 /* ThemePreviewView.swift */,
 				B1000013 /* ComponentPreviewView.swift */,
 				B1000015 /* LabelPreviewView.swift */,
+				B1000022 /* SettingsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -396,6 +415,7 @@
 				B100000F /* ErrorRetryRow.swift */,
 				B1000010 /* LoadingPlaceholder.swift */,
 				B1000011 /* EmptyState.swift */,
+				B1000025 /* HeritageAsyncImage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -580,6 +600,10 @@
 				B200001C /* ContentDtos.swift in Sources */,
 				B200001E /* HeritageRepository.swift in Sources */,
 				B200001F /* DefaultHeritageRepository.swift in Sources */,
+				B2000022 /* SettingsView.swift in Sources */,
+				B2000023 /* ImagePreviewUrl.swift in Sources */,
+				B2000024 /* ImagePreviewOverlay.swift in Sources */,
+				B2000025 /* HeritageAsyncImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
