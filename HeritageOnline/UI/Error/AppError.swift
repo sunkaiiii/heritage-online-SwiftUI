@@ -13,8 +13,14 @@ enum AppError: Error, Equatable {
     /// 未知错误
     case unknown(String?)
 
-    /// 从 NSError 转换
+    /// 从 Error 转换
     static func from(_ error: Error) -> AppError {
+        // 优先识别 NetworkError
+        if let networkError = error as? NetworkError {
+            return fromNetworkError(networkError)
+        }
+
+        // 处理 NSError
         let nsError = error as NSError
 
         switch nsError.domain {
@@ -42,6 +48,41 @@ enum AppError: Error, Equatable {
                 }
             }
             return .unknown(nsError.localizedDescription)
+        }
+    }
+
+    /// 从 NetworkError 转换
+    private static func fromNetworkError(_ error: NetworkError) -> AppError {
+        switch error {
+        case .networkUnavailable:
+            return .network
+        case .timeout:
+            return .timeout
+        case .notFound:
+            return .notFound
+        case .notFoundWithDetails:
+            return .notFound
+        case .serverError:
+            return .server
+        case .serverErrorWithDetails:
+            return .server
+        case .httpError(let statusCode):
+            if statusCode == 404 {
+                return .notFound
+            } else if statusCode >= 500 {
+                return .server
+            }
+            return .unknown(error.localizedDescription)
+        case .badRequest:
+            return .unknown(error.localizedDescription)
+        case .badRequestWithDetails(let details):
+            return .unknown(details?.detail ?? error.localizedDescription)
+        case .decodingError(let decodingError):
+            return .unknown(decodingError.localizedDescription)
+        case .invalidBaseURL, .invalidURL, .invalidResponse:
+            return .unknown(error.localizedDescription)
+        case .underlying(let underlyingError):
+            return .unknown(underlyingError.localizedDescription)
         }
     }
 

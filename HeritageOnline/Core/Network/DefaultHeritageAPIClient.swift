@@ -32,14 +32,14 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
     }
 
     func getArticle(id: String) async throws -> ArticleDetailDTO {
-        try await httpClient.get("api/articles/\(id)")
+        try await httpClient.get(["api", "articles", id])
     }
 
     func getArticleBySourceId(sourceId: String, category: ArticleCategory) async throws -> ArticleDetailDTO {
         var builder = QueryBuilder()
         builder.add("category", value: category.wireName)
         return try await httpClient.get(
-            "api/articles/source/\(sourceId)",
+            ["api", "articles", "source", sourceId],
             queryItems: builder.build()
         )
     }
@@ -52,7 +52,7 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
     }
 
     func getArticleContext(id: String) async throws -> DetailContextDTO {
-        try await httpClient.get("api/articles/\(id)/context")
+        try await httpClient.get(["api", "articles", id, "context"])
     }
 
     // MARK: - 名录
@@ -71,20 +71,20 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
     }
 
     func getDirectoryItem(id: String) async throws -> DirectoryItemDetailDTO {
-        try await httpClient.get("api/directory-items/\(id)")
+        try await httpClient.get(["api", "directory-items", id])
     }
 
     func getDirectoryItemBySourceId(sourceId: String, kind: DirectoryItemKind) async throws -> DirectoryItemDetailDTO {
         var builder = QueryBuilder()
         builder.add("kind", value: kind.wireName)
         return try await httpClient.get(
-            "api/directory-items/source/\(sourceId)",
+            ["api", "directory-items", "source", sourceId],
             queryItems: builder.build()
         )
     }
 
     func getDirectoryItemContext(id: String) async throws -> DetailContextDTO {
-        try await httpClient.get("api/directory-items/\(id)/context")
+        try await httpClient.get(["api", "directory-items", id, "context"])
     }
 
     // MARK: - 传承人
@@ -102,15 +102,15 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
     }
 
     func getInheritor(id: String) async throws -> InheritorDetailDTO {
-        try await httpClient.get("api/inheritors/\(id)")
+        try await httpClient.get(["api", "inheritors", id])
     }
 
     func getInheritorBySourceId(sourceId: String) async throws -> InheritorDetailDTO {
-        try await httpClient.get("api/inheritors/source/\(sourceId)")
+        try await httpClient.get(["api", "inheritors", "source", sourceId])
     }
 
     func getInheritorContext(id: String) async throws -> DetailContextDTO {
-        try await httpClient.get("api/inheritors/\(id)/context")
+        try await httpClient.get(["api", "inheritors", id, "context"])
     }
 
     // MARK: - 搜索

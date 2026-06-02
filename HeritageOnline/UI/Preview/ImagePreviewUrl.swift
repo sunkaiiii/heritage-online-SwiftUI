@@ -31,7 +31,7 @@ enum ImagePreviewUrl {
     ///   - coverImage: 封面图
     ///   - gallery: 图库
     ///   - contentBlocks: 内容块
-    /// - Returns: 去重后的预览 URL 数组
+    /// - Returns: 去重后的预览 URL 数组（保持顺序）
     static func collect(
         coverImage: MediaAssetDTO?,
         gallery: [MediaAssetDTO],
@@ -51,7 +51,8 @@ enum ImagePreviewUrl {
         let contentImages = contentBlocks.compactMap { $0.image }
         urls.append(contentsOf: previewUrls(from: contentImages))
 
-        // 去重并保持顺序
-        return Array(Set(urls))
+        // 稳定去重（保持顺序）
+        var seen = Set<String>()
+        return urls.filter { seen.insert($0).inserted }
     }
 }

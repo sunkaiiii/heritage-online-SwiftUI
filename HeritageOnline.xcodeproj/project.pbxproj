@@ -31,7 +31,6 @@
 		B2000006 /* ContentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000006 /* ContentCard.swift */; };
 		B2000007 /* MetaChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000007 /* MetaChip.swift */; };
 		B2000008 /* ImagePlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* ImagePlaceholder.swift */; };
-		B2000009 /* ListImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000009 /* ListImage.swift */; };
 		B200000A /* ListCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000A /* ListCard.swift */; };
 		B200000B /* FactCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* FactCard.swift */; };
 		B200000C /* ReferenceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* ReferenceCard.swift */; };
@@ -109,7 +108,6 @@
 		B1000006 /* ContentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCard.swift; sourceTree = "<group>"; };
 		B1000007 /* MetaChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChip.swift; sourceTree = "<group>"; };
 		B1000008 /* ImagePlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePlaceholder.swift; sourceTree = "<group>"; };
-		B1000009 /* ListImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListImage.swift; sourceTree = "<group>"; };
 		B100000A /* ListCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCard.swift; sourceTree = "<group>"; };
 		B100000B /* FactCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactCard.swift; sourceTree = "<group>"; };
 		B100000C /* ReferenceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceCard.swift; sourceTree = "<group>"; };
@@ -406,7 +404,6 @@
 				B1000006 /* ContentCard.swift */,
 				B1000007 /* MetaChip.swift */,
 				B1000008 /* ImagePlaceholder.swift */,
-				B1000009 /* ListImage.swift */,
 				B100000A /* ListCard.swift */,
 				B100000B /* FactCard.swift */,
 				B100000C /* ReferenceCard.swift */,

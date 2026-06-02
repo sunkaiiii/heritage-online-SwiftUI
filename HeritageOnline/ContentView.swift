@@ -17,32 +17,30 @@ struct ContentView: View {
     @State private var showMyPage = false
 
     var body: some View {
-        @Bindable var settings = settingsManager
-
         ZStack {
             // 主内容
             TabView(selection: $selectedTab) {
                 ArticlesTab(onSettingsSelected: { showSettings = true })
                     .tabItem {
-                        Label(String(localized: "tab.articles"), systemImage: HomeTab.articles.icon)
+                        Label(HomeTab.articles.localizationKey, systemImage: HomeTab.articles.icon)
                     }
                     .tag(HomeTab.articles)
 
                 DirectoryTab()
                     .tabItem {
-                        Label(String(localized: "tab.directory"), systemImage: HomeTab.directory.icon)
+                        Label(HomeTab.directory.localizationKey, systemImage: HomeTab.directory.icon)
                     }
                     .tag(HomeTab.directory)
 
                 InheritorsTab()
                     .tabItem {
-                        Label(String(localized: "tab.inheritors"), systemImage: HomeTab.inheritors.icon)
+                        Label(HomeTab.inheritors.localizationKey, systemImage: HomeTab.inheritors.icon)
                     }
                     .tag(HomeTab.inheritors)
 
                 DiscoveryTab()
                     .tabItem {
-                        Label(String(localized: "tab.discovery"), systemImage: HomeTab.discovery.icon)
+                        Label(HomeTab.discovery.localizationKey, systemImage: HomeTab.discovery.icon)
                     }
                     .tag(HomeTab.discovery)
             }
@@ -96,13 +94,13 @@ enum HomeTab: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// 本地化显示名称
-    var displayName: String {
+    /// 本地化显示名称 key
+    var localizationKey: LocalizedStringKey {
         switch self {
-        case .articles: return String(localized: "tab.articles")
-        case .directory: return String(localized: "tab.directory")
-        case .inheritors: return String(localized: "tab.inheritors")
-        case .discovery: return String(localized: "tab.discovery")
+        case .articles: return "tab.articles"
+        case .directory: return "tab.directory"
+        case .inheritors: return "tab.inheritors"
+        case .discovery: return "tab.discovery"
         }
     }
 
@@ -163,20 +161,20 @@ struct DiscoveryTab: View {
 /// 占位详情页（用于 Step 7 验收）
 struct PlaceholderDetailView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    let title: String
+    let titleKey: LocalizedStringKey
 
     var body: some View {
         PageBackground {
             VStack {
-                PageHeader(title: title)
+                PageHeader(titleKey: titleKey)
 
                 Spacer()
 
-                Text(title)
+                Text(titleKey)
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                Text(String(localized: "page.detail.placeholder"))
+                Text("page.detail.placeholder")
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
@@ -184,7 +182,7 @@ struct PlaceholderDetailView: View {
                 Spacer()
             }
         }
-        .navigationTitle(title)
+        .navigationTitle(titleKey)
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar) // 隐藏底部导航
@@ -201,28 +199,28 @@ struct ArticlesListView: View {
         PageBackground {
             VStack {
                 PageHeader(
-                    title: String(localized: "app.name"),
-                    subtitle: String(localized: "page.articles.subtitle"),
+                    titleKey: "app.name",
+                    subtitleKey: "page.articles.subtitle",
                     actions: [
-                        .init(icon: "gear", accessibilityLabel: String(localized: "nav.settings")) { onSettingsSelected() },
-                        .init(icon: "arrow.clockwise", accessibilityLabel: String(localized: "action.refresh")) { /* 刷新 */ }
+                        .init(icon: "gear", accessibilityLabelKey: "nav.settings") { onSettingsSelected() },
+                        .init(icon: "arrow.clockwise", accessibilityLabelKey: "action.refresh") { /* 刷新 */ }
                     ]
                 )
 
                 Spacer()
 
-                Text(String(localized: "page.articles"))
+                Text("page.articles")
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                Text(String(localized: "page.articles.placeholder"))
+                Text("page.articles.placeholder")
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
 
                 // 占位详情页按钮（用于 Step 7 验收）
-                NavigationLink(destination: PlaceholderDetailView(title: String(localized: "page.article.detail"))) {
-                    Text(String(localized: "action.viewDetail"))
+                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.article.detail")) {
+                    Text("action.viewDetail")
                         .font(HeritageTypography.labelLarge)
                         .foregroundStyle(colorScheme.primary)
                         .padding(.top, 16)
@@ -231,7 +229,7 @@ struct ArticlesListView: View {
                 Spacer()
             }
         }
-        .navigationTitle(String(localized: "tab.articles"))
+        .navigationTitle("tab.articles")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -246,25 +244,33 @@ struct DirectoryListView: View {
         PageBackground {
             VStack {
                 PageHeader(
-                    title: String(localized: "page.directory"),
-                    subtitle: String(localized: "page.directory.subtitle")
+                    titleKey: "page.directory",
+                    subtitleKey: "page.directory.subtitle"
                 )
 
                 Spacer()
 
-                Text(String(localized: "page.directory"))
+                Text("page.directory")
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                Text(String(localized: "page.directory.placeholder"))
+                Text("page.directory.placeholder")
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
 
+                // 占位详情页按钮
+                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.directory.detail")) {
+                    Text("action.viewDetail")
+                        .font(HeritageTypography.labelLarge)
+                        .foregroundStyle(colorScheme.primary)
+                        .padding(.top, 16)
+                }
+
                 Spacer()
             }
         }
-        .navigationTitle(String(localized: "tab.directory"))
+        .navigationTitle("tab.directory")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -279,25 +285,33 @@ struct InheritorsListView: View {
         PageBackground {
             VStack {
                 PageHeader(
-                    title: String(localized: "page.inheritors"),
-                    subtitle: String(localized: "page.inheritors.subtitle")
+                    titleKey: "page.inheritors",
+                    subtitleKey: "page.inheritors.subtitle"
                 )
 
                 Spacer()
 
-                Text(String(localized: "page.inheritors"))
+                Text("page.inheritors")
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                Text(String(localized: "page.inheritors.placeholder"))
+                Text("page.inheritors.placeholder")
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
 
+                // 占位详情页按钮
+                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.inheritor.detail")) {
+                    Text("action.viewDetail")
+                        .font(HeritageTypography.labelLarge)
+                        .foregroundStyle(colorScheme.primary)
+                        .padding(.top, 16)
+                }
+
                 Spacer()
             }
         }
-        .navigationTitle(String(localized: "tab.inheritors"))
+        .navigationTitle("tab.inheritors")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -312,25 +326,33 @@ struct DiscoveryView: View {
         PageBackground {
             VStack {
                 PageHeader(
-                    title: String(localized: "page.discovery"),
-                    subtitle: String(localized: "page.discovery.subtitle")
+                    titleKey: "page.discovery",
+                    subtitleKey: "page.discovery.subtitle"
                 )
 
                 Spacer()
 
-                Text(String(localized: "page.discovery"))
+                Text("page.discovery")
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                Text(String(localized: "page.discovery.placeholder"))
+                Text("page.discovery.placeholder")
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
 
+                // 占位详情页按钮
+                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.discovery")) {
+                    Text("action.viewDetail")
+                        .font(HeritageTypography.labelLarge)
+                        .foregroundStyle(colorScheme.primary)
+                        .padding(.top, 16)
+                }
+
                 Spacer()
             }
         }
-        .navigationTitle(String(localized: "tab.discovery"))
+        .navigationTitle("tab.discovery")
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
@@ -356,15 +378,15 @@ struct MyPageView: View {
         NavigationStack {
             PageBackground {
                 VStack {
-                    PageHeader(title: String(localized: "page.my"))
+                    PageHeader(titleKey: "page.my")
 
                     Spacer()
 
-                    Text(String(localized: "page.my"))
+                    Text("page.my")
                         .font(HeritageTypography.headlineLarge)
                         .foregroundStyle(colorScheme.onBackground)
 
-                    Text(String(localized: "page.my.placeholder"))
+                    Text("page.my.placeholder")
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(colorScheme.onSurfaceVariant)
                         .padding(.top, 8)
@@ -372,12 +394,12 @@ struct MyPageView: View {
                     Spacer()
                 }
             }
-            .navigationTitle(String(localized: "page.my"))
+            .navigationTitle("page.my")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(String(localized: "nav.back")) {
+                    Button("nav.back") {
                         onBack()
                     }
                 }

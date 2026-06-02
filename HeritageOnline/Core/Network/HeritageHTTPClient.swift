@@ -47,7 +47,7 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
 
     // MARK: - 请求方法
 
-    /// 发送 GET 请求
+    /// 发送 GET 请求（字符串路径）
     /// - Parameters:
     ///   - path: API 路径
     ///   - queryItems: 查询参数
@@ -69,7 +69,29 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
         }
     }
 
-    /// 发送 GET 请求（无响应体）
+    /// 发送 GET 请求（路径段数组）
+    /// - Parameters:
+    ///   - segments: 路径段数组，每段会独立编码
+    ///   - queryItems: 查询参数
+    /// - Returns: 解码后的响应
+    func get<T: Decodable>(_ segments: [String], queryItems: [URLQueryItem] = []) async throws -> T {
+        do {
+            let url = try buildURL(pathSegments: segments, queryItems: queryItems)
+            let (data, response) = try await session.data(from: url)
+            try validateResponse(response, data: data)
+            return try decoder.decode(T.self, from: data)
+        } catch let error as NetworkError {
+            throw error
+        } catch let error as DecodingError {
+            throw NetworkError.decodingError(error)
+        } catch let error as URLError {
+            throw NetworkError.from(error)
+        } catch {
+            throw NetworkError.underlying(error)
+        }
+    }
+
+    /// 发送 GET 请求（无响应体，字符串路径）
     /// - Parameters:
     ///   - path: API 路径
     ///   - queryItems: 查询参数
@@ -87,9 +109,27 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
         }
     }
 
+    /// 发送 GET 请求（无响应体，路径段数组）
+    /// - Parameters:
+    ///   - segments: 路径段数组，每段会独立编码
+    ///   - queryItems: 查询参数
+    func get(_ segments: [String], queryItems: [URLQueryItem] = []) async throws {
+        do {
+            let url = try buildURL(pathSegments: segments, queryItems: queryItems)
+            let (data, response) = try await session.data(from: url)
+            try validateResponse(response, data: data)
+        } catch let error as NetworkError {
+            throw error
+        } catch let error as URLError {
+            throw NetworkError.from(error)
+        } catch {
+            throw NetworkError.underlying(error)
+        }
+    }
+
     // MARK: - URL 构建
 
-    /// 构建完整 URL
+    /// 构建完整 URL（字符串路径）
     /// - Parameters:
     ///   - path: API 路径
     ///   - queryItems: 查询参数
@@ -101,6 +141,37 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
 
         // 拼接路径，确保路径编码安全
         let encodedPath = path.split(separator: "/").map { Self.pathSegment(String($0)) }.joined(separator: "/")
+        components.path = components.path.hasSuffix("/")
+            ? components.path + encodedPath
+            : components.path + "/" + encodedPath
+
+        // 添加查询参数（过滤空值）
+        let validQueryItems = queryItems.filter { $0.value != nil && !$0.value!.isEmpty }
+        if !validQueryItems.isEmpty {
+            components.queryItems = validQueryItems
+        }
+
+        guard let url = components.url else {
+            throw NetworkError.invalidURL
+        }
+
+        return url
+    }
+
+    /// 构建完整 URL（路径段数组）
+    /// 每个路径段会独立编码，斜杠会被编码为 %2F
+    /// - Parameters:
+    ///   - segments: 路径段数组
+    ///   - queryItems: 查询参数
+    /// - Returns: 完整 URL
+    func buildURL(pathSegments segments: [String], queryItems: [URLQueryItem] = []) throws -> URL {
+        guard var components = URLComponents(url: config.baseURL, resolvingAgainstBaseURL: true) else {
+            throw NetworkError.invalidBaseURL
+        }
+
+        // 每个段独立编码
+        let encodedSegments = segments.map { Self.pathSegment($0) }
+        let encodedPath = encodedSegments.joined(separator: "/")
         components.path = components.path.hasSuffix("/")
             ? components.path + encodedPath
             : components.path + "/" + encodedPath
@@ -325,9 +396,9 @@ extension HeritageHTTPClient {
             return
         }
 
-        // 仅信任 localhost 和 127.0.0.1
+        // 仅信任 localhost 和 127.0.0.1（iOS 开发常用地址）
         let host = challenge.protectionSpace.host
-        let trustedHosts = ["localhost", "127.0.0.1", "10.0.2.2"]
+        let trustedHosts = ["localhost", "127.0.0.1"]
 
         guard trustsSelfSigned && trustedHosts.contains(host) else {
             completionHandler(.cancelAuthenticationChallenge, nil)

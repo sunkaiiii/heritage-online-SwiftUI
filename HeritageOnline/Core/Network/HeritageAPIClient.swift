@@ -397,23 +397,27 @@ struct InheritorDetailDTO: Decodable, Sendable {
 }
 
 /// 详情 Context DTO
+/// 详情 Context DTO
+/// 对齐 Android DetailContextDto
 struct DetailContextDTO: Decodable, Sendable {
     let related: [RelatedItemDTO]
     let recommendations: [RelatedItemDTO]
     let semanticRecommendations: [RelatedItemDTO]
     let collections: [CollectionRefDTO]
     let exploreTopics: [ExploreTopicRefDTO]
+    let graph: [GraphEdgeDTO]
 
     enum CodingKeys: String, CodingKey {
-        case related, recommendations, semanticRecommendations, collections, exploreTopics
+        case related, recommendations, semanticRecommendations, collections, exploreTopics, graph
     }
 
-    init(related: [RelatedItemDTO], recommendations: [RelatedItemDTO], semanticRecommendations: [RelatedItemDTO], collections: [CollectionRefDTO], exploreTopics: [ExploreTopicRefDTO]) {
+    init(related: [RelatedItemDTO], recommendations: [RelatedItemDTO], semanticRecommendations: [RelatedItemDTO], collections: [CollectionRefDTO], exploreTopics: [ExploreTopicRefDTO], graph: [GraphEdgeDTO]) {
         self.related = related
         self.recommendations = recommendations
         self.semanticRecommendations = semanticRecommendations
         self.collections = collections
         self.exploreTopics = exploreTopics
+        self.graph = graph
     }
 
     init(from decoder: Decoder) throws {
@@ -423,15 +427,21 @@ struct DetailContextDTO: Decodable, Sendable {
         semanticRecommendations = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .semanticRecommendations) ?? []
         collections = try container.decodeIfPresent([CollectionRefDTO].self, forKey: .collections) ?? []
         exploreTopics = try container.decodeIfPresent([ExploreTopicRefDTO].self, forKey: .exploreTopics) ?? []
+        graph = try container.decodeIfPresent([GraphEdgeDTO].self, forKey: .graph) ?? []
     }
 }
 
 /// 相关内容 DTO
+/// 对齐 Android RelatedItemDto
 struct RelatedItemDTO: Decodable, Sendable {
     let id: String?
     let title: String?
     let type: String?
+    let kind: String?
+    let category: String?
+    let summary: String?
     let imageUrl: String?
+    let coverImage: MediaAssetDTO?
     let sourceId: String?
     let sourceUrl: String?
 }
@@ -440,6 +450,7 @@ struct RelatedItemDTO: Decodable, Sendable {
 struct CollectionRefDTO: Decodable, Sendable {
     let id: String?
     let title: String?
+    let subtitle: String?
     let type: String?
 }
 
@@ -450,48 +461,83 @@ struct ExploreTopicRefDTO: Decodable, Sendable {
     let title: String?
 }
 
+/// 关系图谱边 DTO
+struct GraphEdgeDTO: Decodable, Sendable {
+    let fromId: String?
+    let fromType: String?
+    let fromTitle: String?
+    let toId: String?
+    let toType: String?
+    let toTitle: String?
+    let relation: String?
+}
+
 /// 搜索 v2 响应 DTO
+/// 对齐 Android SearchV2ResponseDto
 struct SearchV2ResponseDTO: Decodable, Sendable {
     let items: [SearchResultItemDTO]
-    let totalCount: Int
+    let total: Int
     let page: Int
     let pageSize: Int
     let hasMore: Bool
+    let facets: SearchFacetsDTO?
+    let query: String?
 
     enum CodingKeys: String, CodingKey {
-        case items, totalCount, page, pageSize, hasMore
+        case items, total, page, pageSize, hasMore, facets, query
     }
 
-    init(items: [SearchResultItemDTO], totalCount: Int, page: Int, pageSize: Int, hasMore: Bool) {
+    init(items: [SearchResultItemDTO], total: Int, page: Int, pageSize: Int, hasMore: Bool, facets: SearchFacetsDTO?, query: String?) {
         self.items = items
-        self.totalCount = totalCount
+        self.total = total
         self.page = page
         self.pageSize = pageSize
         self.hasMore = hasMore
+        self.facets = facets
+        self.query = query
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         items = try container.decodeIfPresent([SearchResultItemDTO].self, forKey: .items) ?? []
-        totalCount = try container.decodeIfPresent(Int.self, forKey: .totalCount) ?? 0
+        // 兼容 total 和 totalCount
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
         page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
         pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
         hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
+        facets = try container.decodeIfPresent(SearchFacetsDTO.self, forKey: .facets)
+        query = try container.decodeIfPresent(String.self, forKey: .query)
     }
 }
 
+/// 搜索分面 DTO
+struct SearchFacetsDTO: Decodable, Sendable {
+    let types: [FacetBucketDTO]?
+    let categories: [FacetBucketDTO]?
+    let regions: [FacetBucketDTO]?
+    let years: [FacetBucketDTO]?
+    let kinds: [FacetBucketDTO]?
+}
+
 /// 搜索结果项 DTO
+/// 对齐 Android SearchResultItemDto
 struct SearchResultItemDTO: Decodable, Sendable {
     let id: String?
     let title: String?
     let subtitle: String?
     let summary: String?
     let type: String?
-    let imageUrl: String?
+    let kind: String?
     let category: String?
     let region: String?
+    let publishedAt: String?
+    let publishedYear: Int?
+    let coverImage: MediaAssetDTO?
     let sourceId: String?
     let sourceUrl: String?
+    let highlights: [String]?
+    let matchedFields: [String]?
+    let score: Double?
 }
 
 /// 搜索建议 DTO
@@ -501,47 +547,91 @@ struct SearchSuggestionDTO: Decodable, Sendable {
 }
 
 /// 时间线 v2 响应 DTO
+/// 对齐 Android TimelineV2ResponseDto
 struct TimelineV2ResponseDTO: Decodable, Sendable {
     let items: [TimelineItemDTO]
+    let total: Int
     let page: Int
     let pageSize: Int
     let hasMore: Bool
+    let facets: TimelineFacetsDTO?
 
     enum CodingKeys: String, CodingKey {
-        case items, page, pageSize, hasMore
+        case items, total, page, pageSize, hasMore, facets
     }
 
-    init(items: [TimelineItemDTO], page: Int, pageSize: Int, hasMore: Bool) {
+    init(items: [TimelineItemDTO], total: Int, page: Int, pageSize: Int, hasMore: Bool, facets: TimelineFacetsDTO?) {
         self.items = items
+        self.total = total
         self.page = page
         self.pageSize = pageSize
         self.hasMore = hasMore
+        self.facets = facets
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         items = try container.decodeIfPresent([TimelineItemDTO].self, forKey: .items) ?? []
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
         page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
         pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
         hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
+        facets = try container.decodeIfPresent(TimelineFacetsDTO.self, forKey: .facets)
     }
 }
 
+/// 时间线分面 DTO
+struct TimelineFacetsDTO: Decodable, Sendable {
+    let types: [FacetBucketDTO]?
+    let categories: [FacetBucketDTO]?
+    let regions: [FacetBucketDTO]?
+}
+
 /// 时间线项 DTO
+/// 对齐 Android TimelineItemDto
 struct TimelineItemDTO: Decodable, Sendable {
     let id: String?
     let title: String?
+    let summary: String?
     let type: String?
-    let imageUrl: String?
-    let publishedAt: String?
+    let category: String?
+    let kind: String?
+    let region: String?
+    let date: String?
     let year: Int?
+    let publishedAt: String?
+    let coverImage: MediaAssetDTO?
+    let sourceUrl: String?
 }
 
 /// 时间线年份聚合 DTO
+/// 对齐 Android TimelineYearBucketDto
 struct TimelineYearBucketDTO: Decodable, Sendable {
     let year: Int
-    let totalCount: Int
+    let total: Int
     let articleCount: Int?
     let directoryItemCount: Int?
     let inheritorCount: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case year, total, articleCount, directoryItemCount, inheritorCount
+    }
+
+    init(year: Int, total: Int, articleCount: Int?, directoryItemCount: Int?, inheritorCount: Int?) {
+        self.year = year
+        self.total = total
+        self.articleCount = articleCount
+        self.directoryItemCount = directoryItemCount
+        self.inheritorCount = inheritorCount
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        year = try container.decode(Int.self, forKey: .year)
+        // 兼容 total 和 totalCount
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+        articleCount = try container.decodeIfPresent(Int.self, forKey: .articleCount)
+        directoryItemCount = try container.decodeIfPresent(Int.self, forKey: .directoryItemCount)
+        inheritorCount = try container.decodeIfPresent(Int.self, forKey: .inheritorCount)
+    }
 }

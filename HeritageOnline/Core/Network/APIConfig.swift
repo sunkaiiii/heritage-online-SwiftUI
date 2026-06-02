@@ -52,12 +52,5 @@ struct APIConfig: Sendable {
         self.timeoutInterval = 30
     }
 
-    /// 构建完整的 API URL
-    func url(for path: String, queryItems: [URLQueryItem]? = nil) -> URL? {
-        guard var components = URLComponents(url: baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: true) else {
-            return nil
-        }
-        components.queryItems = queryItems
-        return components.url
-    }
+    // 注意：URL 构建统一使用 HeritageHTTPClient.buildURL，不再保留重复的 url(for:) 方法
 }

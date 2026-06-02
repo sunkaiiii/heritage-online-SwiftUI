@@ -43,11 +43,11 @@ struct ComponentPreviewView: View {
                 // MARK: - PageHeader
                 section("PageHeader") {
                     PageHeader(
-                        title: "E迹",
-                        subtitle: "非遗新闻、论坛与专题",
+                        titleKey: "app.name",
+                        subtitleKey: "page.articles.subtitle",
                         actions: [
-                            .init(icon: "gear") { showSheet = true },
-                            .init(icon: "arrow.clockwise") {}
+                            .init(icon: "gear", accessibilityLabelKey: "nav.settings") { showSheet = true },
+                            .init(icon: "arrow.clockwise", accessibilityLabelKey: "action.refresh") {}
                         ]
                     )
                     .background(colorScheme.surfaceContainerLow)

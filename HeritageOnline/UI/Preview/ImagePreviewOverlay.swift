@@ -1,16 +1,13 @@
 import SwiftUI
 
 /// 图片预览覆盖层
-/// 完全对齐 Android ImagePreviewOverlay
+/// 对齐 Android ImagePreviewOverlay
 /// 支持多图、关闭、缩放、页码显示
 struct ImagePreviewOverlay: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    /// 图片 URL 列表
-    let imageUrls: [String]
-
-    /// 初始显示的图片索引
-    let initialIndex: Int
+    /// 有效的图片 URL 列表（已过滤非法 URL）
+    let validUrls: [String]
 
     /// 关闭回调
     let onDismiss: () -> Void
@@ -29,14 +26,21 @@ struct ImagePreviewOverlay: View {
         initialIndex: Int = 0,
         onDismiss: @escaping () -> Void
     ) {
-        self.imageUrls = imageUrls
-        self.initialIndex = initialIndex
+        // 过滤有效的 URL 字符串
+        let filtered = imageUrls.filter { urlString in
+            guard let url = URL(string: urlString) else { return false }
+            return url.scheme == "http" || url.scheme == "https"
+        }
+        self.validUrls = filtered
         self.onDismiss = onDismiss
-        self._currentPage = State(initialValue: initialIndex)
+
+        // 对 initialIndex 做 clamp
+        let safeIndex = filtered.isEmpty ? 0 : min(max(initialIndex, 0), filtered.count - 1)
+        self._currentPage = State(initialValue: safeIndex)
     }
 
     var body: some View {
-        if imageUrls.isEmpty {
+        if validUrls.isEmpty {
             EmptyView()
         } else {
             ZStack {
@@ -46,7 +50,7 @@ struct ImagePreviewOverlay: View {
 
                 // 图片内容
                 TabView(selection: $currentPage) {
-                    ForEach(Array(imageUrls.enumerated()), id: \.offset) { index, urlString in
+                    ForEach(Array(validUrls.enumerated()), id: \.offset) { index, urlString in
                         if let url = URL(string: urlString) {
                             ZoomableImageView(url: url)
                                 .tag(index)
@@ -71,8 +75,8 @@ struct ImagePreviewOverlay: View {
 
                         Spacer()
 
-                        // 页码指示器
-                        Text("\(currentPage + 1) / \(imageUrls.count)")
+                        // 页码指示器（使用过滤后的 URL 数量）
+                        Text("\(currentPage + 1) / \(validUrls.count)")
                             .font(HeritageTypography.labelLarge)
                             .foregroundStyle(.white)
                     }
@@ -159,7 +163,7 @@ struct ZoomableImageView: View {
                         .font(.system(size: 48))
                         .foregroundStyle(.white.opacity(0.6))
 
-                    Text(String(localized: "error.unknown"))
+                    Text("error.unknown")
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(.white.opacity(0.6))
                 }

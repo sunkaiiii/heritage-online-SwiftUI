@@ -5,38 +5,38 @@ import SwiftUI
 struct PageHeader: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    let title: String
-    let subtitle: String?
+    let titleKey: LocalizedStringKey
+    let subtitleKey: LocalizedStringKey?
     let actions: [PageHeaderAction]
 
     struct PageHeaderAction: Identifiable {
         let id = UUID()
         let icon: String
-        let accessibilityLabel: String
+        let accessibilityLabelKey: LocalizedStringKey
         let action: () -> Void
 
-        init(icon: String, accessibilityLabel: String? = nil, action: @escaping () -> Void) {
+        init(icon: String, accessibilityLabelKey: LocalizedStringKey, action: @escaping () -> Void) {
             self.icon = icon
-            self.accessibilityLabel = accessibilityLabel ?? icon
+            self.accessibilityLabelKey = accessibilityLabelKey
             self.action = action
         }
     }
 
-    init(title: String, subtitle: String? = nil, actions: [PageHeaderAction] = []) {
-        self.title = title
-        self.subtitle = subtitle
+    init(titleKey: LocalizedStringKey, subtitleKey: LocalizedStringKey? = nil, actions: [PageHeaderAction] = []) {
+        self.titleKey = titleKey
+        self.subtitleKey = subtitleKey
         self.actions = actions
     }
 
     var body: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
+                Text(titleKey)
                     .font(HeritageTypography.headlineLarge)
                     .foregroundStyle(colorScheme.onBackground)
 
-                if let subtitle {
-                    Text(subtitle)
+                if let subtitleKey {
+                    Text(subtitleKey)
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(colorScheme.onSurfaceVariant)
                         .lineLimit(2)
@@ -53,7 +53,7 @@ struct PageHeader: View {
                             .font(.system(size: 18))
                             .foregroundStyle(colorScheme.onSurfaceVariant)
                     }
-                    .accessibilityLabel(action.accessibilityLabel)
+                    .accessibilityLabel(action.accessibilityLabelKey)
                 }
             }
         }
@@ -64,11 +64,11 @@ struct PageHeader: View {
 
 #Preview {
     PageHeader(
-        title: String(localized: "app.name"),
-        subtitle: String(localized: "page.articles.subtitle"),
+        titleKey: "app.name",
+        subtitleKey: "page.articles.subtitle",
         actions: [
-            .init(icon: "gear", accessibilityLabel: String(localized: "nav.settings"), action: {}),
-            .init(icon: "arrow.clockwise", accessibilityLabel: String(localized: "action.refresh"), action: {})
+            .init(icon: "gear", accessibilityLabelKey: "nav.settings", action: {}),
+            .init(icon: "arrow.clockwise", accessibilityLabelKey: "action.refresh", action: {})
         ]
     )
     .environment(\.heritageColorScheme, .light)
