@@ -1,8 +1,8 @@
 import Foundation
 
 /// Heritage HTTP 客户端配置
-/// 完全对齐 Android KtorHeritageApiClient
-final class HeritageHTTPClient: Sendable {
+/// 对齐 Android KtorHeritageApiClient
+final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
     /// 共享实例
     static let shared = HeritageHTTPClient()
 
@@ -10,13 +10,18 @@ final class HeritageHTTPClient: Sendable {
     private let config: APIConfig
 
     /// URL 会话
-    private let session: URLSession
+    private nonisolated(unsafe) var session: URLSession
 
     /// JSON 解码器
     let decoder: JSONDecoder
 
-    private init() {
-        self.config = APIConfig.shared
+    /// 自签名证书信任状态（用于 URLSessionDelegate）
+    private let trustsSelfSigned: Bool
+
+    override private init() {
+        let config = APIConfig.shared
+        self.config = config
+        self.trustsSelfSigned = config.trustSelfSigned
 
         // 配置 URLSession
         let sessionConfig = URLSessionConfiguration.default
@@ -24,19 +29,20 @@ final class HeritageHTTPClient: Sendable {
         sessionConfig.timeoutIntervalForResource = config.timeoutInterval * 2
         sessionConfig.waitsForConnectivity = true
 
-        #if DEBUG
-        // Debug 环境信任自签名证书
-        if config.trustSelfSigned {
-            // 注意：这需要在 Info.plist 中配置 NSAllowsLocalNetworking = true
-            // 以及在 URLSessionDelegate 中处理证书验证
-        }
-        #endif
-
-        self.session = URLSession(configuration: sessionConfig)
-
         // 配置 JSON 解码器
         self.decoder = JSONDecoder()
-        // 允许未知字段，避免后端加字段导致客户端崩溃
+
+        // 初始创建 URLSession（不带 delegate）
+        self.session = URLSession(configuration: sessionConfig)
+
+        super.init()
+
+        // 在 DEBUG 环境下，如果需要信任自签名证书，重新创建带 delegate 的 session
+        #if DEBUG
+        if config.trustSelfSigned {
+            self.session = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
+        }
+        #endif
     }
 
     // MARK: - 请求方法
@@ -47,10 +53,20 @@ final class HeritageHTTPClient: Sendable {
     ///   - queryItems: 查询参数
     /// - Returns: 解码后的响应
     func get<T: Decodable>(_ path: String, queryItems: [URLQueryItem] = []) async throws -> T {
-        let url = try buildURL(path: path, queryItems: queryItems)
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response, data: data)
-        return try decoder.decode(T.self, from: data)
+        do {
+            let url = try buildURL(path: path, queryItems: queryItems)
+            let (data, response) = try await session.data(from: url)
+            try validateResponse(response, data: data)
+            return try decoder.decode(T.self, from: data)
+        } catch let error as NetworkError {
+            throw error
+        } catch let error as DecodingError {
+            throw NetworkError.decodingError(error)
+        } catch let error as URLError {
+            throw NetworkError.from(error)
+        } catch {
+            throw NetworkError.underlying(error)
+        }
     }
 
     /// 发送 GET 请求（无响应体）
@@ -58,9 +74,17 @@ final class HeritageHTTPClient: Sendable {
     ///   - path: API 路径
     ///   - queryItems: 查询参数
     func get(_ path: String, queryItems: [URLQueryItem] = []) async throws {
-        let url = try buildURL(path: path, queryItems: queryItems)
-        let (data, response) = try await session.data(from: url)
-        try validateResponse(response, data: data)
+        do {
+            let url = try buildURL(path: path, queryItems: queryItems)
+            let (data, response) = try await session.data(from: url)
+            try validateResponse(response, data: data)
+        } catch let error as NetworkError {
+            throw error
+        } catch let error as URLError {
+            throw NetworkError.from(error)
+        } catch {
+            throw NetworkError.underlying(error)
+        }
     }
 
     // MARK: - URL 构建
@@ -122,11 +146,14 @@ final class HeritageHTTPClient: Sendable {
         case 200...299:
             return // 成功
         case 400:
-            throw NetworkError.badRequest
+            let problemDetails = try? decoder.decode(ProblemDetailsDTO.self, from: data)
+            throw NetworkError.badRequestWithDetails(problemDetails)
         case 404:
-            throw NetworkError.notFound
+            let problemDetails = try? decoder.decode(ProblemDetailsDTO.self, from: data)
+            throw NetworkError.notFoundWithDetails(problemDetails)
         case 500...599:
-            throw NetworkError.serverError
+            let problemDetails = try? decoder.decode(ProblemDetailsDTO.self, from: data)
+            throw NetworkError.serverErrorWithDetails(problemDetails)
         default:
             throw NetworkError.httpError(statusCode: httpResponse.statusCode)
         }
@@ -136,60 +163,81 @@ final class HeritageHTTPClient: Sendable {
 // MARK: - 网络错误类型
 
 /// 网络错误类型
-/// 完全对齐 Android 错误类型
+/// 对齐 Android 错误类型
 enum NetworkError: Error, LocalizedError {
     case invalidBaseURL
     case invalidURL
     case invalidResponse
     case badRequest
+    case badRequestWithDetails(ProblemDetailsDTO?)
     case notFound
+    case notFoundWithDetails(ProblemDetailsDTO?)
     case serverError
+    case serverErrorWithDetails(ProblemDetailsDTO?)
     case httpError(statusCode: Int)
     case decodingError(Error)
+    case networkUnavailable
+    case timeout
     case underlying(Error)
 
     var errorDescription: String? {
         switch self {
         case .invalidBaseURL:
-            return "无效的 API 基础 URL"
+            return String(localized: "error.invalidBaseURL")
         case .invalidURL:
-            return "无效的请求 URL"
+            return String(localized: "error.invalidURL")
         case .invalidResponse:
-            return "无效的服务器响应"
+            return String(localized: "error.invalidResponse")
         case .badRequest:
-            return "请求参数错误"
+            return String(localized: "error.badRequest")
+        case .badRequestWithDetails(let details):
+            return details?.detail ?? String(localized: "error.badRequest")
         case .notFound:
-            return "资源不存在"
+            return String(localized: "error.notFound")
+        case .notFoundWithDetails(let details):
+            return details?.detail ?? String(localized: "error.notFound")
         case .serverError:
-            return "服务器错误"
+            return String(localized: "error.serverError")
+        case .serverErrorWithDetails(let details):
+            return details?.detail ?? String(localized: "error.serverError")
         case .httpError(let statusCode):
-            return "HTTP 错误: \(statusCode)"
-        case .decodingError(let error):
-            return "数据解析错误: \(error.localizedDescription)"
+            return String(localized: "error.httpError \(statusCode)")
+        case .decodingError:
+            return String(localized: "error.decodingError")
+        case .networkUnavailable:
+            return String(localized: "error.network")
+        case .timeout:
+            return String(localized: "error.timeout")
         case .underlying(let error):
             return error.localizedDescription
         }
     }
 
-    /// 从 NSError 转换
-    static func from(_ error: Error) -> NetworkError {
-        let nsError = error as NSError
-
-        switch nsError.domain {
-        case NSURLErrorDomain:
-            switch nsError.code {
-            case NSURLErrorNotConnectedToInternet,
-                 NSURLErrorNetworkConnectionLost,
-                 NSURLErrorCannotConnectToHost:
-                return .underlying(error)
-            case NSURLErrorTimedOut:
-                return .underlying(error)
-            default:
-                return .underlying(error)
-            }
+    /// 从 URLError 转换
+    static func from(_ error: URLError) -> NetworkError {
+        switch error.code {
+        case .notConnectedToInternet,
+             .networkConnectionLost,
+             .cannotConnectToHost,
+             .cannotFindHost,
+             .dnsLookupFailed:
+            return .networkUnavailable
+        case .timedOut:
+            return .timeout
+        case .badServerResponse,
+             .cannotParseResponse:
+            return .invalidResponse
         default:
             return .underlying(error)
         }
+    }
+
+    /// 从 NSError 转换
+    static func from(_ error: Error) -> NetworkError {
+        if let urlError = error as? URLError {
+            return from(urlError)
+        }
+        return .underlying(error)
     }
 }
 
@@ -258,3 +306,37 @@ struct QueryBuilder {
         items
     }
 }
+
+// MARK: - URLSessionDelegate (自签名证书支持)
+
+#if DEBUG
+extension HeritageHTTPClient {
+    /// 处理服务器证书验证
+    /// 仅在 debug 环境下信任自签名证书，且仅限 localhost/127.0.0.1
+    func urlSession(
+        _ session: URLSession,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
+        // 仅处理服务器信任挑战
+        guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+              let serverTrust = challenge.protectionSpace.serverTrust else {
+            completionHandler(.performDefaultHandling, nil)
+            return
+        }
+
+        // 仅信任 localhost 和 127.0.0.1
+        let host = challenge.protectionSpace.host
+        let trustedHosts = ["localhost", "127.0.0.1", "10.0.2.2"]
+
+        guard trustsSelfSigned && trustedHosts.contains(host) else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+            return
+        }
+
+        // 创建凭证并信任证书
+        let credential = URLCredential(trust: serverTrust)
+        completionHandler(.useCredential, credential)
+    }
+}
+#endif

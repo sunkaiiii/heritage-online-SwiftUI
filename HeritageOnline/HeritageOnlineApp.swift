@@ -9,6 +9,8 @@ struct HeritageOnlineApp: App {
         WindowGroup {
             ContentView()
                 .environment(settingsManager)
+                .heritageTheme(settingsManager: settingsManager)
+                .environment(\.locale, settingsManager.locale ?? .autoupdatingCurrent)
                 .preferredColorScheme(settingsManager.colorScheme)
         }
         #if os(macOS)

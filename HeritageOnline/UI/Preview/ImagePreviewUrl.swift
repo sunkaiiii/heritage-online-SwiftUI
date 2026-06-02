@@ -1,7 +1,7 @@
 import Foundation
 
 /// 图片 URL 选择工具
-/// 完全对齐 Android ImagePreviewUrl.kt
+/// 对齐 Android ImagePreviewUrl.kt 和 ImagePreviewUrls.kt
 enum ImagePreviewUrl {
     /// 列表图片 URL 选择
     /// 优先级：displayUrl -> thumbnailUrl -> originalUrl -> sourceUrl
@@ -23,5 +23,35 @@ enum ImagePreviewUrl {
     /// 从 MediaAssetDTO 列表中提取列表 URL
     static func listUrls(from assets: [MediaAssetDTO]) -> [String] {
         assets.compactMap { listUrl(from: $0) }
+    }
+
+    /// 收集所有可预览的图片 URL
+    /// 从封面图、图库、内容块中提取
+    /// - Parameters:
+    ///   - coverImage: 封面图
+    ///   - gallery: 图库
+    ///   - contentBlocks: 内容块
+    /// - Returns: 去重后的预览 URL 数组
+    static func collect(
+        coverImage: MediaAssetDTO?,
+        gallery: [MediaAssetDTO],
+        contentBlocks: [ArticleContentBlockDTO]
+    ) -> [String] {
+        var urls: [String] = []
+
+        // 1. 封面图
+        if let coverUrl = previewUrl(from: coverImage) {
+            urls.append(coverUrl)
+        }
+
+        // 2. 图库
+        urls.append(contentsOf: previewUrls(from: gallery))
+
+        // 3. 内容块中的图片
+        let contentImages = contentBlocks.compactMap { $0.image }
+        urls.append(contentsOf: previewUrls(from: contentImages))
+
+        // 去重并保持顺序
+        return Array(Set(urls))
     }
 }

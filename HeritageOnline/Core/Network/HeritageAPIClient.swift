@@ -1,7 +1,7 @@
 import Foundation
 
 /// Heritage API 客户端接口
-/// 完全对齐 Android HeritageApiClient
+/// 对齐 Android API 合同
 protocol HeritageAPIClient: Sendable {
     // MARK: - 首页
 
@@ -76,22 +76,23 @@ protocol HeritageAPIClient: Sendable {
 // MARK: - DTO 占位符
 
 /// 分页结果 DTO
+/// 对齐 Android PagedResult
 struct PagedResultDTO<T: Decodable & Sendable>: Decodable, Sendable {
     let items: [T]
     let page: Int
     let pageSize: Int
-    let totalCount: Int
+    let total: Int
     let hasMore: Bool
 
     enum CodingKeys: String, CodingKey {
-        case items, page, pageSize, totalCount, hasMore
+        case items, page, pageSize, total, hasMore
     }
 
-    init(items: [T], page: Int, pageSize: Int, totalCount: Int, hasMore: Bool) {
+    init(items: [T], page: Int, pageSize: Int, total: Int, hasMore: Bool) {
         self.items = items
         self.page = page
         self.pageSize = pageSize
-        self.totalCount = totalCount
+        self.total = total
         self.hasMore = hasMore
     }
 
@@ -100,221 +101,298 @@ struct PagedResultDTO<T: Decodable & Sendable>: Decodable, Sendable {
         items = try container.decodeIfPresent([T].self, forKey: .items) ?? []
         page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
         pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
-        totalCount = try container.decodeIfPresent(Int.self, forKey: .totalCount) ?? 0
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
         hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
     }
 }
 
 /// 首页 Banner DTO
+/// 对齐 Android HomeBannerDto
 struct HomeBannerDTO: Decodable, Sendable {
-    let id: String
-    let title: String?
-    let subtitle: String?
-    let imageUrl: String?
-    let linkUrl: String?
+    let id: String?
+    let sortOrder: Int?
+    let targetUrl: String?
+    let displayImage: MediaAssetDTO?
+    let mobileImage: MediaAssetDTO?
+    let desktopImage: MediaAssetDTO?
 }
 
 /// 首页 Feed DTO
+/// 对齐 Android HomeFeedDto
 struct HomeFeedDTO: Decodable, Sendable {
     let banners: [HomeBannerDTO]
-    let articles: [ArticleSummaryDTO]
+    let latestNews: [ArticleSummaryDTO]
+    let latestSpecialTopics: [ArticleSummaryDTO]
+    let latestForumArticles: [ArticleSummaryDTO]
+    let featuredDirectoryItems: [DirectoryItemSummaryDTO]
+    let featuredInheritors: [InheritorSummaryDTO]
+    let summary: HomeFeedSummaryDTO?
 
     enum CodingKeys: String, CodingKey {
-        case banners, articles
+        case banners, latestNews, latestSpecialTopics, latestForumArticles
+        case featuredDirectoryItems, featuredInheritors, summary
     }
 
-    init(banners: [HomeBannerDTO], articles: [ArticleSummaryDTO]) {
+    init(banners: [HomeBannerDTO], latestNews: [ArticleSummaryDTO], latestSpecialTopics: [ArticleSummaryDTO], latestForumArticles: [ArticleSummaryDTO], featuredDirectoryItems: [DirectoryItemSummaryDTO], featuredInheritors: [InheritorSummaryDTO], summary: HomeFeedSummaryDTO?) {
         self.banners = banners
-        self.articles = articles
+        self.latestNews = latestNews
+        self.latestSpecialTopics = latestSpecialTopics
+        self.latestForumArticles = latestForumArticles
+        self.featuredDirectoryItems = featuredDirectoryItems
+        self.featuredInheritors = featuredInheritors
+        self.summary = summary
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         banners = try container.decodeIfPresent([HomeBannerDTO].self, forKey: .banners) ?? []
-        articles = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .articles) ?? []
+        latestNews = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestNews) ?? []
+        latestSpecialTopics = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestSpecialTopics) ?? []
+        latestForumArticles = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestForumArticles) ?? []
+        featuredDirectoryItems = try container.decodeIfPresent([DirectoryItemSummaryDTO].self, forKey: .featuredDirectoryItems) ?? []
+        featuredInheritors = try container.decodeIfPresent([InheritorSummaryDTO].self, forKey: .featuredInheritors) ?? []
+        summary = try container.decodeIfPresent(HomeFeedSummaryDTO.self, forKey: .summary)
     }
 }
 
 /// 文章摘要 DTO
+/// 对齐 Android ArticleSummaryDto
 struct ArticleSummaryDTO: Decodable, Sendable {
-    let id: String
+    let id: String?
+    let category: String?
     let title: String?
     let summary: String?
-    let category: String?
-    let imageUrl: String?
     let publishedAt: String?
+    let coverImage: MediaAssetDTO?
     let sourceUrl: String?
 }
 
 /// 文章详情 DTO
+/// 对齐 Android ArticleDetailDto
 struct ArticleDetailDTO: Decodable, Sendable {
-    let id: String
+    let id: String?
+    let category: String?
     let title: String?
     let summary: String?
-    let category: String?
-    let imageUrl: String?
     let publishedAt: String?
+    let coverImage: MediaAssetDTO?
     let sourceUrl: String?
+    let sourceName: String?
     let author: String?
-    let content: String?
-    let contentBlocks: [ContentBlockDTO]
+    let editor: String?
+    let contentBlocks: [ArticleContentBlockDTO]
+    let relatedArticles: [ArticleReferenceDTO]
 
     enum CodingKeys: String, CodingKey {
-        case id, title, summary, category, imageUrl, publishedAt, sourceUrl, author, content, contentBlocks
+        case id, category, title, summary, publishedAt, coverImage, sourceUrl
+        case sourceName, author, editor, contentBlocks, relatedArticles
     }
 
-    init(id: String, title: String?, summary: String?, category: String?, imageUrl: String?, publishedAt: String?, sourceUrl: String?, author: String?, content: String?, contentBlocks: [ContentBlockDTO]) {
+    init(id: String?, category: String?, title: String?, summary: String?, publishedAt: String?, coverImage: MediaAssetDTO?, sourceUrl: String?, sourceName: String?, author: String?, editor: String?, contentBlocks: [ArticleContentBlockDTO], relatedArticles: [ArticleReferenceDTO]) {
         self.id = id
+        self.category = category
         self.title = title
         self.summary = summary
-        self.category = category
-        self.imageUrl = imageUrl
         self.publishedAt = publishedAt
+        self.coverImage = coverImage
         self.sourceUrl = sourceUrl
+        self.sourceName = sourceName
         self.author = author
-        self.content = content
+        self.editor = editor
         self.contentBlocks = contentBlocks
+        self.relatedArticles = relatedArticles
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+        category = try container.decodeIfPresent(String.self, forKey: .category)
         title = try container.decodeIfPresent(String.self, forKey: .title)
         summary = try container.decodeIfPresent(String.self, forKey: .summary)
-        category = try container.decodeIfPresent(String.self, forKey: .category)
-        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         publishedAt = try container.decodeIfPresent(String.self, forKey: .publishedAt)
+        coverImage = try container.decodeIfPresent(MediaAssetDTO.self, forKey: .coverImage)
         sourceUrl = try container.decodeIfPresent(String.self, forKey: .sourceUrl)
+        sourceName = try container.decodeIfPresent(String.self, forKey: .sourceName)
         author = try container.decodeIfPresent(String.self, forKey: .author)
-        content = try container.decodeIfPresent(String.self, forKey: .content)
-        contentBlocks = try container.decodeIfPresent([ContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        editor = try container.decodeIfPresent(String.self, forKey: .editor)
+        contentBlocks = try container.decodeIfPresent([ArticleContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        relatedArticles = try container.decodeIfPresent([ArticleReferenceDTO].self, forKey: .relatedArticles) ?? []
     }
-}
-
-/// 内容块 DTO
-struct ContentBlockDTO: Decodable, Sendable {
-    let type: String?
-    let text: String?
-    let imageUrl: String?
 }
 
 /// 名录摘要 DTO
+/// 对齐 Android DirectoryItemSummaryDto
 struct DirectoryItemSummaryDTO: Decodable, Sendable {
-    let id: String
+    let id: String?
+    let kind: String?
     let title: String?
     let summary: String?
-    let kind: String?
     let category: String?
     let region: String?
-    let imageUrl: String?
-    let projectCode: String?
-}
-
-/// 名录详情 DTO
-struct DirectoryItemDetailDTO: Decodable, Sendable {
-    let id: String
-    let title: String?
-    let summary: String?
-    let kind: String?
-    let category: String?
-    let region: String?
-    let imageUrl: String?
     let projectCode: String?
     let batch: String?
     let publishedYear: Int?
-    let content: String?
-    let contentBlocks: [ContentBlockDTO]
+    let listType: String?
+    let coverImage: MediaAssetDTO?
+    let sourceUrl: String?
+}
+
+/// 名录详情 DTO
+/// 对齐 Android DirectoryItemDetailDto
+struct DirectoryItemDetailDTO: Decodable, Sendable {
+    let id: String?
+    let kind: String?
+    let title: String?
+    let summary: String?
+    let category: String?
+    let region: String?
+    let projectCode: String?
+    let batch: String?
+    let publishedYear: Int?
+    let listType: String?
+    let nominationType: String?
+    let protectionUnit: String?
+    let coverImage: MediaAssetDTO?
+    let sourceUrl: String?
+    let gallery: [MediaAssetDTO]
+    let contentBlocks: [ArticleContentBlockDTO]
+    let relatedProjects: [DirectoryReferenceDTO]
+    let relatedInheritors: [DirectoryReferenceDTO]
+    let relatedDocuments: [DirectoryReferenceDTO]
 
     enum CodingKeys: String, CodingKey {
-        case id, title, summary, kind, category, region, imageUrl, projectCode, batch, publishedYear, content, contentBlocks
+        case id, kind, title, summary, category, region, projectCode, batch, publishedYear
+        case listType, nominationType, protectionUnit, coverImage, sourceUrl
+        case gallery, contentBlocks, relatedProjects, relatedInheritors, relatedDocuments
     }
 
-    init(id: String, title: String?, summary: String?, kind: String?, category: String?, region: String?, imageUrl: String?, projectCode: String?, batch: String?, publishedYear: Int?, content: String?, contentBlocks: [ContentBlockDTO]) {
+    init(id: String?, kind: String?, title: String?, summary: String?, category: String?, region: String?, projectCode: String?, batch: String?, publishedYear: Int?, listType: String?, nominationType: String?, protectionUnit: String?, coverImage: MediaAssetDTO?, sourceUrl: String?, gallery: [MediaAssetDTO], contentBlocks: [ArticleContentBlockDTO], relatedProjects: [DirectoryReferenceDTO], relatedInheritors: [DirectoryReferenceDTO], relatedDocuments: [DirectoryReferenceDTO]) {
         self.id = id
+        self.kind = kind
         self.title = title
         self.summary = summary
-        self.kind = kind
         self.category = category
         self.region = region
-        self.imageUrl = imageUrl
         self.projectCode = projectCode
         self.batch = batch
         self.publishedYear = publishedYear
-        self.content = content
+        self.listType = listType
+        self.nominationType = nominationType
+        self.protectionUnit = protectionUnit
+        self.coverImage = coverImage
+        self.sourceUrl = sourceUrl
+        self.gallery = gallery
         self.contentBlocks = contentBlocks
+        self.relatedProjects = relatedProjects
+        self.relatedInheritors = relatedInheritors
+        self.relatedDocuments = relatedDocuments
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+        kind = try container.decodeIfPresent(String.self, forKey: .kind)
         title = try container.decodeIfPresent(String.self, forKey: .title)
         summary = try container.decodeIfPresent(String.self, forKey: .summary)
-        kind = try container.decodeIfPresent(String.self, forKey: .kind)
         category = try container.decodeIfPresent(String.self, forKey: .category)
         region = try container.decodeIfPresent(String.self, forKey: .region)
-        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         projectCode = try container.decodeIfPresent(String.self, forKey: .projectCode)
         batch = try container.decodeIfPresent(String.self, forKey: .batch)
         publishedYear = try container.decodeIfPresent(Int.self, forKey: .publishedYear)
-        content = try container.decodeIfPresent(String.self, forKey: .content)
-        contentBlocks = try container.decodeIfPresent([ContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        listType = try container.decodeIfPresent(String.self, forKey: .listType)
+        nominationType = try container.decodeIfPresent(String.self, forKey: .nominationType)
+        protectionUnit = try container.decodeIfPresent(String.self, forKey: .protectionUnit)
+        coverImage = try container.decodeIfPresent(MediaAssetDTO.self, forKey: .coverImage)
+        sourceUrl = try container.decodeIfPresent(String.self, forKey: .sourceUrl)
+        gallery = try container.decodeIfPresent([MediaAssetDTO].self, forKey: .gallery) ?? []
+        contentBlocks = try container.decodeIfPresent([ArticleContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        relatedProjects = try container.decodeIfPresent([DirectoryReferenceDTO].self, forKey: .relatedProjects) ?? []
+        relatedInheritors = try container.decodeIfPresent([DirectoryReferenceDTO].self, forKey: .relatedInheritors) ?? []
+        relatedDocuments = try container.decodeIfPresent([DirectoryReferenceDTO].self, forKey: .relatedDocuments) ?? []
     }
 }
 
 /// 传承人摘要 DTO
+/// 对齐 Android InheritorSummaryDto
 struct InheritorSummaryDTO: Decodable, Sendable {
-    let id: String
+    let id: String?
     let name: String?
-    let projectName: String?
     let gender: String?
+    let birthDateText: String?
     let ethnicity: String?
     let category: String?
+    let projectCode: String?
+    let projectName: String?
     let region: String?
-    let imageUrl: String?
+    let batch: String?
+    let description: String?
+    let coverImage: MediaAssetDTO?
+    let sourceUrl: String?
 }
 
 /// 传承人详情 DTO
+/// 对齐 Android InheritorDetailDto
 struct InheritorDetailDTO: Decodable, Sendable {
-    let id: String
+    let id: String?
     let name: String?
-    let projectName: String?
     let gender: String?
+    let birthDateText: String?
     let ethnicity: String?
     let category: String?
+    let projectCode: String?
+    let projectName: String?
     let region: String?
-    let imageUrl: String?
+    let batch: String?
     let description: String?
-    let contentBlocks: [ContentBlockDTO]
+    let coverImage: MediaAssetDTO?
+    let sourceUrl: String?
+    let contentBlocks: [ArticleContentBlockDTO]
+    let relatedProjects: [DirectoryReferenceDTO]
+    let relatedInheritors: [DirectoryReferenceDTO]
 
     enum CodingKeys: String, CodingKey {
-        case id, name, projectName, gender, ethnicity, category, region, imageUrl, description, contentBlocks
+        case id, name, gender, birthDateText, ethnicity, category, projectCode, projectName
+        case region, batch, description, coverImage, sourceUrl
+        case contentBlocks, relatedProjects, relatedInheritors
     }
 
-    init(id: String, name: String?, projectName: String?, gender: String?, ethnicity: String?, category: String?, region: String?, imageUrl: String?, description: String?, contentBlocks: [ContentBlockDTO]) {
+    init(id: String?, name: String?, gender: String?, birthDateText: String?, ethnicity: String?, category: String?, projectCode: String?, projectName: String?, region: String?, batch: String?, description: String?, coverImage: MediaAssetDTO?, sourceUrl: String?, contentBlocks: [ArticleContentBlockDTO], relatedProjects: [DirectoryReferenceDTO], relatedInheritors: [DirectoryReferenceDTO]) {
         self.id = id
         self.name = name
-        self.projectName = projectName
         self.gender = gender
+        self.birthDateText = birthDateText
         self.ethnicity = ethnicity
         self.category = category
+        self.projectCode = projectCode
+        self.projectName = projectName
         self.region = region
-        self.imageUrl = imageUrl
+        self.batch = batch
         self.description = description
+        self.coverImage = coverImage
+        self.sourceUrl = sourceUrl
         self.contentBlocks = contentBlocks
+        self.relatedProjects = relatedProjects
+        self.relatedInheritors = relatedInheritors
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
+        id = try container.decodeIfPresent(String.self, forKey: .id)
         name = try container.decodeIfPresent(String.self, forKey: .name)
-        projectName = try container.decodeIfPresent(String.self, forKey: .projectName)
         gender = try container.decodeIfPresent(String.self, forKey: .gender)
+        birthDateText = try container.decodeIfPresent(String.self, forKey: .birthDateText)
         ethnicity = try container.decodeIfPresent(String.self, forKey: .ethnicity)
         category = try container.decodeIfPresent(String.self, forKey: .category)
+        projectCode = try container.decodeIfPresent(String.self, forKey: .projectCode)
+        projectName = try container.decodeIfPresent(String.self, forKey: .projectName)
         region = try container.decodeIfPresent(String.self, forKey: .region)
-        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
+        batch = try container.decodeIfPresent(String.self, forKey: .batch)
         description = try container.decodeIfPresent(String.self, forKey: .description)
-        contentBlocks = try container.decodeIfPresent([ContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        coverImage = try container.decodeIfPresent(MediaAssetDTO.self, forKey: .coverImage)
+        sourceUrl = try container.decodeIfPresent(String.self, forKey: .sourceUrl)
+        contentBlocks = try container.decodeIfPresent([ArticleContentBlockDTO].self, forKey: .contentBlocks) ?? []
+        relatedProjects = try container.decodeIfPresent([DirectoryReferenceDTO].self, forKey: .relatedProjects) ?? []
+        relatedInheritors = try container.decodeIfPresent([DirectoryReferenceDTO].self, forKey: .relatedInheritors) ?? []
     }
 }
 

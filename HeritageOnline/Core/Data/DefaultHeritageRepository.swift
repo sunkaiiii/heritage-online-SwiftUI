@@ -1,12 +1,11 @@
 import Foundation
 
 /// Heritage Repository 默认实现
-/// 完全对齐 Android DefaultHeritageRepository
 /// 当前阶段不做本地缓存，直接委托给 API client
 final class DefaultHeritageRepository: HeritageRepository {
     private let apiClient: HeritageAPIClient
 
-    init(apiClient: HeritageAPIClient = KtorHeritageAPIClient()) {
+    init(apiClient: HeritageAPIClient = DefaultHeritageAPIClient()) {
         self.apiClient = apiClient
     }
 
@@ -96,5 +95,39 @@ final class DefaultHeritageRepository: HeritageRepository {
 
     func timelineYears() async throws -> [TimelineYearBucketDTO] {
         try await apiClient.getTimelineYears()
+    }
+
+    // MARK: - Lookup（详情查找）
+
+    func article(lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO {
+        if let articleId = lookup.articleId, !articleId.isEmpty {
+            return try await apiClient.getArticle(id: articleId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return try await apiClient.getArticleBySourceId(sourceId: sourceId, category: lookup.category)
+        } else if let sourceUrl = lookup.sourceUrl, !sourceUrl.isEmpty {
+            return try await apiClient.getArticleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
+        } else {
+            throw NetworkError.badRequest
+        }
+    }
+
+    func directoryItem(lookup: DirectoryDetailLookup) async throws -> DirectoryItemDetailDTO {
+        if let itemId = lookup.itemId, !itemId.isEmpty {
+            return try await apiClient.getDirectoryItem(id: itemId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return try await apiClient.getDirectoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
+        } else {
+            throw NetworkError.badRequest
+        }
+    }
+
+    func inheritor(lookup: InheritorDetailLookup) async throws -> InheritorDetailDTO {
+        if let inheritorId = lookup.inheritorId, !inheritorId.isEmpty {
+            return try await apiClient.getInheritor(id: inheritorId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return try await apiClient.getInheritorBySourceId(sourceId: sourceId)
+        } else {
+            throw NetworkError.badRequest
+        }
     }
 }

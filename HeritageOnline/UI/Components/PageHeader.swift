@@ -12,7 +12,14 @@ struct PageHeader: View {
     struct PageHeaderAction: Identifiable {
         let id = UUID()
         let icon: String
+        let accessibilityLabel: String
         let action: () -> Void
+
+        init(icon: String, accessibilityLabel: String? = nil, action: @escaping () -> Void) {
+            self.icon = icon
+            self.accessibilityLabel = accessibilityLabel ?? icon
+            self.action = action
+        }
     }
 
     init(title: String, subtitle: String? = nil, actions: [PageHeaderAction] = []) {
@@ -46,6 +53,7 @@ struct PageHeader: View {
                             .font(.system(size: 18))
                             .foregroundStyle(colorScheme.onSurfaceVariant)
                     }
+                    .accessibilityLabel(action.accessibilityLabel)
                 }
             }
         }
@@ -56,11 +64,11 @@ struct PageHeader: View {
 
 #Preview {
     PageHeader(
-        title: "E迹",
-        subtitle: "非遗新闻、论坛与专题",
+        title: String(localized: "app.name"),
+        subtitle: String(localized: "page.articles.subtitle"),
         actions: [
-            .init(icon: "gear", action: {}),
-            .init(icon: "arrow.clockwise", action: {})
+            .init(icon: "gear", accessibilityLabel: String(localized: "nav.settings"), action: {}),
+            .init(icon: "arrow.clockwise", accessibilityLabel: String(localized: "action.refresh"), action: {})
         ]
     )
     .environment(\.heritageColorScheme, .light)

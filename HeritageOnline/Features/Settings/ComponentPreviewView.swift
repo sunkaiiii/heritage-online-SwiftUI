@@ -127,8 +127,8 @@ struct ComponentPreviewView: View {
                 // MARK: - ListImage
                 section("ListImage") {
                     HStack(spacing: 12) {
-                        ListImage(url: nil, title: "无图片", width: 100, height: 80)
-                        ListImage(url: nil, title: "测试标题", width: 100, height: 80)
+                        HeritageListImage(urlString: nil, placeholderText: "无图片", width: 100, height: 80)
+                        HeritageListImage(urlString: nil, placeholderText: "测试标题", width: 100, height: 80)
                     }
                 }
 

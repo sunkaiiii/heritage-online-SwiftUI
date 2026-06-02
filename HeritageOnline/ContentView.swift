@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// 应用主视图 - App Shell
-/// 完全对齐 Android MainActivity HeritageApp
+/// 对齐 Android MainActivity HeritageApp
 /// 实现四个底部导航、隐藏入口、二级页隐藏底部导航
 struct ContentView: View {
     @Environment(SettingsManager.self) private var settingsManager
@@ -16,68 +16,37 @@ struct ContentView: View {
     /// 是否显示我的页
     @State private var showMyPage = false
 
-    /// 各 tab 是否在详情页（用于隐藏底部导航）
-    @State private var articlesInDetail = false
-    @State private var directoryInDetail = false
-    @State private var inheritorsInDetail = false
-    @State private var discoveryInDetail = false
-
-    /// 当前 tab 是否在详情页
-    private var currentTabInDetail: Bool {
-        switch selectedTab {
-        case .articles: return articlesInDetail
-        case .directory: return directoryInDetail
-        case .inheritors: return inheritorsInDetail
-        case .discovery: return discoveryInDetail
-        }
-    }
-
-    /// 是否显示底部导航
-    private var shouldShowBottomBar: Bool {
-        !showSettings && !showMyPage && !currentTabInDetail
-    }
-
     var body: some View {
         @Bindable var settings = settingsManager
 
         ZStack {
             // 主内容
             TabView(selection: $selectedTab) {
-                ArticlesTab(
-                    onSettingsSelected: { showSettings = true },
-                    onDetailChanged: { articlesInDetail = $0 }
-                )
-                .tabItem {
-                    Label(String(localized: "tab.articles"), systemImage: HomeTab.articles.icon)
-                }
-                .tag(HomeTab.articles)
+                ArticlesTab(onSettingsSelected: { showSettings = true })
+                    .tabItem {
+                        Label(String(localized: "tab.articles"), systemImage: HomeTab.articles.icon)
+                    }
+                    .tag(HomeTab.articles)
 
-                DirectoryTab(
-                    onDetailChanged: { directoryInDetail = $0 }
-                )
-                .tabItem {
-                    Label(String(localized: "tab.directory"), systemImage: HomeTab.directory.icon)
-                }
-                .tag(HomeTab.directory)
+                DirectoryTab()
+                    .tabItem {
+                        Label(String(localized: "tab.directory"), systemImage: HomeTab.directory.icon)
+                    }
+                    .tag(HomeTab.directory)
 
-                InheritorsTab(
-                    onDetailChanged: { inheritorsInDetail = $0 }
-                )
-                .tabItem {
-                    Label(String(localized: "tab.inheritors"), systemImage: HomeTab.inheritors.icon)
-                }
-                .tag(HomeTab.inheritors)
+                InheritorsTab()
+                    .tabItem {
+                        Label(String(localized: "tab.inheritors"), systemImage: HomeTab.inheritors.icon)
+                    }
+                    .tag(HomeTab.inheritors)
 
-                DiscoveryTab(
-                    onDetailChanged: { discoveryInDetail = $0 }
-                )
-                .tabItem {
-                    Label(String(localized: "tab.discovery"), systemImage: HomeTab.discovery.icon)
-                }
-                .tag(HomeTab.discovery)
+                DiscoveryTab()
+                    .tabItem {
+                        Label(String(localized: "tab.discovery"), systemImage: HomeTab.discovery.icon)
+                    }
+                    .tag(HomeTab.discovery)
             }
-            .tint(colorScheme.primary) // 选中文案颜色：primary
-            .opacity(shouldShowBottomBar ? 1 : 0) // 隐藏 tab 时保持状态
+            .tint(colorScheme.primary)
 
             // 设置页覆盖层
             if showSettings {
@@ -154,68 +123,89 @@ enum HomeTab: String, CaseIterable, Identifiable {
 /// 文章 Tab
 struct ArticlesTab: View {
     let onSettingsSelected: () -> Void
-    let onDetailChanged: (Bool) -> Void
 
     var body: some View {
         NavigationStack {
-            ArticlesListView(
-                onSettingsSelected: onSettingsSelected,
-                onDetailChanged: onDetailChanged
-            )
+            ArticlesListView(onSettingsSelected: onSettingsSelected)
         }
     }
 }
 
 /// 名录 Tab
 struct DirectoryTab: View {
-    let onDetailChanged: (Bool) -> Void
-
     var body: some View {
         NavigationStack {
-            DirectoryListView(onDetailChanged: onDetailChanged)
+            DirectoryListView()
         }
     }
 }
 
 /// 传承人 Tab
 struct InheritorsTab: View {
-    let onDetailChanged: (Bool) -> Void
-
     var body: some View {
         NavigationStack {
-            InheritorsListView(onDetailChanged: onDetailChanged)
+            InheritorsListView()
         }
     }
 }
 
 /// 发现 Tab
 struct DiscoveryTab: View {
-    let onDetailChanged: (Bool) -> Void
-
     var body: some View {
         NavigationStack {
-            DiscoveryView(onDetailChanged: onDetailChanged)
+            DiscoveryView()
         }
     }
 }
 
 // MARK: - 占位页面
 
+/// 占位详情页（用于 Step 7 验收）
+struct PlaceholderDetailView: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+    let title: String
+
+    var body: some View {
+        PageBackground {
+            VStack {
+                PageHeader(title: title)
+
+                Spacer()
+
+                Text(title)
+                    .font(HeritageTypography.headlineLarge)
+                    .foregroundStyle(colorScheme.onBackground)
+
+                Text(String(localized: "page.detail.placeholder"))
+                    .font(HeritageTypography.bodyMedium)
+                    .foregroundStyle(colorScheme.onSurfaceVariant)
+                    .padding(.top, 8)
+
+                Spacer()
+            }
+        }
+        .navigationTitle(title)
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .tabBar) // 隐藏底部导航
+        #endif
+    }
+}
+
 /// 文章列表占位页
 struct ArticlesListView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
     let onSettingsSelected: () -> Void
-    let onDetailChanged: (Bool) -> Void
 
     var body: some View {
         PageBackground {
             VStack {
                 PageHeader(
-                    title: "E迹",
+                    title: String(localized: "app.name"),
                     subtitle: String(localized: "page.articles.subtitle"),
                     actions: [
-                        .init(icon: "gear") { onSettingsSelected() },
-                        .init(icon: "arrow.clockwise") { /* 刷新 */ }
+                        .init(icon: "gear", accessibilityLabel: String(localized: "nav.settings")) { onSettingsSelected() },
+                        .init(icon: "arrow.clockwise", accessibilityLabel: String(localized: "action.refresh")) { /* 刷新 */ }
                     ]
                 )
 
@@ -230,6 +220,14 @@ struct ArticlesListView: View {
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .padding(.top, 8)
 
+                // 占位详情页按钮（用于 Step 7 验收）
+                NavigationLink(destination: PlaceholderDetailView(title: String(localized: "page.article.detail"))) {
+                    Text(String(localized: "action.viewDetail"))
+                        .font(HeritageTypography.labelLarge)
+                        .foregroundStyle(colorScheme.primary)
+                        .padding(.top, 16)
+                }
+
                 Spacer()
             }
         }
@@ -243,7 +241,6 @@ struct ArticlesListView: View {
 /// 名录列表占位页
 struct DirectoryListView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    let onDetailChanged: (Bool) -> Void
 
     var body: some View {
         PageBackground {
@@ -277,7 +274,6 @@ struct DirectoryListView: View {
 /// 传承人列表占位页
 struct InheritorsListView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    let onDetailChanged: (Bool) -> Void
 
     var body: some View {
         PageBackground {
@@ -311,7 +307,6 @@ struct InheritorsListView: View {
 /// 发现页占位页
 struct DiscoveryView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    let onDetailChanged: (Bool) -> Void
 
     var body: some View {
         PageBackground {

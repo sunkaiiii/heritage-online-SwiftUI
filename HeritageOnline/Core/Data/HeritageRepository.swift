@@ -126,4 +126,18 @@ protocol HeritageRepository: Sendable {
 
     /// 获取年份聚合
     func timelineYears() async throws -> [TimelineYearBucketDTO]
+
+    // MARK: - Lookup（详情查找）
+
+    /// 根据 lookup 参数获取文章详情
+    /// 优先级：articleId -> sourceId -> sourceUrl
+    func article(lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO
+
+    /// 根据 lookup 参数获取名录详情
+    /// 优先级：itemId -> sourceId
+    func directoryItem(lookup: DirectoryDetailLookup) async throws -> DirectoryItemDetailDTO
+
+    /// 根据 lookup 参数获取传承人详情
+    /// 优先级：inheritorId -> sourceId
+    func inheritor(lookup: InheritorDetailLookup) async throws -> InheritorDetailDTO
 }

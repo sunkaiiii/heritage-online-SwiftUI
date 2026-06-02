@@ -20,6 +20,7 @@
 "action.retry" = "重试";
 "action.refresh" = "刷新";
 "action.viewOriginal" = "查看原文";
+"action.viewDetail" = "查看详情";
 "action.favorite" = "收藏";
 "action.unfavorite" = "取消收藏";
 "action.clear" = "清空";
@@ -59,15 +60,19 @@
 "page.articles" = "文章";
 "page.articles.subtitle" = "非遗新闻、论坛与专题";
 "page.articles.placeholder" = "文章列表将在此显示";
+"page.article.detail" = "文章详情";
 "page.directory" = "非遗名录";
 "page.directory.subtitle" = "国家级项目、文化生态区等";
 "page.directory.placeholder" = "名录列表将在此显示";
+"page.directory.detail" = "名录详情";
 "page.inheritors" = "代表性传承人";
 "page.inheritors.subtitle" = "非遗项目代表性传承人";
 "page.inheritors.placeholder" = "传承人列表将在此显示";
+"page.inheritor.detail" = "传承人详情";
 "page.discovery" = "发现";
 "page.discovery.subtitle" = "探索、学习路径与精选合集";
 "page.discovery.placeholder" = "发现页将在此显示";
+"page.detail.placeholder" = "详情内容将在此显示";
 "page.settings" = "设置";
 "page.my" = "我的";
 "page.my.placeholder" = "收藏、最近浏览、阅读路径";
@@ -105,6 +110,13 @@
 "error.notFound" = "内容不存在。";
 "error.unknown" = "加载失败，请重试。";
 "error.invalidYear" = "请输入有效的4位年份";
+"error.invalidBaseURL" = "无效的 API 配置";
+"error.invalidURL" = "无效的请求地址";
+"error.invalidResponse" = "服务器响应无效";
+"error.badRequest" = "请求参数错误";
+"error.serverError" = "服务器内部错误";
+"error.httpError %lld" = "HTTP 错误: %lld";
+"error.decodingError" = "数据解析失败";
 
 /* Empty States */
 "empty.noContent" = "暂无内容";

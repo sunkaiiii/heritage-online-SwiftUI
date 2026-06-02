@@ -14,7 +14,7 @@ struct ReferenceCard: View {
         ContentCard {
             HStack(spacing: 12) {
                 if let imageURL {
-                    ListImage(url: imageURL, title: title, width: 60, height: 60)
+                    HeritageListImage(urlString: imageURL.absoluteString, placeholderText: title, width: 60, height: 60)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {

@@ -1,0 +1,21 @@
+{
+    "items": [
+        {
+            "id": "1",
+            "category": "news",
+            "title": "测试文章标题",
+            "summary": "这是一篇测试文章的摘要",
+            "publishedAt": "2024-01-15",
+            "coverImage": {
+                "sourceUrl": "https://example.com/image.jpg",
+                "displayUrl": "https://example.com/image_display.jpg",
+                "thumbnailUrl": "https://example.com/image_thumb.jpg"
+            },
+            "sourceUrl": "https://example.com/article/1"
+        }
+    ],
+    "page": 1,
+    "pageSize": 20,
+    "total": 100,
+    "hasMore": true
+}

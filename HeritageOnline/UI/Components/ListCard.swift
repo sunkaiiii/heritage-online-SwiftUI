@@ -43,7 +43,7 @@ struct ListCard: View {
 
     private var horizontalLayout: some View {
         HStack(spacing: 12) {
-            ListImage(url: imageURL, title: title, width: 100, height: 80)
+            HeritageListImage(urlString: imageURL?.absoluteString, placeholderText: title, width: 100, height: 80)
 
             VStack(alignment: .leading, spacing: 4) {
                 if let category {
@@ -77,7 +77,7 @@ struct ListCard: View {
 
     private var prominentLayout: some View {
         VStack(alignment: .leading, spacing: 8) {
-            ListImage(url: imageURL, title: title, width: nil, height: 160)
+            HeritageListImage(urlString: imageURL?.absoluteString, placeholderText: title, width: nil, height: 160)
                 .frame(maxWidth: .infinity)
 
             VStack(alignment: .leading, spacing: 4) {

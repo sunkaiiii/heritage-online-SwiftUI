@@ -54,4 +54,17 @@ final class SettingsManager {
             return .dark
         }
     }
+
+    /// 获取当前应使用的 Locale
+    /// - Returns: 对应语言的 Locale，system 返回 nil 表示跟随系统
+    var locale: Locale? {
+        switch languageMode {
+        case .system:
+            return nil // 跟随系统
+        case .zhHans:
+            return Locale(identifier: "zh-Hans")
+        case .en:
+            return Locale(identifier: "en")
+        }
+    }
 }

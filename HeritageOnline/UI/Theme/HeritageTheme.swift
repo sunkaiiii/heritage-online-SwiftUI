@@ -19,7 +19,7 @@ extension EnvironmentValues {
 /// Heritage 主题修饰符
 /// 根据设置和系统模式自动切换浅色/暗色
 struct HeritageThemeModifier: ViewModifier {
-    @Environment(SettingsManager.self) private var settingsManager
+    let settingsManager: SettingsManager
     @Environment(\.colorScheme) private var systemColorScheme
 
     func body(content: Content) -> some View {
@@ -47,7 +47,7 @@ struct HeritageThemeModifier: ViewModifier {
 
 extension View {
     /// 应用 Heritage 主题
-    func heritageTheme() -> some View {
-        modifier(HeritageThemeModifier())
+    func heritageTheme(settingsManager: SettingsManager = .shared) -> some View {
+        modifier(HeritageThemeModifier(settingsManager: settingsManager))
     }
 }

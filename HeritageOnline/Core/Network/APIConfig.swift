@@ -8,6 +8,9 @@ struct APIConfig: Sendable {
         case release
     }
 
+    /// 默认 base URL
+    private static let defaultBaseURL = "https://localhost:5078"
+
     /// 共享实例
     static let shared = APIConfig()
 
@@ -33,17 +36,19 @@ struct APIConfig: Sendable {
         #endif
 
         // 从环境变量或配置文件读取 baseUrl
-        #if targetEnvironment(simulator)
-        // iOS 模拟器使用 localhost
         let urlString = ProcessInfo.processInfo.environment["HERITAGE_API_BASE_URL"]
-            ?? "https://localhost:5078"
-        #else
-        // 真机和其他平台使用配置的 URL
-        let urlString = ProcessInfo.processInfo.environment["HERITAGE_API_BASE_URL"]
-            ?? "https://localhost:5078"
-        #endif
+            ?? Self.defaultBaseURL
 
-        self.baseURL = URL(string: urlString)!
+        // 安全解析 URL，失败时使用默认值
+        if let url = URL(string: urlString) {
+            self.baseURL = url
+        } else if let defaultURL = URL(string: Self.defaultBaseURL) {
+            self.baseURL = defaultURL
+        } else {
+            // 最后的 fallback，不应该发生
+            self.baseURL = URL(fileURLWithPath: "/")
+        }
+
         self.timeoutInterval = 30
     }
 

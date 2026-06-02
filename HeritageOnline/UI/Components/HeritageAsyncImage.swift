@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// 统一图片加载组件
-/// 完全对齐 Android Coil AsyncImage
+/// 对齐 Android Coil AsyncImage
 /// 支持 URL 为空时显示占位、加载失败占位
 struct HeritageAsyncImage: View {
     @Environment(\.heritageColorScheme) private var colorScheme
@@ -20,12 +20,26 @@ struct HeritageAsyncImage: View {
 
     init(
         urlString: String?,
-        placeholderText: String = "E迹",
+        placeholderText: String? = nil,
         contentMode: ContentMode = .fill,
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.contentMode = contentMode
+        self.onTap = onTap
+    }
+
+    /// 从 MediaAssetDTO 初始化
+    /// 使用 ImagePreviewUrl.listUrl 选择 URL
+    init(
+        asset: MediaAssetDTO?,
+        placeholderText: String? = nil,
+        contentMode: ContentMode = .fill,
+        onTap: (() -> Void)? = nil
+    ) {
+        self.urlString = ImagePreviewUrl.listUrl(from: asset)
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
         self.contentMode = contentMode
         self.onTap = onTap
     }
@@ -61,7 +75,10 @@ struct HeritageAsyncImage: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            onTap?()
+            // 只在有有效 URL 时触发预览
+            if urlString != nil, !(urlString?.isEmpty ?? true) {
+                onTap?()
+            }
         }
     }
 
@@ -91,7 +108,7 @@ struct HeritageAsyncImage: View {
 // MARK: - 列表图片组件
 
 /// 列表图片组件
-/// 完全对齐 Android HeritageListImage
+/// 对齐 Android HeritageListImage
 struct HeritageListImage: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
@@ -112,13 +129,28 @@ struct HeritageListImage: View {
 
     init(
         urlString: String?,
-        placeholderText: String = "E迹",
+        placeholderText: String? = nil,
         width: CGFloat? = 100,
         height: CGFloat = 80,
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.width = width
+        self.height = height
+        self.onTap = onTap
+    }
+
+    /// 从 MediaAssetDTO 初始化
+    init(
+        asset: MediaAssetDTO?,
+        placeholderText: String? = nil,
+        width: CGFloat? = 100,
+        height: CGFloat = 80,
+        onTap: (() -> Void)? = nil
+    ) {
+        self.urlString = ImagePreviewUrl.listUrl(from: asset)
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
         self.width = width
         self.height = height
         self.onTap = onTap
@@ -138,7 +170,7 @@ struct HeritageListImage: View {
 // MARK: - 详情图片组件
 
 /// 详情图片组件
-/// 完全对齐 Android HeritageDetailImage
+/// 对齐 Android HeritageDetailImage
 struct HeritageDetailImage: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
@@ -156,12 +188,25 @@ struct HeritageDetailImage: View {
 
     init(
         urlString: String?,
-        placeholderText: String = "E迹",
+        placeholderText: String? = nil,
         contentMode: ContentMode = .fit,
         onTap: (() -> Void)? = nil
     ) {
         self.urlString = urlString
-        self.placeholderText = placeholderText
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
+        self.contentMode = contentMode
+        self.onTap = onTap
+    }
+
+    /// 从 MediaAssetDTO 初始化
+    init(
+        asset: MediaAssetDTO?,
+        placeholderText: String? = nil,
+        contentMode: ContentMode = .fit,
+        onTap: (() -> Void)? = nil
+    ) {
+        self.urlString = ImagePreviewUrl.previewUrl(from: asset)
+        self.placeholderText = placeholderText ?? String(localized: "app.name")
         self.contentMode = contentMode
         self.onTap = onTap
     }

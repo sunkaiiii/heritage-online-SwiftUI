@@ -1,0 +1,41 @@
+{
+    "id": "1",
+    "category": "news",
+    "title": "测试文章详情",
+    "summary": "这是一篇测试文章的摘要",
+    "publishedAt": "2024-01-15",
+    "coverImage": {
+        "sourceUrl": "https://example.com/image.jpg",
+        "displayUrl": "https://example.com/image_display.jpg",
+        "thumbnailUrl": "https://example.com/image_thumb.jpg"
+    },
+    "sourceUrl": "https://example.com/article/1",
+    "sourceName": "测试来源",
+    "author": "测试作者",
+    "editor": "测试编辑",
+    "contentBlocks": [
+        {
+            "type": "heading",
+            "text": "第一章"
+        },
+        {
+            "type": "text",
+            "text": "这是正文内容"
+        },
+        {
+            "type": "image",
+            "image": {
+                "sourceUrl": "https://example.com/content_image.jpg",
+                "displayUrl": "https://example.com/content_image_display.jpg"
+            }
+        }
+    ],
+    "relatedArticles": [
+        {
+            "title": "相关文章",
+            "detailUrl": "https://example.com/related/1",
+            "sourceId": "related-1",
+            "publishedAt": "2024-01-10"
+        }
+    ]
+}

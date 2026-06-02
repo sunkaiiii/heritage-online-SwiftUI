@@ -1,0 +1,70 @@
+{
+    "banners": [
+        {
+            "id": "banner-1",
+            "sortOrder": 1,
+            "targetUrl": "https://example.com/banner/1",
+            "displayImage": {
+                "sourceUrl": "https://example.com/banner.jpg",
+                "displayUrl": "https://example.com/banner_display.jpg"
+            }
+        }
+    ],
+    "latestNews": [
+        {
+            "id": "news-1",
+            "category": "news",
+            "title": "最新新闻",
+            "summary": "新闻摘要",
+            "publishedAt": "2024-01-15"
+        }
+    ],
+    "latestSpecialTopics": [
+        {
+            "id": "special-1",
+            "category": "specialTopic",
+            "title": "专题文章",
+            "summary": "专题摘要",
+            "publishedAt": "2024-01-14"
+        }
+    ],
+    "latestForumArticles": [
+        {
+            "id": "forum-1",
+            "category": "forum",
+            "title": "论坛文章",
+            "summary": "论坛摘要",
+            "publishedAt": "2024-01-13"
+        }
+    ],
+    "featuredDirectoryItems": [
+        {
+            "id": "dir-1",
+            "kind": "nationalProject",
+            "title": "国家级项目",
+            "summary": "项目摘要",
+            "category": "传统技艺",
+            "region": "北京市"
+        }
+    ],
+    "featuredInheritors": [
+        {
+            "id": "inheritor-1",
+            "name": "传承人姓名",
+            "gender": "男",
+            "category": "传统技艺",
+            "projectName": "项目名称",
+            "region": "北京市"
+        }
+    ],
+    "summary": {
+        "totalArticles": 1000,
+        "totalDirectoryItems": 500,
+        "totalInheritors": 200,
+        "directoryKindCounts": {
+            "nationalProject": 300,
+            "culturalEcoZone": 100,
+            "unescoEntry": 100
+        }
+    }
+}

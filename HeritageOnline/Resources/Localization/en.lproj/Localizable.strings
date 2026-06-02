@@ -20,6 +20,7 @@
 "action.retry" = "Retry";
 "action.refresh" = "Refresh";
 "action.viewOriginal" = "View Original";
+"action.viewDetail" = "View Detail";
 "action.favorite" = "Favorite";
 "action.unfavorite" = "Unfavorite";
 "action.clear" = "Clear";
@@ -59,15 +60,19 @@
 "page.articles" = "Articles";
 "page.articles.subtitle" = "Heritage news, forums and specials";
 "page.articles.placeholder" = "Article list will be displayed here";
+"page.article.detail" = "Article Detail";
 "page.directory" = "Heritage Directory";
 "page.directory.subtitle" = "National projects, cultural eco zones, etc.";
 "page.directory.placeholder" = "Directory list will be displayed here";
+"page.directory.detail" = "Directory Detail";
 "page.inheritors" = "Representative Inheritors";
 "page.inheritors.subtitle" = "Representative inheritors of heritage projects";
 "page.inheritors.placeholder" = "Inheritor list will be displayed here";
+"page.inheritor.detail" = "Inheritor Detail";
 "page.discovery" = "Discovery";
 "page.discovery.subtitle" = "Explore, learning paths and featured collections";
 "page.discovery.placeholder" = "Discovery page will be displayed here";
+"page.detail.placeholder" = "Detail content will be displayed here";
 "page.settings" = "Settings";
 "page.my" = "My";
 "page.my.placeholder" = "Favorites, recently viewed, reading path";
@@ -105,6 +110,13 @@
 "error.notFound" = "Content not found.";
 "error.unknown" = "Failed to load. Please try again.";
 "error.invalidYear" = "Please enter a valid 4-digit year";
+"error.invalidBaseURL" = "Invalid API configuration";
+"error.invalidURL" = "Invalid request URL";
+"error.invalidResponse" = "Invalid server response";
+"error.badRequest" = "Bad request";
+"error.serverError" = "Internal server error";
+"error.httpError %lld" = "HTTP Error: %lld";
+"error.decodingError" = "Failed to decode response";
 
 /* Empty States */
 "empty.noContent" = "No content available";
