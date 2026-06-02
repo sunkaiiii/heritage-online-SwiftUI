@@ -200,3 +200,37 @@
 "directory.statistics.regionRanking" = "Region Ranking";
 "directory.statistics.generatedAt" = "Data generated at";
 "directory.yearFormat" = "%d";
+
+/* Directory Detail */
+"directoryDetail.title" = "Directory Detail";
+"directoryDetail.field.projectCode" = "Project Code";
+"directoryDetail.field.batch" = "Batch";
+"directoryDetail.field.protectionUnit" = "Protection Unit";
+"directoryDetail.field.nominationType" = "Nomination Type";
+"directoryDetail.gallery" = "Gallery";
+"directoryDetail.relatedProjects" = "Related Projects";
+"directoryDetail.relatedInheritors" = "Related Inheritors";
+"directoryDetail.relatedDocuments" = "Related Documents";
+
+/* Inheritors Page */
+"inheritors.searchPlaceholder" = "Name or keywords";
+"inheritors.filter.region" = "Region";
+"inheritors.filter.category" = "Category";
+"inheritors.filter.year" = "Year";
+"inheritors.filter.yearPlaceholder" = "e.g. 2024";
+"inheritors.filter.gender" = "Gender";
+"inheritors.filter.gender.all" = "All";
+"inheritors.filter.gender.male" = "Male";
+"inheritors.filter.gender.female" = "Female";
+"inheritors.empty.default" = "No inheritors yet";
+"inheritors.empty.search" = "No matching inheritors found";
+"inheritors.empty.searchHint" = "Try different keywords or filters";
+
+/* Inheritor Detail */
+"inheritorDetail.title" = "Inheritor Detail";
+"inheritorDetail.field.projectName" = "Representative Project";
+"inheritorDetail.field.projectCode" = "Project Code";
+"inheritorDetail.field.birthDate" = "Birth Date";
+"inheritorDetail.field.batch" = "Batch";
+"inheritorDetail.relatedProjects" = "Related Projects";
+"inheritorDetail.relatedInheritors" = "Related Inheritors";

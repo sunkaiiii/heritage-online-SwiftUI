@@ -1,8 +1,8 @@
 import SwiftUI
 import Foundation
 
-/// 名录 Tab 类型
-enum DirectoryTab: String, CaseIterable {
+/// 名录页面 Tab 类型（名录列表 / 统计）
+enum DirectoryPageTab: String, CaseIterable {
     case list
     case statistics
 
@@ -35,7 +35,7 @@ final class DirectoryUiState {
     var categoryFilter: String = ""
     var yearFilter: String = ""
     var listTypeFilter: String = ""
-    var selectedTab: DirectoryTab = .list
+    var selectedTab: DirectoryPageTab = .list
     var statisticsState = DirectoryStatisticsState()
 
     /// 文章列表
@@ -161,7 +161,7 @@ final class DirectoryViewModel {
         }
     }
 
-    func selectTab(_ tab: DirectoryTab) {
+    func selectTab(_ tab: DirectoryPageTab) {
         guard uiState.selectedTab != tab else { return }
         uiState.selectedTab = tab
         if tab == .statistics && uiState.statisticsState.overview == nil {

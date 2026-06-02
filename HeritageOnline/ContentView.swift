@@ -142,7 +142,7 @@ struct DirectoryTab: View {
 struct InheritorsTab: View {
     var body: some View {
         NavigationStack {
-            InheritorsListView()
+            InheritorsView()
         }
     }
 }
@@ -189,48 +189,6 @@ struct PlaceholderDetailView: View {
         #endif
     }
 }
-
-/// 传承人列表占位页
-struct InheritorsListView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-
-    var body: some View {
-        PageBackground {
-            VStack {
-                PageHeader(
-                    titleKey: "page.inheritors",
-                    subtitleKey: "page.inheritors.subtitle"
-                )
-
-                Spacer()
-
-                Text("page.inheritors")
-                    .font(HeritageTypography.headlineLarge)
-                    .foregroundStyle(colorScheme.onBackground)
-
-                Text("page.inheritors.placeholder")
-                    .font(HeritageTypography.bodyMedium)
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
-                    .padding(.top, 8)
-
-                // 占位详情页按钮
-                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.inheritor.detail")) {
-                    Text("action.viewDetail")
-                        .font(HeritageTypography.labelLarge)
-                        .foregroundStyle(colorScheme.primary)
-                        .padding(.top, 16)
-                }
-
-                Spacer()
-            }
-        }
-        .navigationTitle("tab.inheritors")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
-        #endif
-    }
-}
-
 /// 发现页占位页
 struct DiscoveryView: View {
     @Environment(\.heritageColorScheme) private var colorScheme

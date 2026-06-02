@@ -200,3 +200,37 @@
 "directory.statistics.regionRanking" = "地区排行";
 "directory.statistics.generatedAt" = "数据生成于";
 "directory.yearFormat" = "%d年";
+
+/* Directory Detail */
+"directoryDetail.title" = "名录详情";
+"directoryDetail.field.projectCode" = "项目编号";
+"directoryDetail.field.batch" = "批次";
+"directoryDetail.field.protectionUnit" = "保护单位";
+"directoryDetail.field.nominationType" = "申报类型";
+"directoryDetail.gallery" = "图库";
+"directoryDetail.relatedProjects" = "相关项目";
+"directoryDetail.relatedInheritors" = "相关传承人";
+"directoryDetail.relatedDocuments" = "相关文献";
+
+/* Inheritors Page */
+"inheritors.searchPlaceholder" = "姓名或关键词";
+"inheritors.filter.region" = "地区";
+"inheritors.filter.category" = "类别";
+"inheritors.filter.year" = "年份";
+"inheritors.filter.yearPlaceholder" = "例如 2024";
+"inheritors.filter.gender" = "性别";
+"inheritors.filter.gender.all" = "不限";
+"inheritors.filter.gender.male" = "男";
+"inheritors.filter.gender.female" = "女";
+"inheritors.empty.default" = "暂无传承人";
+"inheritors.empty.search" = "未找到匹配的传承人";
+"inheritors.empty.searchHint" = "尝试不同的关键词或筛选条件";
+
+/* Inheritor Detail */
+"inheritorDetail.title" = "传承人详情";
+"inheritorDetail.field.projectName" = "代表性项目";
+"inheritorDetail.field.projectCode" = "项目编号";
+"inheritorDetail.field.birthDate" = "出生日期";
+"inheritorDetail.field.batch" = "批次";
+"inheritorDetail.relatedProjects" = "相关项目";
+"inheritorDetail.relatedInheritors" = "相关传承人";

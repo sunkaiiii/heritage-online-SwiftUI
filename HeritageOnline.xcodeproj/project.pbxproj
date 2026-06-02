@@ -69,6 +69,12 @@
 		B2000044 /* DirectoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000044 /* DirectoryViewModel.swift */; };
 		B2000045 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000045 /* DirectoryView.swift */; };
 		B2000046 /* DirectoryStatisticsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000046 /* DirectoryStatisticsContentView.swift */; };
+		B2000047 /* DirectoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000047 /* DirectoryDetailViewModel.swift */; };
+		B2000048 /* DirectoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000048 /* DirectoryDetailView.swift */; };
+		B2000049 /* InheritorsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000049 /* InheritorsViewModel.swift */; };
+		B2000050 /* InheritorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* InheritorsView.swift */; };
+		B2000051 /* InheritorDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000051 /* InheritorDetailViewModel.swift */; };
+		B2000052 /* InheritorDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000052 /* InheritorDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -156,6 +162,12 @@
 		B1000044 /* DirectoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModel.swift; sourceTree = "<group>"; };
 		B1000045 /* DirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryView.swift; sourceTree = "<group>"; };
 		B1000046 /* DirectoryStatisticsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryStatisticsContentView.swift; sourceTree = "<group>"; };
+		B1000047 /* DirectoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryDetailViewModel.swift; sourceTree = "<group>"; };
+		B1000048 /* DirectoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryDetailView.swift; sourceTree = "<group>"; };
+		B1000049 /* InheritorsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorsViewModel.swift; sourceTree = "<group>"; };
+		B1000050 /* InheritorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorsView.swift; sourceTree = "<group>"; };
+		B1000051 /* InheritorDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorDetailViewModel.swift; sourceTree = "<group>"; };
+		B1000052 /* InheritorDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -378,6 +390,8 @@
 				B1000044 /* DirectoryViewModel.swift */,
 				B1000045 /* DirectoryView.swift */,
 				B1000046 /* DirectoryStatisticsContentView.swift */,
+				B1000047 /* DirectoryDetailViewModel.swift */,
+				B1000048 /* DirectoryDetailView.swift */,
 			);
 			path = Directory;
 			sourceTree = "<group>";
@@ -385,6 +399,10 @@
 		A5000011 /* Inheritors */ = {
 			isa = PBXGroup;
 			children = (
+				B1000049 /* InheritorsViewModel.swift */,
+				B1000050 /* InheritorsView.swift */,
+				B1000051 /* InheritorDetailViewModel.swift */,
+				B1000052 /* InheritorDetailView.swift */,
 			);
 			path = Inheritors;
 			sourceTree = "<group>";
@@ -656,6 +674,12 @@
 				B2000044 /* DirectoryViewModel.swift in Sources */,
 				B2000045 /* DirectoryView.swift in Sources */,
 				B2000046 /* DirectoryStatisticsContentView.swift in Sources */,
+				B2000047 /* DirectoryDetailViewModel.swift in Sources */,
+				B2000048 /* DirectoryDetailView.swift in Sources */,
+				B2000049 /* InheritorsViewModel.swift in Sources */,
+				B2000050 /* InheritorsView.swift in Sources */,
+				B2000051 /* InheritorDetailViewModel.swift in Sources */,
+				B2000052 /* InheritorDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -79,7 +79,7 @@ struct DirectoryView: View {
 
     private var tabToggle: some View {
         HStack(spacing: 0) {
-            ForEach(DirectoryTab.allCases, id: \.self) { tab in
+            ForEach(DirectoryPageTab.allCases, id: \.self) { tab in
                 Button {
                     viewModel.selectTab(tab)
                 } label: {
@@ -263,7 +263,11 @@ private struct DirectoryItemRow: View {
     let item: DirectoryItemSummaryDTO
 
     var body: some View {
-        NavigationLink(destination: PlaceholderDetailView(titleKey: "page.directory.detail")) {
+        NavigationLink(destination: DirectoryDetailView(
+            itemId: item.id,
+            sourceId: nil,
+            kind: DirectoryItemKind(rawValue: item.kind ?? "nationalProject") ?? .nationalProject
+        )) {
             ContentCard {
                 HStack(spacing: 12) {
                     HeritageListImage(
