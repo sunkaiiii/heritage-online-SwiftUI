@@ -5,8 +5,6 @@ struct ContentView: View {
     @Environment(SettingsManager.self) private var settingsManager
 
     var body: some View {
-        @Bindable var settings = settingsManager
-
         TabView {
             ArticlesTab()
                 .tabItem {
@@ -28,7 +26,7 @@ struct ContentView: View {
                     Label(String(localized: "tab.discovery"), systemImage: "safari")
                 }
         }
-        .tint(HeritageColors.primaryLight) // TODO: 根据主题动态切换
+        .tint(settingsManager.themeMode == .dark ? HeritageColorScheme.dark.primary : HeritageColorScheme.light.primary)
     }
 }
 
@@ -36,44 +34,101 @@ struct ContentView: View {
 
 /// 文章 Tab
 struct ArticlesTab: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+
     var body: some View {
         NavigationStack {
-            Text(String(localized: "page.articles"))
-                .font(HeritageTypography.headlineLarge)
-                .navigationTitle(String(localized: "tab.articles"))
+            PageBackground {
+                VStack {
+                    PageHeader(
+                        title: "E迹",
+                        subtitle: "非遗新闻、论坛与专题",
+                        actions: [
+                            .init(icon: "gear") {
+                                // TODO: 进入设置
+                            }
+                        ]
+                    )
+
+                    Spacer()
+
+                    Text(String(localized: "page.articles"))
+                        .font(HeritageTypography.headlineLarge)
+                        .foregroundStyle(colorScheme.onBackground)
+
+                    Spacer()
+                }
+            }
+            .navigationTitle(String(localized: "tab.articles"))
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
         }
     }
 }
 
 /// 名录 Tab
 struct DirectoryTab: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+
     var body: some View {
         NavigationStack {
-            Text(String(localized: "page.directory"))
-                .font(HeritageTypography.headlineLarge)
-                .navigationTitle(String(localized: "tab.directory"))
+            PageBackground {
+                VStack {
+                    Spacer()
+
+                    Text(String(localized: "page.directory"))
+                        .font(HeritageTypography.headlineLarge)
+                        .foregroundStyle(colorScheme.onBackground)
+
+                    Spacer()
+                }
+            }
+            .navigationTitle(String(localized: "tab.directory"))
         }
     }
 }
 
 /// 传承人 Tab
 struct InheritorsTab: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+
     var body: some View {
         NavigationStack {
-            Text(String(localized: "page.inheritors"))
-                .font(HeritageTypography.headlineLarge)
-                .navigationTitle(String(localized: "tab.inheritors"))
+            PageBackground {
+                VStack {
+                    Spacer()
+
+                    Text(String(localized: "page.inheritors"))
+                        .font(HeritageTypography.headlineLarge)
+                        .foregroundStyle(colorScheme.onBackground)
+
+                    Spacer()
+                }
+            }
+            .navigationTitle(String(localized: "tab.inheritors"))
         }
     }
 }
 
 /// 发现 Tab
 struct DiscoveryTab: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+
     var body: some View {
         NavigationStack {
-            Text(String(localized: "page.discovery"))
-                .font(HeritageTypography.headlineLarge)
-                .navigationTitle(String(localized: "tab.discovery"))
+            PageBackground {
+                VStack {
+                    Spacer()
+
+                    Text(String(localized: "page.discovery"))
+                        .font(HeritageTypography.headlineLarge)
+                        .foregroundStyle(colorScheme.onBackground)
+
+                    Spacer()
+                }
+            }
+            .navigationTitle(String(localized: "tab.discovery"))
         }
     }
 }
@@ -81,4 +136,5 @@ struct DiscoveryTab: View {
 #Preview {
     ContentView()
         .environment(SettingsManager.shared)
+        .environment(\.heritageColorScheme, .light)
 }
