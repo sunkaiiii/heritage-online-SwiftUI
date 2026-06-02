@@ -133,7 +133,7 @@ struct ArticlesTab: View {
 struct DirectoryTab: View {
     var body: some View {
         NavigationStack {
-            DirectoryListView()
+            DirectoryView()
         }
     }
 }
@@ -186,48 +186,6 @@ struct PlaceholderDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar) // 隐藏底部导航
-        #endif
-    }
-}
-
-
-/// 名录列表占位页
-struct DirectoryListView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-
-    var body: some View {
-        PageBackground {
-            VStack {
-                PageHeader(
-                    titleKey: "page.directory",
-                    subtitleKey: "page.directory.subtitle"
-                )
-
-                Spacer()
-
-                Text("page.directory")
-                    .font(HeritageTypography.headlineLarge)
-                    .foregroundStyle(colorScheme.onBackground)
-
-                Text("page.directory.placeholder")
-                    .font(HeritageTypography.bodyMedium)
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
-                    .padding(.top, 8)
-
-                // 占位详情页按钮
-                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.directory.detail")) {
-                    Text("action.viewDetail")
-                        .font(HeritageTypography.labelLarge)
-                        .foregroundStyle(colorScheme.primary)
-                        .padding(.top, 16)
-                }
-
-                Spacer()
-            }
-        }
-        .navigationTitle("tab.directory")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 }

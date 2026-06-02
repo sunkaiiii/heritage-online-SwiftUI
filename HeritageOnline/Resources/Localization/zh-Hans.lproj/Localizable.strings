@@ -170,3 +170,33 @@
 "articles.empty.search" = "未找到匹配的文章";
 "articles.empty.searchHint" = "尝试不同的关键词或筛选条件";
 "articles.filter.invalidYear" = "请输入有效的4位年份";
+
+/* Article Detail */
+"articleDetail.title" = "文章详情";
+"articleDetail.relatedArticles" = "相关新闻";
+"articleDetail.viewSource" = "查看原文";
+"articleDetail.sourceOpenFailed" = "无法打开原文链接";
+"articleDetail.staleContent" = "内容可能不是最新，刷新获取最新版本";
+"articleDetail.emptyContent" = "暂无正文内容";
+
+/* Directory Page */
+"directory.tab.list" = "名录";
+"directory.tab.statistics" = "统计";
+"directory.searchPlaceholder" = "标题或关键词";
+"directory.filter.region" = "地区";
+"directory.filter.category" = "类别";
+"directory.filter.year" = "年份";
+"directory.filter.yearPlaceholder" = "例如 2024";
+"directory.filter.listType" = "入选类型";
+"directory.filter.regionPlaceholder" = "例如 北京";
+"directory.filter.categoryPlaceholder" = "例如 传统音乐";
+"directory.filter.listTypePlaceholder" = "例如 人类非遗代表作名录";
+"directory.empty.default" = "暂无名录";
+"directory.empty.search" = "未找到匹配的名录";
+"directory.empty.searchHint" = "尝试不同的关键词或筛选条件";
+"directory.statistics.overview" = "总览";
+"directory.statistics.yearDistribution" = "年份分布";
+"directory.statistics.categoryDistribution" = "类别分布";
+"directory.statistics.regionRanking" = "地区排行";
+"directory.statistics.generatedAt" = "数据生成于";
+"directory.yearFormat" = "%d年";

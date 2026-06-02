@@ -64,6 +64,11 @@
 		B2000032 /* ArticleDetail.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000032 /* ArticleDetail.json */; };
 		B2000040 /* ArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000040 /* ArticlesViewModel.swift */; };
 		B2000041 /* ArticlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000041 /* ArticlesView.swift */; };
+		B2000042 /* ArticleDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000042 /* ArticleDetailViewModel.swift */; };
+		B2000043 /* ArticleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000043 /* ArticleDetailView.swift */; };
+		B2000044 /* DirectoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000044 /* DirectoryViewModel.swift */; };
+		B2000045 /* DirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000045 /* DirectoryView.swift */; };
+		B2000046 /* DirectoryStatisticsContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000046 /* DirectoryStatisticsContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +151,11 @@
 		B1000032 /* ArticleDetail.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ArticleDetail.json; sourceTree = "<group>"; };
 		B1000040 /* ArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesViewModel.swift; sourceTree = "<group>"; };
 		B1000041 /* ArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesView.swift; sourceTree = "<group>"; };
+		B1000042 /* ArticleDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailViewModel.swift; sourceTree = "<group>"; };
+		B1000043 /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
+		B1000044 /* DirectoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModel.swift; sourceTree = "<group>"; };
+		B1000045 /* DirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryView.swift; sourceTree = "<group>"; };
+		B1000046 /* DirectoryStatisticsContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryStatisticsContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,6 +366,8 @@
 			children = (
 				B1000040 /* ArticlesViewModel.swift */,
 				B1000041 /* ArticlesView.swift */,
+				B1000042 /* ArticleDetailViewModel.swift */,
+				B1000043 /* ArticleDetailView.swift */,
 			);
 			path = Articles;
 			sourceTree = "<group>";
@@ -363,6 +375,9 @@
 		A5000010 /* Directory */ = {
 			isa = PBXGroup;
 			children = (
+				B1000044 /* DirectoryViewModel.swift */,
+				B1000045 /* DirectoryView.swift */,
+				B1000046 /* DirectoryStatisticsContentView.swift */,
 			);
 			path = Directory;
 			sourceTree = "<group>";
@@ -636,6 +651,11 @@
 				B2000025 /* HeritageAsyncImage.swift in Sources */,
 				B2000040 /* ArticlesViewModel.swift in Sources */,
 				B2000041 /* ArticlesView.swift in Sources */,
+				B2000042 /* ArticleDetailViewModel.swift in Sources */,
+				B2000043 /* ArticleDetailView.swift in Sources */,
+				B2000044 /* DirectoryViewModel.swift in Sources */,
+				B2000045 /* DirectoryView.swift in Sources */,
+				B2000046 /* DirectoryStatisticsContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

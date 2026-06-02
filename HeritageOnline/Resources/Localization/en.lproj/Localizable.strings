@@ -170,3 +170,33 @@
 "articles.empty.search" = "No matching articles found";
 "articles.empty.searchHint" = "Try different keywords or filters";
 "articles.filter.invalidYear" = "Please enter a valid 4-digit year";
+
+/* Article Detail */
+"articleDetail.title" = "Article Detail";
+"articleDetail.relatedArticles" = "Related Articles";
+"articleDetail.viewSource" = "View Original";
+"articleDetail.sourceOpenFailed" = "Unable to open the original link";
+"articleDetail.staleContent" = "Content may not be up to date. Refresh to get the latest version.";
+"articleDetail.emptyContent" = "No content available";
+
+/* Directory Page */
+"directory.tab.list" = "Directory";
+"directory.tab.statistics" = "Statistics";
+"directory.searchPlaceholder" = "Title or keywords";
+"directory.filter.region" = "Region";
+"directory.filter.category" = "Category";
+"directory.filter.year" = "Year";
+"directory.filter.yearPlaceholder" = "e.g. 2024";
+"directory.filter.listType" = "List Type";
+"directory.filter.regionPlaceholder" = "e.g. Beijing";
+"directory.filter.categoryPlaceholder" = "e.g. Traditional Music";
+"directory.filter.listTypePlaceholder" = "e.g. UNESCO Representative List";
+"directory.empty.default" = "No directory items yet";
+"directory.empty.search" = "No matching directory items found";
+"directory.empty.searchHint" = "Try different keywords or filters";
+"directory.statistics.overview" = "Overview";
+"directory.statistics.yearDistribution" = "Year Distribution";
+"directory.statistics.categoryDistribution" = "Category Distribution";
+"directory.statistics.regionRanking" = "Region Ranking";
+"directory.statistics.generatedAt" = "Data generated at";
+"directory.yearFormat" = "%d";

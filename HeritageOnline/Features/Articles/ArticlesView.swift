@@ -370,7 +370,12 @@ private struct ArticleRow: View {
             return String(localized: String.LocalizationValue(key))
         }()
 
-        NavigationLink(destination: PlaceholderDetailView(titleKey: "page.article.detail")) {
+        NavigationLink(destination: ArticleDetailView(
+            articleId: article.id,
+            sourceId: nil,
+            sourceUrl: article.sourceUrl,
+            category: ArticleCategory(rawValue: article.category ?? "news") ?? .news
+        )) {
             ListCard(
                 title: article.title ?? "",
                 subtitle: nil,

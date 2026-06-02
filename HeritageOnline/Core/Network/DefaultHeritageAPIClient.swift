@@ -87,6 +87,20 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
         try await httpClient.get(["api", "directory-items", id, "context"])
     }
 
+    func getDirectoryStatisticsOverview(kind: DirectoryItemKind) async throws -> DirectoryStatisticsOverviewDTO {
+        var builder = QueryBuilder()
+        builder.add("kind", value: kind.wireName)
+        return try await httpClient.get("api/directory-items/statistics", queryItems: builder.build())
+    }
+
+    func getDirectoryStatisticsBreakdown(kind: DirectoryItemKind, dimension: DirectoryStatisticDimension, limit: Int) async throws -> DirectoryStatisticDimensionDTO {
+        var builder = QueryBuilder()
+        builder.add("kind", value: kind.wireName)
+        builder.add("dimension", value: dimension.wireName)
+        builder.add("limit", value: limit)
+        return try await httpClient.get("api/directory-items/statistics/breakdown", queryItems: builder.build())
+    }
+
     // MARK: - 传承人
 
     func getInheritors(query: InheritorQuery) async throws -> PagedResultDTO<InheritorSummaryDTO> {

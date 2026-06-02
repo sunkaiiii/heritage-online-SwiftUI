@@ -59,6 +59,14 @@ final class DefaultHeritageRepository: HeritageRepository {
         try await apiClient.getDirectoryItemContext(id: id)
     }
 
+    func directoryStatisticsOverview(kind: DirectoryItemKind) async throws -> DirectoryStatisticsOverviewDTO {
+        try await apiClient.getDirectoryStatisticsOverview(kind: kind)
+    }
+
+    func directoryStatisticsBreakdown(kind: DirectoryItemKind, dimension: DirectoryStatisticDimension, limit: Int) async throws -> DirectoryStatisticDimensionDTO {
+        try await apiClient.getDirectoryStatisticsBreakdown(kind: kind, dimension: dimension, limit: limit)
+    }
+
     // MARK: - 传承人
 
     func inheritors(query: InheritorQuery) async throws -> PagedResultDTO<InheritorSummaryDTO> {

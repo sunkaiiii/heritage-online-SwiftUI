@@ -42,6 +42,12 @@ protocol HeritageAPIClient: Sendable {
     /// 获取名录 Context
     func getDirectoryItemContext(id: String) async throws -> DetailContextDTO
 
+    /// 获取名录统计总览
+    func getDirectoryStatisticsOverview(kind: DirectoryItemKind) async throws -> DirectoryStatisticsOverviewDTO
+
+    /// 获取名录统计 breakdown
+    func getDirectoryStatisticsBreakdown(kind: DirectoryItemKind, dimension: DirectoryStatisticDimension, limit: Int) async throws -> DirectoryStatisticDimensionDTO
+
     // MARK: - 传承人
 
     /// 获取传承人列表
