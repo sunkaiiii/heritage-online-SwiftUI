@@ -26,7 +26,7 @@ struct ContentView: View {
                     Label(String(localized: "tab.discovery"), systemImage: "safari")
                 }
         }
-        .tint(settingsManager.themeMode == .dark ? HeritageColorScheme.dark.primary : HeritageColorScheme.light.primary)
+        .heritageTheme()
     }
 }
 

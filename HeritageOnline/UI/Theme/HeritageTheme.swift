@@ -16,8 +16,11 @@ extension EnvironmentValues {
 
 // MARK: - Theme View Modifier
 
+/// Heritage 主题修饰符
+/// 根据设置和系统模式自动切换浅色/暗色
 struct HeritageThemeModifier: ViewModifier {
     @Environment(SettingsManager.self) private var settingsManager
+    @Environment(\.colorScheme) private var systemColorScheme
 
     func body(content: Content) -> some View {
         let colorScheme = resolveColorScheme()
@@ -28,12 +31,12 @@ struct HeritageThemeModifier: ViewModifier {
             .tint(colorScheme.primary)
     }
 
+    /// 根据主题设置解析当前应使用的颜色方案
     private func resolveColorScheme() -> HeritageColorScheme {
         switch settingsManager.themeMode {
         case .system:
-            // 在实际实现中，需要检测系统明暗模式
-            // 这里暂时使用浅色，后续会改进
-            return .light
+            // 跟随系统明暗模式
+            return systemColorScheme == .dark ? .dark : .light
         case .light:
             return .light
         case .dark:
@@ -46,14 +49,5 @@ extension View {
     /// 应用 Heritage 主题
     func heritageTheme() -> some View {
         modifier(HeritageThemeModifier())
-    }
-}
-
-// MARK: - Convenience Extensions
-
-extension View {
-    /// 使用 Heritage 颜色方案中的主色调
-    func heritagePrimary() -> some View {
-        self.environment(\.colorScheme, .light) // 占位，后续完善
     }
 }
