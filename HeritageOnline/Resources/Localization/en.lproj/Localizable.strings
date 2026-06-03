@@ -148,6 +148,27 @@
 "discovery.itemCount %lld" = "%lld items";
 "discovery.regionCount %lld" = "%lld regions";
 
+/* Search */
+"search.resultsCount %lld" = "%lld results";
+"search.loadMore" = "Load More";
+"search.emptyTitle" = "No Results Found";
+"search.emptyMessage" = "Try different keywords or filters";
+"search.filterType" = "Type";
+"search.filterKind" = "Kind";
+"search.type.article" = "Article";
+"search.type.directory" = "Directory";
+"search.type.inheritor" = "Inheritor";
+
+/* Filter */
+"filter.title" = "Filters";
+"filter.category" = "Category";
+"filter.region" = "Region";
+"filter.year" = "Year";
+"filter.hasImage" = "Has Image";
+"filter.noImage" = "No Image";
+"filter.clear" = "Clear";
+"filter.apply" = "Apply";
+
 /* Statistics */
 "stats.total" = "Total";
 "stats.articles" = "Articles";

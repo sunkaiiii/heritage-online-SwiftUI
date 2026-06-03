@@ -83,12 +83,27 @@ enum ContentLabels {
         case "article": return "contentType.article"
         case "directoryItem": return "contentType.directoryItem"
         case "inheritor": return "contentType.inheritor"
+        case "specialTopic": return "articleCategory.specialTopic"
         default: return type
         }
     }
 
     static func localizedSearchResultType(_ type: String?) -> String? {
         searchResultTypeKey(type)
+    }
+
+    /// SearchResultType 枚举版本
+    static func searchResultTypeKey(_ type: SearchResultType) -> String {
+        switch type {
+        case .article: return "contentType.article"
+        case .directoryItem: return "contentType.directoryItem"
+        case .inheritor: return "contentType.inheritor"
+        }
+    }
+
+    /// DirectoryItemKind 枚举版本
+    static func directoryKindKey(_ kind: DirectoryItemKind) -> String {
+        directoryKindKey(kind.rawValue) ?? kind.rawValue
     }
 
     // MARK: - Timeline Types

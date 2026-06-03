@@ -101,8 +101,22 @@ struct DiscoveryView: View {
             viewModel.loadAll()
         }
         .navigationDestination(isPresented: $navigateToSearch) {
-            PlaceholderDetailView(titleKey: "page.search",
-                subtitleKey: LocalizedStringKey(searchQuery))
+            SearchView(
+                initialQuery: searchQuery,
+                onBack: { navigateToSearch = false },
+                onArticleSelected: { id in
+                    navigateToSearch = false
+                    navigateToArticleDetail = id
+                },
+                onDirectoryItemSelected: { id in
+                    navigateToSearch = false
+                    navigateToDirectoryDetail = id
+                },
+                onInheritorSelected: { id in
+                    navigateToSearch = false
+                    navigateToInheritorDetail = id
+                }
+            )
         }
         .navigationDestination(item: $navigateToTopic) { topic in
             PlaceholderDetailView(titleKey: "contentType.topic")

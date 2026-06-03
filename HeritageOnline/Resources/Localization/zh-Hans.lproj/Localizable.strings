@@ -148,6 +148,27 @@
 "discovery.itemCount %lld" = "%lld 项";
 "discovery.regionCount %lld" = "%lld 个地区";
 
+/* Search */
+"search.resultsCount %lld" = "共 %lld 条结果";
+"search.loadMore" = "加载更多";
+"search.emptyTitle" = "未找到结果";
+"search.emptyMessage" = "尝试不同的关键词或筛选条件";
+"search.filterType" = "类型";
+"search.filterKind" = "种类";
+"search.type.article" = "文章";
+"search.type.directory" = "名录";
+"search.type.inheritor" = "传承人";
+
+/* Filter */
+"filter.title" = "筛选";
+"filter.category" = "分类";
+"filter.region" = "地区";
+"filter.year" = "年份";
+"filter.hasImage" = "有图";
+"filter.noImage" = "无图";
+"filter.clear" = "清除";
+"filter.apply" = "应用";
+
 /* Statistics */
 "stats.total" = "总计";
 "stats.articles" = "文章";

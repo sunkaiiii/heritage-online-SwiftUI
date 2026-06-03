@@ -286,13 +286,8 @@ enum DirectoryFilterField: String, CaseIterable {
     }
 }
 
-/// DirectoryItemKind CaseIterable 扩展
-extension DirectoryItemKind: CaseIterable {
-    public static var allCases: [DirectoryItemKind] = [
-        .nationalProject, .culturalEcoZone, .productiveProtectionBase,
-        .unescoEntry, .chinaUnescoEntry, .contractingState
-    ]
-
+/// DirectoryItemKind 本地化显示名称扩展
+extension DirectoryItemKind {
     /// 本地化显示名称
     var displayName: String {
         let key = ContentLabels.localizedDirectoryKind(self.wireName) ?? self.wireName

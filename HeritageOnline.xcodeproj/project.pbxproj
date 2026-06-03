@@ -103,6 +103,9 @@
 		B20000AA3 /* DiscoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A3 /* DiscoveryViewModel.swift */; };
 		B20000AA4 /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A4 /* DiscoveryView.swift */; };
 		B20000AA5 /* DiscoveryItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A5 /* DiscoveryItemCard.swift */; };
+		B20000C0 /* SearchUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000C0 /* SearchUiState.swift */; };
+		B20000C1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000C1 /* SearchViewModel.swift */; };
+		B20000C2 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000C2 /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,6 +227,9 @@
 		B10000A3 /* DiscoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewModel.swift; sourceTree = "<group>"; };
 		B10000A4 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
 		B10000A5 /* DiscoveryItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryItemCard.swift; sourceTree = "<group>"; };
+		B10000C0 /* SearchUiState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUiState.swift; sourceTree = "<group>"; };
+		B10000C1 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		B10000C2 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -495,6 +501,9 @@
 		A5000013 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				B10000C0 /* SearchUiState.swift */,
+				B10000C1 /* SearchViewModel.swift */,
+				B10000C2 /* SearchView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -784,6 +793,9 @@
 				B20000AA3 /* DiscoveryViewModel.swift in Sources */,
 				B20000AA4 /* DiscoveryView.swift in Sources */,
 				B20000AA5 /* DiscoveryItemCard.swift in Sources */,
+				B20000C0 /* SearchUiState.swift in Sources */,
+				B20000C1 /* SearchViewModel.swift in Sources */,
+				B20000C2 /* SearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -68,7 +68,7 @@ struct DirectoryItemQuery: Sendable {
 }
 
 /// 名录种类
-enum DirectoryItemKind: String, Sendable {
+enum DirectoryItemKind: String, Sendable, CaseIterable {
     case nationalProject
     case culturalEcoZone
     case productiveProtectionBase
