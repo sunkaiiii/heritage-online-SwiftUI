@@ -105,6 +105,78 @@ final class DefaultHeritageRepository: HeritageRepository {
         try await apiClient.getTimelineYears()
     }
 
+    // MARK: - 发现
+
+    func discoveryToday() async throws -> DiscoveryTodayDTO {
+        try await apiClient.getDiscoveryToday()
+    }
+
+    func discoveryRandom(type: SearchResultType) async throws -> DiscoveryItemDTO {
+        try await apiClient.getDiscoveryRandom(type: type)
+    }
+
+    func discoveryTrending(limit: Int = 10) async throws -> DiscoveryTrendingDTO {
+        try await apiClient.getDiscoveryTrending(limit: limit)
+    }
+
+    func discoveryWeekly() async throws -> DiscoveryWeeklyDTO {
+        try await apiClient.getDiscoveryWeekly()
+    }
+
+    func discoverySerendipity(query: DiscoverySerendipityQuery) async throws -> DiscoveryItemDTO {
+        try await apiClient.getDiscoverySerendipity(query: query)
+    }
+
+    func discoveryDeepDive(query: DiscoveryDeepDiveQuery) async throws -> DiscoveryDeepDiveDTO {
+        try await apiClient.getDiscoveryDeepDive(query: query)
+    }
+
+    // MARK: - 探索
+
+    func exploreIndex() async throws -> ExploreIndexDTO {
+        try await apiClient.getExploreIndex()
+    }
+
+    func exploreTopics(type: String? = nil, limit: Int = 20) async throws -> [ExploreTopicInfoDTO] {
+        try await apiClient.getExploreTopics(type: type, limit: limit)
+    }
+
+    func exploreTopic(type: String, key: String, limit: Int = 6) async throws -> ExploreTopicV2DTO {
+        try await apiClient.getExploreTopic(type: type, key: key, limit: limit)
+    }
+
+    func learningPaths() async throws -> [LearningPathDTO] {
+        try await apiClient.getLearningPaths()
+    }
+
+    func learningPathDetail(id: String, limit: Int = 6) async throws -> LearningPathDetailDTO {
+        try await apiClient.getLearningPathDetail(id: id, limit: limit)
+    }
+
+    // MARK: - 地区图谱
+
+    func regionAtlas() async throws -> RegionAtlasDTO {
+        try await apiClient.getRegionAtlas()
+    }
+
+    func regionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDTO {
+        try await apiClient.getRegionAtlasDetail(region: region, limit: limit)
+    }
+
+    // MARK: - 合集
+
+    func featuredCollections() async throws -> [FeaturedCollectionDTO] {
+        try await apiClient.getFeaturedCollections()
+    }
+
+    func collection(id: String) async throws -> CollectionDTO {
+        try await apiClient.getCollection(id: id)
+    }
+
+    func topicCollection(type: String, key: String) async throws -> CollectionDTO {
+        try await apiClient.getTopicCollection(type: type, key: key)
+    }
+
     // MARK: - Lookup（详情查找）
 
     func article(lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO {

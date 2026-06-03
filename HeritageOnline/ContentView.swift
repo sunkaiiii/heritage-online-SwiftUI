@@ -148,7 +148,7 @@ struct InheritorsTab: View {
 struct DiscoveryTab: View {
     var body: some View {
         NavigationStack {
-            DiscoveryView()
+            DiscoveryView()  // 使用 Features/Discovery/DiscoveryView.swift
         }
     }
 }
@@ -159,6 +159,7 @@ struct DiscoveryTab: View {
 struct PlaceholderDetailView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
     let titleKey: LocalizedStringKey
+    var subtitleKey: LocalizedStringKey?
 
     var body: some View {
         PageBackground {
@@ -167,14 +168,22 @@ struct PlaceholderDetailView: View {
 
                 Spacer()
 
-                Text(titleKey)
-                    .font(HeritageTypography.headlineLarge)
-                    .foregroundStyle(colorScheme.onBackground)
+                VStack(spacing: 8) {
+                    Text(titleKey)
+                        .font(HeritageTypography.headlineLarge)
+                        .foregroundStyle(colorScheme.onBackground)
 
-                Text("page.detail.placeholder")
-                    .font(HeritageTypography.bodyMedium)
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
-                    .padding(.top, 8)
+                    if let subtitleKey {
+                        Text(subtitleKey)
+                            .font(HeritageTypography.bodyLarge)
+                            .foregroundStyle(colorScheme.onSurfaceVariant)
+                    }
+
+                    Text("page.detail.placeholder")
+                        .font(HeritageTypography.bodyMedium)
+                        .foregroundStyle(colorScheme.onSurfaceVariant)
+                        .padding(.top, 4)
+                }
 
                 Spacer()
             }
@@ -183,46 +192,6 @@ struct PlaceholderDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar) // 隐藏底部导航
-        #endif
-    }
-}
-/// 发现页占位页
-struct DiscoveryView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-
-    var body: some View {
-        PageBackground {
-            VStack {
-                PageHeader(
-                    titleKey: "page.discovery",
-                    subtitleKey: "page.discovery.subtitle"
-                )
-
-                Spacer()
-
-                Text("page.discovery")
-                    .font(HeritageTypography.headlineLarge)
-                    .foregroundStyle(colorScheme.onBackground)
-
-                Text("page.discovery.placeholder")
-                    .font(HeritageTypography.bodyMedium)
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
-                    .padding(.top, 8)
-
-                // 占位详情页按钮
-                NavigationLink(destination: PlaceholderDetailView(titleKey: "page.discovery")) {
-                    Text("action.viewDetail")
-                        .font(HeritageTypography.labelLarge)
-                        .foregroundStyle(colorScheme.primary)
-                        .padding(.top, 16)
-                }
-
-                Spacer()
-            }
-        }
-        .navigationTitle("tab.discovery")
-        #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
         #endif
     }
 }
@@ -235,3 +204,4 @@ struct DiscoveryView: View {
         .environment(SettingsManager.shared)
         .heritageTheme()
 }
+

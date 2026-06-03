@@ -97,6 +97,12 @@
 		B2000095 /* ReadingPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000095 /* ReadingPath.swift */; };
 		B2000096 /* ReadingPathRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000096 /* ReadingPathRepository.swift */; };
 		B2000097 /* ReadingPathRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000097 /* ReadingPathRecorder.swift */; };
+		B20000AA0 /* DiscoveryDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A0 /* DiscoveryDtos.swift */; };
+		B20000AA1 /* DiscoverySectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A1 /* DiscoverySectionState.swift */; };
+		B20000AA2 /* DiscoveryUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A2 /* DiscoveryUiState.swift */; };
+		B20000AA3 /* DiscoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A3 /* DiscoveryViewModel.swift */; };
+		B20000AA4 /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A4 /* DiscoveryView.swift */; };
+		B20000AA5 /* DiscoveryItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A5 /* DiscoveryItemCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -212,6 +218,12 @@
 		B1000095 /* ReadingPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPath.swift; sourceTree = "<group>"; };
 		B1000096 /* ReadingPathRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepository.swift; sourceTree = "<group>"; };
 		B1000097 /* ReadingPathRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRecorder.swift; sourceTree = "<group>"; };
+		B10000A0 /* DiscoveryDtos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryDtos.swift; sourceTree = "<group>"; };
+		B10000A1 /* DiscoverySectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverySectionState.swift; sourceTree = "<group>"; };
+		B10000A2 /* DiscoveryUiState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryUiState.swift; sourceTree = "<group>"; };
+		B10000A3 /* DiscoveryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewModel.swift; sourceTree = "<group>"; };
+		B10000A4 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
+		B10000A5 /* DiscoveryItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryItemCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +403,7 @@
 			isa = PBXGroup;
 			children = (
 				B100001B /* CommonDtos.swift */,
+				B10000A0 /* DiscoveryDtos.swift */,
 				B100001C /* ContentDtos.swift */,
 			);
 			path = DTOs;
@@ -471,6 +484,10 @@
 		A5000012 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
+				B10000A1 /* DiscoverySectionState.swift */,
+				B10000A2 /* DiscoveryUiState.swift */,
+				B10000A3 /* DiscoveryViewModel.swift */,
+				B10000A4 /* DiscoveryView.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -534,6 +551,7 @@
 				B1000025 /* HeritageAsyncImage.swift */,				B1000070 /* FlowLayout.swift */,
 				B1000071 /* DetailContentBlockView.swift */,
 				B1000074 /* DirectoryReferenceCard.swift */,
+				B10000A5 /* DiscoveryItemCard.swift */,
 
 			);
 			path = Components;
@@ -564,6 +582,7 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
+
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -759,6 +778,12 @@
 				B2000095 /* ReadingPath.swift in Sources */,
 				B2000096 /* ReadingPathRepository.swift in Sources */,
 				B2000097 /* ReadingPathRecorder.swift in Sources */,
+				B20000AA0 /* DiscoveryDtos.swift in Sources */,
+				B20000AA1 /* DiscoverySectionState.swift in Sources */,
+				B20000AA2 /* DiscoveryUiState.swift in Sources */,
+				B20000AA3 /* DiscoveryViewModel.swift in Sources */,
+				B20000AA4 /* DiscoveryView.swift in Sources */,
+				B20000AA5 /* DiscoveryItemCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

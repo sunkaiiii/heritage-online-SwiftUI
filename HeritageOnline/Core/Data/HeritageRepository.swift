@@ -133,6 +133,62 @@ protocol HeritageRepository: Sendable {
     /// 获取年份聚合
     func timelineYears() async throws -> [TimelineYearBucketDTO]
 
+    // MARK: - 发现
+
+    /// 获取今日发现
+    func discoveryToday() async throws -> DiscoveryTodayDTO
+
+    /// 获取随机内容
+    func discoveryRandom(type: SearchResultType) async throws -> DiscoveryItemDTO
+
+    /// 获取趋势内容
+    func discoveryTrending(limit: Int) async throws -> DiscoveryTrendingDTO
+
+    /// 获取本周精选
+    func discoveryWeekly() async throws -> DiscoveryWeeklyDTO
+
+    /// 获取随便看看
+    func discoverySerendipity(query: DiscoverySerendipityQuery) async throws -> DiscoveryItemDTO
+
+    /// 获取深度探索
+    func discoveryDeepDive(query: DiscoveryDeepDiveQuery) async throws -> DiscoveryDeepDiveDTO
+
+    // MARK: - 探索
+
+    /// 获取探索首页
+    func exploreIndex() async throws -> ExploreIndexDTO
+
+    /// 获取探索主题列表
+    func exploreTopics(type: String?, limit: Int) async throws -> [ExploreTopicInfoDTO]
+
+    /// 获取探索主题详情
+    func exploreTopic(type: String, key: String, limit: Int) async throws -> ExploreTopicV2DTO
+
+    /// 获取学习路径列表
+    func learningPaths() async throws -> [LearningPathDTO]
+
+    /// 获取学习路径详情
+    func learningPathDetail(id: String, limit: Int) async throws -> LearningPathDetailDTO
+
+    // MARK: - 地区图谱
+
+    /// 获取地区图谱首页
+    func regionAtlas() async throws -> RegionAtlasDTO
+
+    /// 获取地区图谱详情
+    func regionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDTO
+
+    // MARK: - 合集
+
+    /// 获取精选合集
+    func featuredCollections() async throws -> [FeaturedCollectionDTO]
+
+    /// 获取合集详情
+    func collection(id: String) async throws -> CollectionDTO
+
+    /// 获取主题合集
+    func topicCollection(type: String, key: String) async throws -> CollectionDTO
+
     // MARK: - Lookup（详情查找）
 
     /// 根据 lookup 参数获取文章详情

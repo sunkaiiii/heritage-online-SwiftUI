@@ -137,11 +137,16 @@
 "discovery.collections" = "Featured Collections";
 "discovery.regionAtlas" = "Region Atlas";
 "discovery.timeline" = "Timeline";
+"discovery.timeline.subtitle" = "Browse heritage content by year";
 "discovery.taxonomy" = "Taxonomy";
 "discovery.stories" = "Data Stories";
 "discovery.serendipity" = "Serendipity";
 "discovery.deepDive" = "Deep Dive";
 "discovery.tryLuck" = "Try Your Luck";
+"discovery.searchPlaceholder" = "Search heritage content";
+"discovery.stepCount %lld" = "%lld steps";
+"discovery.itemCount %lld" = "%lld items";
+"discovery.regionCount %lld" = "%lld regions";
 
 /* Statistics */
 "stats.total" = "Total";

@@ -137,11 +137,16 @@
 "discovery.collections" = "精选合集";
 "discovery.regionAtlas" = "地区图谱";
 "discovery.timeline" = "时间线";
+"discovery.timeline.subtitle" = "按年份浏览非遗内容";
 "discovery.taxonomy" = "主题库";
 "discovery.stories" = "数据故事";
 "discovery.serendipity" = "随便看看";
 "discovery.deepDive" = "深度探索";
 "discovery.tryLuck" = "随便看看";
+"discovery.searchPlaceholder" = "搜索非遗内容";
+"discovery.stepCount %lld" = "%lld 步";
+"discovery.itemCount %lld" = "%lld 项";
+"discovery.regionCount %lld" = "%lld 个地区";
 
 /* Statistics */
 "stats.total" = "总计";

@@ -168,4 +168,98 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
     func getTimelineYears() async throws -> [TimelineYearBucketDTO] {
         try await httpClient.get("api/timeline/years")
     }
+
+    // MARK: - 发现
+
+    func getDiscoveryToday() async throws -> DiscoveryTodayDTO {
+        try await httpClient.get("api/discovery/today")
+    }
+
+    func getDiscoveryRandom(type: SearchResultType) async throws -> DiscoveryItemDTO {
+        var builder = QueryBuilder()
+        builder.add("type", value: type.wireName)
+        return try await httpClient.get("api/discovery/random", queryItems: builder.build())
+    }
+
+    func getDiscoveryTrending(limit: Int = 10) async throws -> DiscoveryTrendingDTO {
+        var builder = QueryBuilder()
+        builder.add("limit", value: limit)
+        return try await httpClient.get("api/discovery/trending", queryItems: builder.build())
+    }
+
+    func getDiscoveryWeekly() async throws -> DiscoveryWeeklyDTO {
+        try await httpClient.get("api/discovery/weekly")
+    }
+
+    func getDiscoverySerendipity(query: DiscoverySerendipityQuery) async throws -> DiscoveryItemDTO {
+        var builder = QueryBuilder()
+        builder.add("type", value: query.type.wireName)
+        builder.add("hasImage", value: query.hasImage)
+        builder.add("region", value: query.region)
+        builder.add("category", value: query.category)
+        return try await httpClient.get("api/discovery/serendipity", queryItems: builder.build())
+    }
+
+    func getDiscoveryDeepDive(query: DiscoveryDeepDiveQuery) async throws -> DiscoveryDeepDiveDTO {
+        var builder = QueryBuilder()
+        builder.add("seedType", value: query.seedType.wireName)
+        builder.add("seedId", value: query.seedId)
+        builder.add("limit", value: query.limit)
+        return try await httpClient.get("api/discovery/deep-dive", queryItems: builder.build())
+    }
+
+    // MARK: - 探索
+
+    func getExploreIndex() async throws -> ExploreIndexDTO {
+        try await httpClient.get("api/explore")
+    }
+
+    func getExploreTopics(type: String? = nil, limit: Int = 20) async throws -> [ExploreTopicInfoDTO] {
+        var builder = QueryBuilder()
+        builder.add("type", value: type)
+        builder.add("limit", value: limit)
+        return try await httpClient.get("api/explore/topics", queryItems: builder.build())
+    }
+
+    func getExploreTopic(type: String, key: String, limit: Int = 6) async throws -> ExploreTopicV2DTO {
+        var builder = QueryBuilder()
+        builder.add("limit", value: limit)
+        return try await httpClient.get(["api", "explore", "topics", type, key], queryItems: builder.build())
+    }
+
+    func getLearningPaths() async throws -> [LearningPathDTO] {
+        try await httpClient.get("api/explore/learning-paths")
+    }
+
+    func getLearningPathDetail(id: String, limit: Int = 6) async throws -> LearningPathDetailDTO {
+        var builder = QueryBuilder()
+        builder.add("limit", value: limit)
+        return try await httpClient.get(["api", "explore", "learning-paths", id], queryItems: builder.build())
+    }
+
+    // MARK: - 地区图谱
+
+    func getRegionAtlas() async throws -> RegionAtlasDTO {
+        try await httpClient.get("api/regions/atlas")
+    }
+
+    func getRegionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDTO {
+        var builder = QueryBuilder()
+        builder.add("limit", value: limit)
+        return try await httpClient.get(["api", "regions", region, "atlas"], queryItems: builder.build())
+    }
+
+    // MARK: - 合集
+
+    func getFeaturedCollections() async throws -> [FeaturedCollectionDTO] {
+        try await httpClient.get("api/collections/featured")
+    }
+
+    func getCollection(id: String) async throws -> CollectionDTO {
+        try await httpClient.get(["api", "collections", id])
+    }
+
+    func getTopicCollection(type: String, key: String) async throws -> CollectionDTO {
+        try await httpClient.get(["api", "collections", "topic", type, key])
+    }
 }

@@ -77,6 +77,62 @@ protocol HeritageAPIClient: Sendable {
 
     /// 获取年份聚合
     func getTimelineYears() async throws -> [TimelineYearBucketDTO]
+
+    // MARK: - 发现
+
+    /// 获取今日发现
+    func getDiscoveryToday() async throws -> DiscoveryTodayDTO
+
+    /// 获取随机内容
+    func getDiscoveryRandom(type: SearchResultType) async throws -> DiscoveryItemDTO
+
+    /// 获取趋势内容
+    func getDiscoveryTrending(limit: Int) async throws -> DiscoveryTrendingDTO
+
+    /// 获取本周精选
+    func getDiscoveryWeekly() async throws -> DiscoveryWeeklyDTO
+
+    /// 获取随便看看
+    func getDiscoverySerendipity(query: DiscoverySerendipityQuery) async throws -> DiscoveryItemDTO
+
+    /// 获取深度探索
+    func getDiscoveryDeepDive(query: DiscoveryDeepDiveQuery) async throws -> DiscoveryDeepDiveDTO
+
+    // MARK: - 探索
+
+    /// 获取探索首页
+    func getExploreIndex() async throws -> ExploreIndexDTO
+
+    /// 获取探索主题列表
+    func getExploreTopics(type: String?, limit: Int) async throws -> [ExploreTopicInfoDTO]
+
+    /// 获取探索主题详情
+    func getExploreTopic(type: String, key: String, limit: Int) async throws -> ExploreTopicV2DTO
+
+    /// 获取学习路径列表
+    func getLearningPaths() async throws -> [LearningPathDTO]
+
+    /// 获取学习路径详情
+    func getLearningPathDetail(id: String, limit: Int) async throws -> LearningPathDetailDTO
+
+    // MARK: - 地区图谱
+
+    /// 获取地区图谱首页
+    func getRegionAtlas() async throws -> RegionAtlasDTO
+
+    /// 获取地区图谱详情
+    func getRegionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDTO
+
+    // MARK: - 合集
+
+    /// 获取精选合集
+    func getFeaturedCollections() async throws -> [FeaturedCollectionDTO]
+
+    /// 获取合集详情
+    func getCollection(id: String) async throws -> CollectionDTO
+
+    /// 获取主题合集
+    func getTopicCollection(type: String, key: String) async throws -> CollectionDTO
 }
 
 // MARK: - DTO 占位符
