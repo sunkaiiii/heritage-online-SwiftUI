@@ -199,7 +199,9 @@
 "directory.statistics.categoryDistribution" = "类别分布";
 "directory.statistics.regionRanking" = "地区排行";
 "directory.statistics.generatedAt" = "数据生成于";
+"directory.statistics.empty" = "暂无统计数据";
 "directory.yearFormat" = "%d年";
+"filter.invalidYear" = "请输入有效的4位年份";
 
 /* Directory Detail */
 "directoryDetail.title" = "名录详情";

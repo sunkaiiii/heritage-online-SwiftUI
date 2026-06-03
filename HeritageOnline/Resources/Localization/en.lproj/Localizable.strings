@@ -199,7 +199,9 @@
 "directory.statistics.categoryDistribution" = "Category Distribution";
 "directory.statistics.regionRanking" = "Region Ranking";
 "directory.statistics.generatedAt" = "Data generated at";
+"directory.statistics.empty" = "No statistics available";
 "directory.yearFormat" = "%d";
+"filter.invalidYear" = "Please enter a valid 4-digit year";
 
 /* Directory Detail */
 "directoryDetail.title" = "Directory Detail";

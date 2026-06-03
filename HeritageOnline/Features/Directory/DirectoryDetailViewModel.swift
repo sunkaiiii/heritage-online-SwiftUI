@@ -3,6 +3,7 @@ import Foundation
 
 /// 名录详情页面状态
 /// 对齐 Android DirectoryDetailUiState
+@MainActor
 @Observable
 final class DirectoryDetailUiState {
     var isLoading: Bool = true
@@ -14,6 +15,7 @@ final class DirectoryDetailUiState {
 
 /// 名录详情 ViewModel
 /// 对齐 Android DirectoryDetailViewModel
+@MainActor
 @Observable
 final class DirectoryDetailViewModel {
     let uiState = DirectoryDetailUiState()

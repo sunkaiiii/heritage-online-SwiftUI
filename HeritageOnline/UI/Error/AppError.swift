@@ -10,6 +10,8 @@ enum AppError: Error, Equatable {
     case server
     /// 资源不存在
     case notFound
+    /// 输入校验错误
+    case validationError(String)
     /// 未知错误
     case unknown(String?)
 
@@ -97,6 +99,8 @@ enum AppError: Error, Equatable {
             return String(localized: "error.server")
         case .notFound:
             return String(localized: "error.notFound")
+        case .validationError(let message):
+            return message
         case .unknown(let message):
             return message ?? String(localized: "error.unknown")
         }

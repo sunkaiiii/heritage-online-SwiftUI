@@ -2,6 +2,7 @@ import SwiftUI
 import Foundation
 
 /// 传承人详情页面状态
+@MainActor
 @Observable
 final class InheritorDetailUiState {
     var isLoading: Bool = true
@@ -12,6 +13,7 @@ final class InheritorDetailUiState {
 }
 
 /// 传承人详情 ViewModel
+@MainActor
 @Observable
 final class InheritorDetailViewModel {
     let uiState = InheritorDetailUiState()

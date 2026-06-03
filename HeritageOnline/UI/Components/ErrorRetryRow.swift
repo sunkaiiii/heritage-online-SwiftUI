@@ -4,11 +4,12 @@ import SwiftUI
 struct ErrorRetryRow: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    let messageKey: LocalizedStringKey
+    let message: String
     let retryAction: () -> Void
 
-    init(message: LocalizedStringKey = "error.unknown", retryAction: @escaping () -> Void) {
-        self.messageKey = message
+    /// 使用纯文本初始化（用于 error.localizedDescription 等已生成的文案）
+    init(message: String, retryAction: @escaping () -> Void) {
+        self.message = message
         self.retryAction = retryAction
     }
 
@@ -18,7 +19,7 @@ struct ErrorRetryRow: View {
                 .font(.system(size: 16))
                 .foregroundStyle(colorScheme.error)
 
-            Text(messageKey)
+            Text(verbatim: message)
                 .font(HeritageTypography.bodyMedium)
                 .foregroundStyle(colorScheme.onSurfaceVariant)
 

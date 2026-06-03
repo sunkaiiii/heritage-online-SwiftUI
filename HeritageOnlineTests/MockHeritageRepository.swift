@@ -110,6 +110,12 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
         exploreTopics: [],
         graph: []
     ))
+    var directoryStatisticsOverviewResult: Result<DirectoryStatisticsOverviewDTO, Error> = .success(
+        DirectoryStatisticsOverviewDTO(kind: nil, total: 0, generatedAt: nil, dimensions: [])
+    )
+    var directoryStatisticsBreakdownResult: Result<DirectoryStatisticDimensionDTO, Error> = .success(
+        DirectoryStatisticDimensionDTO(dimension: nil, items: [])
+    )
 
     // MARK: - 调用记录
 
@@ -130,6 +136,15 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
     var inheritorLookupCallCount = 0
     var searchV2CallCount = 0
     var timelineV2CallCount = 0
+    var directoryStatisticsOverviewCallCount = 0
+    var directoryStatisticsBreakdownCallCount = 0
+
+    // MARK: - 参数记录
+
+    var lastDirectoryStatisticsOverviewKind: DirectoryItemKind?
+    var lastDirectoryStatisticsBreakdownKind: DirectoryItemKind?
+    var lastDirectoryStatisticsBreakdownDimension: DirectoryStatisticDimension?
+    var lastDirectoryStatisticsBreakdownLimit: Int?
 
     // MARK: - Lookup 参数记录
 
@@ -218,6 +233,24 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
 
     func directoryItemContext(id: String) async throws -> DetailContextDTO {
         try directoryItemContextResult.get()
+    }
+
+    func directoryStatisticsOverview(kind: DirectoryItemKind) async throws -> DirectoryStatisticsOverviewDTO {
+        directoryStatisticsOverviewCallCount += 1
+        lastDirectoryStatisticsOverviewKind = kind
+        return try directoryStatisticsOverviewResult.get()
+    }
+
+    func directoryStatisticsBreakdown(
+        kind: DirectoryItemKind,
+        dimension: DirectoryStatisticDimension,
+        limit: Int
+    ) async throws -> DirectoryStatisticDimensionDTO {
+        directoryStatisticsBreakdownCallCount += 1
+        lastDirectoryStatisticsBreakdownKind = kind
+        lastDirectoryStatisticsBreakdownDimension = dimension
+        lastDirectoryStatisticsBreakdownLimit = limit
+        return try directoryStatisticsBreakdownResult.get()
     }
 
     func inheritors(query: InheritorQuery) async throws -> PagedResultDTO<InheritorSummaryDTO> {

@@ -5,16 +5,23 @@ import SwiftUI
 struct MetaChip: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
-    let text: String
+    let text: Text
     let isSelected: Bool
 
+    /// 使用纯文本初始化
     init(_ text: String, isSelected: Bool = false) {
-        self.text = text
+        self.text = Text(text)
+        self.isSelected = isSelected
+    }
+
+    /// 使用本地化 key 初始化（避免提前 String(localized:)）
+    init(_ key: LocalizedStringKey, isSelected: Bool = false) {
+        self.text = Text(key)
         self.isSelected = isSelected
     }
 
     var body: some View {
-        Text(text)
+        text
             .font(HeritageTypography.labelLarge)
             .foregroundStyle(isSelected ? colorScheme.onPrimaryContainer : colorScheme.onSurfaceVariant)
             .lineLimit(1)

@@ -15,6 +15,7 @@ enum DirectoryPageTab: String, CaseIterable {
 }
 
 /// 名录统计状态
+@MainActor
 @Observable
 final class DirectoryStatisticsState {
     var isLoading: Bool = false
@@ -27,6 +28,7 @@ final class DirectoryStatisticsState {
 
 /// 名录页面状态
 /// 对齐 Android DirectoryUiState
+@MainActor
 @Observable
 final class DirectoryUiState {
     var selectedKind: DirectoryItemKind = .nationalProject
@@ -55,12 +57,19 @@ final class DirectoryUiState {
 
 /// 名录 ViewModel
 /// 对齐 Android DirectoryViewModel
+@MainActor
 @Observable
 final class DirectoryViewModel {
     let uiState = DirectoryUiState()
     private let repository: HeritageRepository
     private var searchTask: Task<Void, Never>?
     private var statisticsTask: Task<Void, Never>?
+
+    /// 统计请求 ID，用于防止旧请求覆盖新数据
+    private var statisticsRequestID: Int = 0
+
+    /// 分页防重入：记录正在加载的页码
+    private var loadingMorePage: Int?
 
     init(repository: HeritageRepository = DefaultHeritageRepository()) {
         self.repository = repository
@@ -72,6 +81,7 @@ final class DirectoryViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.currentPage = 1
+        loadingMorePage = nil
 
         let query = buildQuery(page: 1)
 
@@ -87,11 +97,15 @@ final class DirectoryViewModel {
     }
 
     func loadMore() async {
-        guard !uiState.isLoadingMore, uiState.hasMore else { return }
+        let nextPage = uiState.currentPage + 1
+
+        // 页级别防重入
+        guard !uiState.isLoadingMore, uiState.hasMore, loadingMorePage != nextPage else { return }
+
         uiState.isLoadingMore = true
         uiState.appendError = nil
+        loadingMorePage = nextPage
 
-        let nextPage = uiState.currentPage + 1
         let query = buildQuery(page: nextPage)
 
         do {
@@ -104,6 +118,7 @@ final class DirectoryViewModel {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false
         }
+        loadingMorePage = nil
     }
 
     func refresh() async {
@@ -123,6 +138,8 @@ final class DirectoryViewModel {
         uiState.statisticsState.error = nil
 
         let kind = uiState.selectedKind
+        let requestID = statisticsRequestID + 1
+        statisticsRequestID = requestID
 
         statisticsTask = Task {
             do {
@@ -133,14 +150,15 @@ final class DirectoryViewModel {
 
                 let (ov, year, category, region) = try await (overview, yearBD, categoryBD, regionBD)
 
-                guard !Task.isCancelled else { return }
+                // 只有当 requestID 和 kind 都匹配时才写入 state
+                guard requestID == statisticsRequestID, kind == uiState.selectedKind else { return }
                 uiState.statisticsState.overview = ov
                 uiState.statisticsState.yearBreakdown = year
                 uiState.statisticsState.categoryBreakdown = category
                 uiState.statisticsState.regionBreakdown = region
                 uiState.statisticsState.isLoading = false
             } catch {
-                guard !Task.isCancelled else { return }
+                guard requestID == statisticsRequestID, kind == uiState.selectedKind else { return }
                 uiState.statisticsState.error = AppError.from(error)
                 uiState.statisticsState.isLoading = false
             }
@@ -172,7 +190,7 @@ final class DirectoryViewModel {
     func updateSearchKeywords(_ keywords: String) {
         uiState.searchKeywords = keywords
         searchTask?.cancel()
-        searchTask = Task { @MainActor in
+        searchTask = Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             guard !Task.isCancelled else { return }
             await self.loadItems()
@@ -180,10 +198,19 @@ final class DirectoryViewModel {
     }
 
     func applyFilters(region: String, category: String, year: String, listType: String) {
+        let trimmedYear = year.trimmingCharacters(in: .whitespaces)
+        // 非空时校验必须为 4 位数字
+        if !trimmedYear.isEmpty {
+            guard YearFilterValidator.isValidYear(trimmedYear) else {
+                uiState.error = .validationError(String(localized: "filter.invalidYear"))
+                return
+            }
+        }
         uiState.regionFilter = region
         uiState.categoryFilter = category
         uiState.yearFilter = year
         uiState.listTypeFilter = listType
+        uiState.error = nil
         Task { await loadItems() }
     }
 
@@ -216,7 +243,7 @@ final class DirectoryViewModel {
             keywords: trim(uiState.searchKeywords),
             region: trim(uiState.regionFilter),
             category: trim(uiState.categoryFilter),
-            year: Int(uiState.yearFilter.trimmingCharacters(in: .whitespaces)),
+            year: YearFilterValidator.parseInt(uiState.yearFilter),
             listType: trim(uiState.listTypeFilter)
         )
     }

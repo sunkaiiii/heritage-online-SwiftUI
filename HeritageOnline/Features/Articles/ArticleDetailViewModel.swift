@@ -4,6 +4,7 @@ import Foundation
 /// 文章详情页面状态
 /// 对齐 Android ArticleDetailUiState
 /// Step 11 范围：主体内容 + 收藏占位
+@MainActor
 @Observable
 final class ArticleDetailUiState {
     /// 加载中
@@ -21,6 +22,7 @@ final class ArticleDetailUiState {
 /// 文章详情 ViewModel
 /// 对齐 Android ArticleDetailViewModel
 /// Step 11 范围：详情加载 + 收藏占位
+@MainActor
 @Observable
 final class ArticleDetailViewModel {
     let uiState = ArticleDetailUiState()

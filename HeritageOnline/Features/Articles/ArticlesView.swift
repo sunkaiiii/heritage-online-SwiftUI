@@ -33,7 +33,7 @@ struct ArticlesView: View {
             onSettingsSelected: onSettingsSelected,
             showFilterSheet: $showFilterSheet,
             onBannerTap: { url in
-                if let url = URL(string: url) {
+                if let url = ExternalURLValidator.httpURL(from: url) {
                     #if os(iOS)
                     UIApplication.shared.open(url)
                     #elseif os(macOS)
@@ -198,7 +198,7 @@ private struct ArticlesContent: View {
 
     /// Banner 错误视图
     private func bannerErrorView(_ error: AppError) -> some View {
-        ErrorRetryRow(message: LocalizedStringKey(error.localizedDescription)) {
+        ErrorRetryRow(message: error.localizedDescription) {
             Task { await viewModel.loadBanners() }
         }
         .padding(.horizontal, 20)
@@ -288,7 +288,7 @@ private struct ArticlesContent: View {
                     .font(.system(size: 48))
                     .foregroundStyle(colorScheme.onSurfaceVariant)
 
-                Text(LocalizedStringKey(error.localizedDescription))
+                Text(verbatim: error.localizedDescription)
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .multilineTextAlignment(.center)
@@ -342,7 +342,7 @@ private struct ArticlesContent: View {
 
                 // 追加错误
                 if let appendError = viewModel.uiState.appendError {
-                    ErrorRetryRow(message: LocalizedStringKey(appendError.localizedDescription)) {
+                    ErrorRetryRow(message: appendError.localizedDescription) {
                         Task { await viewModel.loadMore() }
                     }
                 }

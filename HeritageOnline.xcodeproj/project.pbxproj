@@ -75,6 +75,12 @@
 		B2000050 /* InheritorsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000050 /* InheritorsView.swift */; };
 		B2000051 /* InheritorDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000051 /* InheritorDetailViewModel.swift */; };
 		B2000052 /* InheritorDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000052 /* InheritorDetailView.swift */; };
+		B2000053 /* YearFilterValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000053 /* YearFilterValidator.swift */; };
+		B2000054 /* ExternalURLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000054 /* ExternalURLValidator.swift */; };
+		B2000060 /* ArticlesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000060 /* ArticlesViewModelTests.swift */; };
+		B2000061 /* DirectoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000061 /* DirectoryViewModelTests.swift */; };
+		B2000062 /* InheritorsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000062 /* InheritorsViewModelTests.swift */; };
+		B2000063 /* DetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000063 /* DetailViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -168,6 +174,12 @@
 		B1000050 /* InheritorsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorsView.swift; sourceTree = "<group>"; };
 		B1000051 /* InheritorDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorDetailViewModel.swift; sourceTree = "<group>"; };
 		B1000052 /* InheritorDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorDetailView.swift; sourceTree = "<group>"; };
+		B1000053 /* YearFilterValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearFilterValidator.swift; sourceTree = "<group>"; };
+		B1000054 /* ExternalURLValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalURLValidator.swift; sourceTree = "<group>"; };
+		B1000060 /* ArticlesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesViewModelTests.swift; sourceTree = "<group>"; };
+		B1000061 /* DirectoryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModelTests.swift; sourceTree = "<group>"; };
+		B1000062 /* InheritorsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorsViewModelTests.swift; sourceTree = "<group>"; };
+		B1000063 /* DetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +238,10 @@
 				B100001D /* DTOTests.swift */,
 				B1000020 /* MockHeritageRepository.swift */,
 				B1000021 /* RepositoryTests.swift */,
+				B1000060 /* ArticlesViewModelTests.swift */,
+				B1000061 /* DirectoryViewModelTests.swift */,
+				B1000062 /* InheritorsViewModelTests.swift */,
+				B1000063 /* DetailViewModelTests.swift */,
 				B3000030 /* Fixtures */,
 			);
 			path = HeritageOnlineTests;
@@ -263,6 +279,8 @@
 		A5000006 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				B1000053 /* YearFilterValidator.swift */,
+				B1000054 /* ExternalURLValidator.swift */,
 				A500000A /* Network */,
 				A500000B /* Data */,
 				A500000C /* Saved */,
@@ -680,6 +698,8 @@
 				B2000050 /* InheritorsView.swift in Sources */,
 				B2000051 /* InheritorDetailViewModel.swift in Sources */,
 				B2000052 /* InheritorDetailView.swift in Sources */,
+				B2000053 /* YearFilterValidator.swift in Sources */,
+				B2000054 /* ExternalURLValidator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,6 +712,10 @@
 				B200001D /* DTOTests.swift in Sources */,
 				B2000020 /* MockHeritageRepository.swift in Sources */,
 				B2000021 /* RepositoryTests.swift in Sources */,
+				B2000060 /* ArticlesViewModelTests.swift in Sources */,
+				B2000061 /* DirectoryViewModelTests.swift in Sources */,
+				B2000062 /* InheritorsViewModelTests.swift in Sources */,
+				B2000063 /* DetailViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

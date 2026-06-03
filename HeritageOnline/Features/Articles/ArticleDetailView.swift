@@ -124,7 +124,7 @@ struct ArticleDetailView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(colorScheme.onSurfaceVariant)
 
-            Text(LocalizedStringKey(error.localizedDescription))
+            Text(verbatim: error.localizedDescription)
                 .font(HeritageTypography.bodyMedium)
                 .foregroundStyle(colorScheme.onSurfaceVariant)
                 .multilineTextAlignment(.center)
@@ -141,7 +141,7 @@ struct ArticleDetailView: View {
 
     /// 打开原文链接
     private func openSourceURL(_ urlString: String) {
-        guard let url = URL(string: urlString) else {
+        guard let url = ExternalURLValidator.httpURL(from: urlString) else {
             showSourceError = true
             return
         }

@@ -73,6 +73,18 @@ struct DirectoryStatisticsOverviewDTO: Codable, Sendable {
     let generatedAt: String?
     let dimensions: [DirectoryStatisticDimensionDTO]
 
+    init(
+        kind: String? = nil,
+        total: Int = 0,
+        generatedAt: String? = nil,
+        dimensions: [DirectoryStatisticDimensionDTO] = []
+    ) {
+        self.kind = kind
+        self.total = total
+        self.generatedAt = generatedAt
+        self.dimensions = dimensions
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decodeIfPresent(String.self, forKey: .kind)
@@ -88,6 +100,14 @@ struct DirectoryStatisticDimensionDTO: Codable, Sendable {
     let dimension: String?
     let items: [DirectoryStatisticItemDTO]
 
+    init(
+        dimension: String? = nil,
+        items: [DirectoryStatisticItemDTO] = []
+    ) {
+        self.dimension = dimension
+        self.items = items
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         dimension = try container.decodeIfPresent(String.self, forKey: .dimension)
@@ -101,6 +121,16 @@ struct DirectoryStatisticItemDTO: Codable, Sendable {
     let key: String?
     let name: String?
     let value: Int
+
+    init(
+        key: String? = nil,
+        name: String? = nil,
+        value: Int = 0
+    ) {
+        self.key = key
+        self.name = name
+        self.value = value
+    }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

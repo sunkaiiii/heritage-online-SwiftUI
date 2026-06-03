@@ -19,7 +19,7 @@ struct DirectoryStatisticsContentView: View {
                 Image(systemName: "exclamationmark.triangle")
                     .font(.system(size: 48))
                     .foregroundStyle(colorScheme.onSurfaceVariant)
-                Text(LocalizedStringKey(error.localizedDescription))
+                Text(verbatim: error.localizedDescription)
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .multilineTextAlignment(.center)
@@ -52,6 +52,14 @@ struct DirectoryStatisticsContentView: View {
                     regionRankingList(regionBD.items)
                 }
             }
+        } else {
+            // 空态兜底
+            EmptyState(
+                icon: "chart.bar.xaxis",
+                title: "directory.statistics.empty",
+                message: nil
+            )
+            .frame(minHeight: 300)
         }
     }
 
@@ -109,7 +117,9 @@ struct DirectoryStatisticsContentView: View {
                         Text(item.key ?? "")
                             .font(HeritageTypography.labelMedium)
                             .foregroundStyle(colorScheme.onSurfaceVariant)
-                            .lineLimit(1)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.center)
+                            .frame(minWidth: 40)
                     }
                 }
             }
@@ -133,40 +143,42 @@ struct DirectoryStatisticsContentView: View {
                 let bgColor = cardColors[index % cardColors.count]
                 let pct = total > 0 ? Double(item.value) / Double(total) * 100 : 0
 
-                ContentCard {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(item.name ?? item.key ?? "")
-                            .font(HeritageTypography.titleMedium)
-                            .foregroundStyle(colorScheme.onSurface)
-                            .lineLimit(2)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(item.name ?? item.key ?? "")
+                        .font(HeritageTypography.titleMedium)
+                        .foregroundStyle(colorScheme.onSurface)
+                        .lineLimit(2)
 
-                        HStack(alignment: .firstTextBaseline, spacing: 4) {
-                            Text("\(item.value)")
-                                .font(HeritageTypography.headlineSmall)
-                                .foregroundStyle(colorScheme.primary)
-                            Text(String(format: "%.1f%%", pct))
-                                .font(HeritageTypography.labelMedium)
-                                .foregroundStyle(colorScheme.onSurfaceVariant)
-                        }
-
-                        // 进度条
-                        GeometryReader { geo in
-                            let barWidth = total > 0 ? geo.size.width * CGFloat(item.value) / CGFloat(total) : 0
-                            RoundedRectangle(cornerRadius: 3)
-                                .fill(colorScheme.primary.opacity(0.3))
-                                .frame(height: 6)
-                                .overlay(alignment: .leading) {
-                                    RoundedRectangle(cornerRadius: 3)
-                                        .fill(colorScheme.primary)
-                                        .frame(width: barWidth, height: 6)
-                                }
-                        }
-                        .frame(height: 6)
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text("\(item.value)")
+                            .font(HeritageTypography.headlineSmall)
+                            .foregroundStyle(colorScheme.primary)
+                        Text(String(format: "%.1f%%", pct))
+                            .font(HeritageTypography.labelMedium)
+                            .foregroundStyle(colorScheme.onSurfaceVariant)
                     }
-                    .padding(12)
-                    .background(bgColor)
-                    .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
+
+                    // 进度条
+                    GeometryReader { geo in
+                        let barWidth = total > 0 ? geo.size.width * CGFloat(item.value) / CGFloat(total) : 0
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(colorScheme.primary.opacity(0.3))
+                            .frame(height: 6)
+                            .overlay(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 3)
+                                    .fill(colorScheme.primary)
+                                    .frame(width: barWidth, height: 6)
+                            }
+                    }
+                    .frame(height: 6)
                 }
+                .padding(12)
+                .background(bgColor)
+                .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
+                .overlay(
+                    RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius)
+                        .stroke(colorScheme.outlineVariant, lineWidth: 1)
+                )
             }
         }
     }

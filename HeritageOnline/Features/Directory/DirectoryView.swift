@@ -153,7 +153,7 @@ struct DirectoryView: View {
                 Image(systemName: "exclamationmark.triangle")
                     .font(.system(size: 48))
                     .foregroundStyle(colorScheme.onSurfaceVariant)
-                Text(LocalizedStringKey(error.localizedDescription))
+                Text(verbatim: error.localizedDescription)
                     .font(HeritageTypography.bodyMedium)
                     .foregroundStyle(colorScheme.onSurfaceVariant)
                     .multilineTextAlignment(.center)
@@ -193,7 +193,7 @@ struct DirectoryView: View {
                     .padding(.vertical, 8)
                 }
                 if let appendError = viewModel.uiState.appendError {
-                    ErrorRetryRow(message: LocalizedStringKey(appendError.localizedDescription)) {
+                    ErrorRetryRow(message: appendError.localizedDescription) {
                         Task { await viewModel.loadMore() }
                     }
                 }
@@ -225,9 +225,10 @@ struct DirectoryView: View {
                     viewModel.clearFilterField(field)
                 } label: {
                     HStack(spacing: 4) {
-                        Text("\(field.localizationKey): \(trimmed)")
+                        (Text(field.localizationKey) + Text(": \(trimmed)"))
                             .font(HeritageTypography.labelLarge)
                             .foregroundStyle(colorScheme.onPrimaryContainer)
+                            .lineLimit(1)
                         Image(systemName: "xmark")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(colorScheme.onPrimaryContainer)

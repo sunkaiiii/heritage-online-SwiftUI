@@ -4,6 +4,7 @@ import Combine
 
 /// 文章列表页面状态
 /// 对齐 Android ArticlesUiState
+@MainActor
 @Observable
 final class ArticlesUiState {
     /// 当前选中的文章分类
@@ -47,13 +48,16 @@ final class ArticlesUiState {
 
     /// 活跃筛选数量
     var activeFilterCount: Int {
-        yearFilter.trimmingCharacters(in: .whitespaces).isEmpty ? 0 : 1
+        var count = 0
+        if !yearFilter.trimmingCharacters(in: .whitespaces).isEmpty { count += 1 }
+        return count
     }
 }
 
 /// 文章列表 ViewModel
 /// 对齐 Android ArticlesViewModel
 /// 管理文章列表、Banner、搜索、筛选状态
+@MainActor
 @Observable
 final class ArticlesViewModel {
     /// 页面状态
@@ -67,6 +71,9 @@ final class ArticlesViewModel {
 
     /// 分类切换防抖 Task
     private var categoryTask: Task<Void, Never>?
+
+    /// 分页防重入：记录正在加载的页码
+    private var loadingMorePage: Int?
 
     init(repository: HeritageRepository = DefaultHeritageRepository()) {
         self.repository = repository
@@ -94,6 +101,7 @@ final class ArticlesViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.currentPage = 1
+        loadingMorePage = nil
 
         let query = buildQuery(page: 1)
 
@@ -110,12 +118,15 @@ final class ArticlesViewModel {
 
     /// 加载更多文章
     func loadMore() async {
-        guard !uiState.isLoadingMore, uiState.hasMore else { return }
+        let nextPage = uiState.currentPage + 1
+
+        // 页级别防重入：如果已经在加载这一页，直接返回
+        guard !uiState.isLoadingMore, uiState.hasMore, loadingMorePage != nextPage else { return }
 
         uiState.isLoadingMore = true
         uiState.appendError = nil
+        loadingMorePage = nextPage
 
-        let nextPage = uiState.currentPage + 1
         let query = buildQuery(page: nextPage)
 
         do {
@@ -128,6 +139,7 @@ final class ArticlesViewModel {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false
         }
+        loadingMorePage = nil
     }
 
     /// 刷新全部数据
@@ -146,7 +158,7 @@ final class ArticlesViewModel {
         uiState.selectedCategory = category
         // 防抖：350ms 后重新加载
         categoryTask?.cancel()
-        categoryTask = Task { @MainActor in
+        categoryTask = Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             guard !Task.isCancelled else { return }
             await self.loadArticles()
@@ -158,7 +170,7 @@ final class ArticlesViewModel {
         uiState.searchKeywords = keywords
         // 防抖：350ms 后重新加载
         searchTask?.cancel()
-        searchTask = Task { @MainActor in
+        searchTask = Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             guard !Task.isCancelled else { return }
             await self.loadArticles()
@@ -167,18 +179,23 @@ final class ArticlesViewModel {
 
     /// 应用年份筛选
     func applyYearFilter(_ year: String) {
-        uiState.yearFilter = year
-        Task { @MainActor in
-            await self.loadArticles()
+        let trimmed = year.trimmingCharacters(in: .whitespaces)
+        // 非空时校验必须为 4 位数字
+        if !trimmed.isEmpty {
+            guard YearFilterValidator.isValidYear(trimmed) else {
+                uiState.error = .validationError(String(localized: "filter.invalidYear"))
+                return
+            }
         }
+        uiState.yearFilter = year
+        uiState.error = nil
+        Task { await self.loadArticles() }
     }
 
     /// 清除年份筛选
     func clearYearFilter() {
         uiState.yearFilter = ""
-        Task { @MainActor in
-            await self.loadArticles()
-        }
+        Task { await self.loadArticles() }
     }
 
     /// 清除所有筛选
@@ -186,9 +203,7 @@ final class ArticlesViewModel {
         uiState.yearFilter = ""
         uiState.searchKeywords = ""
         uiState.selectedCategory = .news
-        Task { @MainActor in
-            await self.loadArticles()
-        }
+        Task { await self.loadArticles() }
     }
 
     // MARK: - 内部方法
@@ -196,7 +211,7 @@ final class ArticlesViewModel {
     /// 构建查询参数
     private func buildQuery(page: Int) -> ArticleQuery {
         let trimmedKeywords = uiState.searchKeywords.trimmingCharacters(in: .whitespaces)
-        let year = Int(uiState.yearFilter.trimmingCharacters(in: .whitespaces))
+        let year = YearFilterValidator.parseInt(uiState.yearFilter)
 
         return ArticleQuery(
             category: uiState.selectedCategory,

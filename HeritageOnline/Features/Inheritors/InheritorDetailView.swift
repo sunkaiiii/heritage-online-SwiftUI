@@ -90,14 +90,14 @@ struct InheritorDetailView: View {
     private func detailErrorView(_ error: AppError) -> some View {
         VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle").font(.system(size: 48)).foregroundStyle(colorScheme.onSurfaceVariant)
-            Text(LocalizedStringKey(error.localizedDescription)).font(HeritageTypography.bodyMedium).foregroundStyle(colorScheme.onSurfaceVariant).multilineTextAlignment(.center)
+            Text(verbatim: error.localizedDescription).font(HeritageTypography.bodyMedium).foregroundStyle(colorScheme.onSurfaceVariant).multilineTextAlignment(.center)
             Button("action.retry") { Task { await viewModel.refresh() } }.font(HeritageTypography.labelLarge).foregroundStyle(colorScheme.primary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity).padding(40)
     }
 
     private func openSourceURL(_ urlString: String) {
-        guard let url = URL(string: urlString) else { showSourceError = true; return }
+        guard let url = ExternalURLValidator.httpURL(from: urlString) else { showSourceError = true; return }
         #if os(iOS)
         UIApplication.shared.open(url) { if !$0 { showSourceError = true } }
         #elseif os(macOS)
@@ -417,7 +417,10 @@ private struct ContentBlockView: View {
                     placeholderText: "E",
                     contentMode: .fit,
                     onTap: {
-                        if let urlString, let imageIndex, let idx = previewURLs.firstIndex(of: urlString) {
+                        // 优先使用预计算的 imageIndex，回退到 URL 查找
+                        if let imageIndex {
+                            onPreviewImage(previewURLs, imageIndex)
+                        } else if let urlString, let idx = previewURLs.firstIndex(of: urlString) {
                             onPreviewImage(previewURLs, idx)
                         }
                     }

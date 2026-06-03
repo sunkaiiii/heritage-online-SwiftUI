@@ -3,6 +3,7 @@ import Foundation
 
 /// 传承人页面状态
 /// 对齐 Android InheritorsUiState
+@MainActor
 @Observable
 final class InheritorsUiState {
     var searchKeywords: String = ""
@@ -26,11 +27,15 @@ final class InheritorsUiState {
 
 /// 传承人 ViewModel
 /// 对齐 Android InheritorsViewModel
+@MainActor
 @Observable
 final class InheritorsViewModel {
     let uiState = InheritorsUiState()
     private let repository: HeritageRepository
     private var searchTask: Task<Void, Never>?
+
+    /// 分页防重入：记录正在加载的页码
+    private var loadingMorePage: Int?
 
     init(repository: HeritageRepository = DefaultHeritageRepository()) {
         self.repository = repository
@@ -40,6 +45,7 @@ final class InheritorsViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.currentPage = 1
+        loadingMorePage = nil
 
         let query = buildQuery(page: 1)
 
@@ -55,11 +61,15 @@ final class InheritorsViewModel {
     }
 
     func loadMore() async {
-        guard !uiState.isLoadingMore, uiState.hasMore else { return }
+        let nextPage = uiState.currentPage + 1
+
+        // 页级别防重入
+        guard !uiState.isLoadingMore, uiState.hasMore, loadingMorePage != nextPage else { return }
+
         uiState.isLoadingMore = true
         uiState.appendError = nil
+        loadingMorePage = nextPage
 
-        let nextPage = uiState.currentPage + 1
         let query = buildQuery(page: nextPage)
 
         do {
@@ -72,6 +82,7 @@ final class InheritorsViewModel {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false
         }
+        loadingMorePage = nil
     }
 
     func refresh() async {
@@ -81,7 +92,7 @@ final class InheritorsViewModel {
     func updateSearchKeywords(_ keywords: String) {
         uiState.searchKeywords = keywords
         searchTask?.cancel()
-        searchTask = Task { @MainActor in
+        searchTask = Task {
             try? await Task.sleep(nanoseconds: 350_000_000)
             guard !Task.isCancelled else { return }
             await self.loadItems()
@@ -89,10 +100,19 @@ final class InheritorsViewModel {
     }
 
     func applyFilters(region: String, category: String, year: String, gender: String) {
+        let trimmedYear = year.trimmingCharacters(in: .whitespaces)
+        // 非空时校验必须为 4 位数字
+        if !trimmedYear.isEmpty {
+            guard YearFilterValidator.isValidYear(trimmedYear) else {
+                uiState.error = .validationError(String(localized: "filter.invalidYear"))
+                return
+            }
+        }
         uiState.regionFilter = region
         uiState.categoryFilter = category
         uiState.yearFilter = year
         uiState.genderFilter = gender
+        uiState.error = nil
         Task { await loadItems() }
     }
 
@@ -122,7 +142,7 @@ final class InheritorsViewModel {
             keywords: trim(uiState.searchKeywords),
             region: trim(uiState.regionFilter),
             category: trim(uiState.categoryFilter),
-            year: Int(uiState.yearFilter.trimmingCharacters(in: .whitespaces)),
+            year: YearFilterValidator.parseInt(uiState.yearFilter),
             gender: trim(uiState.genderFilter)
         )
     }
