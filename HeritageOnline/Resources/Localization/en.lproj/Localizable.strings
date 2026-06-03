@@ -243,3 +243,16 @@
 "my.clearRecent" = "Clear History";
 "my.clearRecent.confirm" = "Clear all viewing history?";
 "my.removeRecent" = "Remove";
+
+/* Reading Path */
+"my.readingPath" = "Reading Path";
+"my.empty.readingPath" = "No reading path recorded";
+"my.empty.readingPath.hint" = "Paths are recorded when you tap related content in detail pages";
+"my.clearReadingPath" = "Clear Reading Path";
+"my.clearReadingPath.confirm" = "Clear all reading path records?";
+"readingPathSource.blendedRecommendation" = "Recommendation";
+"readingPathSource.related" = "Related";
+"readingPathSource.recommendation" = "Recommended";
+"readingPathSource.semanticRecommendation" = "Similar";
+"readingPathSource.graph" = "Graph";
+"readingPathSource.list" = "List";

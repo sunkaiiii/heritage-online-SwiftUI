@@ -243,3 +243,16 @@
 "my.clearRecent" = "清空浏览记录";
 "my.clearRecent.confirm" = "确定清空所有浏览记录？";
 "my.removeRecent" = "移除";
+
+/* Reading Path */
+"my.readingPath" = "阅读路径";
+"my.empty.readingPath" = "暂无阅读路径";
+"my.empty.readingPath.hint" = "从详情页点击相关内容时会自动记录";
+"my.clearReadingPath" = "清空阅读路径";
+"my.clearReadingPath.confirm" = "确定清空所有阅读路径？";
+"readingPathSource.blendedRecommendation" = "推荐";
+"readingPathSource.related" = "相关";
+"readingPathSource.recommendation" = "推荐";
+"readingPathSource.semanticRecommendation" = "相似";
+"readingPathSource.graph" = "图谱";
+"readingPathSource.list" = "列表";

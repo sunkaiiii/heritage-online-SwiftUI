@@ -54,6 +54,18 @@ struct ArticleDetailView: View {
                     },
                     onRefresh: {
                         Task { await viewModel.refresh() }
+                    },
+                    onRecordReadingPath: { source, toSourceId, toTitle in
+                        Task {
+                            await ReadingPathRecorder.shared.record(
+                                from: ReadingPathEvent.fromRef(article),
+                                toType: .article,
+                                toId: toSourceId ?? "",
+                                toTitle: toTitle ?? "",
+                                source: source,
+                                toSourceId: toSourceId
+                            )
+                        }
                     }
                 )
             }
@@ -186,6 +198,7 @@ private struct ArticleDetailContent: View {
     let onOpenSource: (String) -> Void
     let onPreviewImage: ([String], Int) -> Void
     let onRefresh: () -> Void
+    let onRecordReadingPath: (ReadingPathSource, String?, String?) -> Void
 
     /// 收集所有可预览图片 URL
     private var previewURLs: [String] {
@@ -248,7 +261,9 @@ private struct ArticleDetailContent: View {
                 if !article.relatedArticles.isEmpty {
                     SectionHeader(title: String(localized: "articleDetail.relatedArticles"))
                     ForEach(Array(article.relatedArticles.enumerated()), id: \.offset) { _, reference in
-                        RelatedArticleRow(reference: reference)
+                        RelatedArticleRow(reference: reference) {
+                            onRecordReadingPath(.related, reference.sourceId, reference.title)
+                        }
                     }
                 }
             }
@@ -377,6 +392,7 @@ private struct RelatedArticleRow: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
     let reference: ArticleReferenceDTO
+    let onNavigate: () -> Void
 
     /// 构建导航目标
     private var hasTarget: Bool {
@@ -395,6 +411,9 @@ private struct RelatedArticleRow: View {
                 referenceCardContent
             }
             .buttonStyle(.plain)
+            .simultaneousGesture(TapGesture().onEnded {
+                onNavigate()
+            })
         } else {
             referenceCardContent
         }

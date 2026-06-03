@@ -5,11 +5,13 @@ import Foundation
 enum MyPageTab: String, CaseIterable {
     case favorites
     case recentlyViewed
+    case readingPath
 
     var localizationKey: LocalizedStringKey {
         switch self {
         case .favorites: return "my.favorites"
         case .recentlyViewed: return "my.recentlyViewed"
+        case .readingPath: return "my.readingPath"
         }
     }
 }
@@ -21,30 +23,42 @@ final class MyPageViewModel {
     var selectedTab: MyPageTab = .favorites
     var favorites: [SavedContent] = []
     var recentlyViewed: [SavedContent] = []
+    var readingPaths: [ReadingPathEvent] = []
 
-    private let repository: SavedContentRepository
+    private let savedRepository: SavedContentRepository
+    private let readingPathRepository: ReadingPathRepository
 
-    init(repository: SavedContentRepository = DefaultSavedContentRepository.shared) {
-        self.repository = repository
+    init(
+        savedRepository: SavedContentRepository = DefaultSavedContentRepository.shared,
+        readingPathRepository: ReadingPathRepository = DefaultReadingPathRepository.shared
+    ) {
+        self.savedRepository = savedRepository
+        self.readingPathRepository = readingPathRepository
     }
 
     func load() async {
-        favorites = await repository.favorites()
-        recentlyViewed = await repository.recentlyViewed()
+        favorites = await savedRepository.favorites()
+        recentlyViewed = await savedRepository.recentlyViewed()
+        readingPaths = await readingPathRepository.events()
     }
 
     func unfavorite(_ item: SavedContent) async {
-        await repository.removeFavorite(item.contentKey)
+        await savedRepository.removeFavorite(item.contentKey)
         await load()
     }
 
     func removeRecent(_ item: SavedContent) async {
-        await repository.removeRecent(item.contentKey)
+        await savedRepository.removeRecent(item.contentKey)
         await load()
     }
 
     func clearRecent() async {
-        await repository.clearRecent()
+        await savedRepository.clearRecent()
+        await load()
+    }
+
+    func clearReadingPath() async {
+        await readingPathRepository.clearAll()
         await load()
     }
 }

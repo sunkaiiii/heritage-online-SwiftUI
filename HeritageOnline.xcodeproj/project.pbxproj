@@ -94,6 +94,9 @@
 		B2000091 /* MyPageViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000091 /* MyPageViewModelTests.swift */; };
 		B2000092 /* SavedContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000092 /* SavedContentTests.swift */; };
 		B2000075 /* DateDisplayFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000075 /* DateDisplayFormatter.swift */; };
+		B2000095 /* ReadingPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000095 /* ReadingPath.swift */; };
+		B2000096 /* ReadingPathRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000096 /* ReadingPathRepository.swift */; };
+		B2000097 /* ReadingPathRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000097 /* ReadingPathRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -206,6 +209,9 @@
 		B1000091 /* MyPageViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModelTests.swift; sourceTree = "<group>"; };
 		B1000092 /* SavedContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentTests.swift; sourceTree = "<group>"; };
 		B1000075 /* DateDisplayFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateDisplayFormatter.swift; sourceTree = "<group>"; };
+		B1000095 /* ReadingPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPath.swift; sourceTree = "<group>"; };
+		B1000096 /* ReadingPathRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepository.swift; sourceTree = "<group>"; };
+		B1000097 /* ReadingPathRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +410,9 @@
 			children = (
 				B1000080 /* SavedContent.swift */,
 				B1000081 /* SavedContentRepository.swift */,
+				B1000095 /* ReadingPath.swift */,
+				B1000096 /* ReadingPathRepository.swift */,
+				B1000097 /* ReadingPathRecorder.swift */,
 			);
 			path = Saved;
 			sourceTree = "<group>";
@@ -747,6 +756,9 @@
 				B2000081 /* SavedContentRepository.swift in Sources */,
 				B2000082 /* MyPageViewModel.swift in Sources */,
 				B2000083 /* MyPageView.swift in Sources */,
+				B2000095 /* ReadingPath.swift in Sources */,
+				B2000096 /* ReadingPathRepository.swift in Sources */,
+				B2000097 /* ReadingPathRecorder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

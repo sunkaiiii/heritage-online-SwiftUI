@@ -61,11 +61,14 @@ struct ContentView: View {
                 MyPageView(
                     onBack: { showMyPage = false },
                     onNavigate: { item in
-                        // 从我的页跳转到详情时，先关闭我的页，再切换到对应 tab
                         showMyPage = false
                         showSettings = false
                         selectedTab = item.targetTab
-                        // TODO: Step 7+ 后续实现 pendingNavigation 推入详情
+                    },
+                    onNavigateReadingPath: { event in
+                        showMyPage = false
+                        showSettings = false
+                        selectedTab = event.targetTab
                     }
                 )
                 .transition(.move(edge: .trailing))

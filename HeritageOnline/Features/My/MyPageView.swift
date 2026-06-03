@@ -7,9 +7,11 @@ struct MyPageView: View {
 
     let onBack: () -> Void
     let onNavigate: (SavedContent) -> Void
+    let onNavigateReadingPath: (ReadingPathEvent) -> Void
 
     @State private var viewModel = MyPageViewModel()
     @State private var showClearConfirm = false
+    @State private var showClearReadingPathConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -19,10 +21,13 @@ struct MyPageView: View {
                     tabToggle
 
                     // 内容
-                    if viewModel.selectedTab == .favorites {
+                    switch viewModel.selectedTab {
+                    case .favorites:
                         favoritesTab
-                    } else {
+                    case .recentlyViewed:
                         recentlyViewedTab
+                    case .readingPath:
+                        readingPathTab
                     }
                 }
             }
@@ -40,6 +45,12 @@ struct MyPageView: View {
                 Button("nav.cancel", role: .cancel) {}
                 Button("action.clear", role: .destructive) {
                     Task { await viewModel.clearRecent() }
+                }
+            }
+            .alert("my.clearReadingPath.confirm", isPresented: $showClearReadingPathConfirm) {
+                Button("nav.cancel", role: .cancel) {}
+                Button("action.clear", role: .destructive) {
+                    Task { await viewModel.clearReadingPath() }
                 }
             }
         }
@@ -115,7 +126,6 @@ struct MyPageView: View {
                 )
             } else {
                 List {
-                    // 清空按钮
                     Section {
                         Button {
                             showClearConfirm = true
@@ -130,7 +140,6 @@ struct MyPageView: View {
                         }
                     }
 
-                    // 浏览记录列表
                     ForEach(viewModel.recentlyViewed) { item in
                         SavedContentRow(item: item) {
                             onNavigate(item)
@@ -141,6 +150,43 @@ struct MyPageView: View {
                             } label: {
                                 Label("my.removeRecent", systemImage: "trash")
                             }
+                        }
+                    }
+                }
+                .listStyle(.plain)
+            }
+        }
+    }
+
+    // MARK: - 阅读路径 Tab
+
+    private var readingPathTab: some View {
+        Group {
+            if viewModel.readingPaths.isEmpty {
+                EmptyState(
+                    icon: "arrow.triangle.branch",
+                    title: "my.empty.readingPath",
+                    message: "my.empty.readingPath.hint"
+                )
+            } else {
+                List {
+                    Section {
+                        Button {
+                            showClearReadingPathConfirm = true
+                        } label: {
+                            HStack {
+                                Spacer()
+                                Label("my.clearReadingPath", systemImage: "trash")
+                                    .font(HeritageTypography.labelLarge)
+                                    .foregroundStyle(colorScheme.error)
+                                Spacer()
+                            }
+                        }
+                    }
+
+                    ForEach(viewModel.readingPaths) { event in
+                        ReadingPathRow(event: event) {
+                            onNavigateReadingPath(event)
                         }
                     }
                 }
@@ -161,7 +207,6 @@ private struct SavedContentRow: View {
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 12) {
-                // 图片
                 HeritageListImage(
                     urlString: item.imageUrl,
                     placeholderText: item.title,
@@ -169,20 +214,16 @@ private struct SavedContentRow: View {
                     height: 60
                 )
 
-                // 信息
                 VStack(alignment: .leading, spacing: 4) {
-                    // 类型标签
                     Text(ContentLabels.localizedContentType(item.contentType.rawValue))
                         .font(HeritageTypography.labelMedium)
                         .foregroundStyle(colorScheme.primary)
 
-                    // 标题
                     Text(item.title)
                         .font(HeritageTypography.titleMedium)
                         .foregroundStyle(colorScheme.onSurface)
                         .lineLimit(2)
 
-                    // 副标题/摘要
                     if let subtitle = item.subtitle, !subtitle.isEmpty {
                         Text(subtitle)
                             .font(HeritageTypography.bodyMedium)
@@ -203,12 +244,78 @@ private struct SavedContentRow: View {
     }
 }
 
+// MARK: - 阅读路径行
+
+private struct ReadingPathRow: View {
+    @Environment(\.heritageColorScheme) private var colorScheme
+
+    let event: ReadingPathEvent
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(alignment: .leading, spacing: 8) {
+                // From -> To
+                HStack(spacing: 8) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(ContentLabels.localizedContentType(event.fromType.rawValue))
+                            .font(HeritageTypography.labelMedium)
+                            .foregroundStyle(colorScheme.onSurfaceVariant)
+                        Text(event.fromTitle)
+                            .font(HeritageTypography.bodyMedium)
+                            .foregroundStyle(colorScheme.onSurface)
+                            .lineLimit(1)
+                    }
+
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 12))
+                        .foregroundStyle(colorScheme.onSurfaceVariant)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(ContentLabels.localizedContentType(event.toType.rawValue))
+                            .font(HeritageTypography.labelMedium)
+                            .foregroundStyle(colorScheme.primary)
+                        Text(event.toTitle)
+                            .font(HeritageTypography.bodyMedium)
+                            .foregroundStyle(colorScheme.onSurface)
+                            .lineLimit(1)
+                    }
+                }
+
+                // Source tag
+                HStack {
+                    MetaChip(event.source.displayName)
+                        .font(HeritageTypography.labelMedium)
+                    Spacer()
+                    Text(event.createdAt, style: .relative)
+                        .font(HeritageTypography.labelMedium)
+                        .foregroundStyle(colorScheme.onSurfaceVariant)
+                }
+            }
+            .padding(.vertical, 4)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 // MARK: - SavedContent 导航目标
 
 extension SavedContent {
-    /// 判断应该切换到哪个主 tab
     var targetTab: HomeTab {
         switch contentType {
+        case .article: return .articles
+        case .directoryItem: return .directory
+        case .inheritor: return .inheritors
+        }
+    }
+}
+
+// MARK: - ReadingPathEvent 导航目标
+
+extension ReadingPathEvent {
+    /// 目标 tab
+    var targetTab: HomeTab {
+        switch toType {
         case .article: return .articles
         case .directoryItem: return .directory
         case .inheritor: return .inheritors
