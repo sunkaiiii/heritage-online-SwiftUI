@@ -93,6 +93,7 @@
 		B2000090 /* SavedContentRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000090 /* SavedContentRepositoryTests.swift */; };
 		B2000091 /* MyPageViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000091 /* MyPageViewModelTests.swift */; };
 		B2000092 /* SavedContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000092 /* SavedContentTests.swift */; };
+		B2000075 /* DateDisplayFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000075 /* DateDisplayFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -204,6 +205,7 @@
 		B1000090 /* SavedContentRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentRepositoryTests.swift; sourceTree = "<group>"; };
 		B1000091 /* MyPageViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModelTests.swift; sourceTree = "<group>"; };
 		B1000092 /* SavedContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentTests.swift; sourceTree = "<group>"; };
+		B1000075 /* DateDisplayFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateDisplayFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +312,7 @@
 			children = (
 				B1000053 /* YearFilterValidator.swift */,
 				B1000054 /* ExternalURLValidator.swift */,
+				B1000075 /* DateDisplayFormatter.swift */,
 				A500000A /* Network */,
 				A500000B /* Data */,
 				A500000C /* Saved */,
@@ -736,6 +739,7 @@
 				B2000052 /* InheritorDetailView.swift in Sources */,
 				B2000053 /* YearFilterValidator.swift in Sources */,
 				B2000054 /* ExternalURLValidator.swift in Sources */,
+				B2000075 /* DateDisplayFormatter.swift in Sources */,
 				B2000070 /* FlowLayout.swift in Sources */,
 				B2000071 /* DetailContentBlockView.swift in Sources */,
 				B2000074 /* DirectoryReferenceCard.swift in Sources */,

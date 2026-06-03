@@ -4,7 +4,6 @@ import SwiftUI
 /// 对齐 Android InheritorDetailScreen
 struct InheritorDetailView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    @Environment(\.dismiss) private var dismiss
 
     @State private var viewModel: InheritorDetailViewModel
 
@@ -52,11 +51,6 @@ struct InheritorDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button { dismiss() } label: {
-                    Image(systemName: "chevron.left").foregroundStyle(colorScheme.onSurface)
-                }
-            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 12) {
                     Button { Task { await viewModel.toggleFavorite() } } label: {

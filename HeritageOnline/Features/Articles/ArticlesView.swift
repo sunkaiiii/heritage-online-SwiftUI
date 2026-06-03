@@ -417,7 +417,7 @@ private struct ArticleRow: View {
                 summary: article.summary,
                 imageURL: imageURL.flatMap { URL(string: $0) },
                 category: categoryLabel,
-                date: article.publishedAt,
+                date: DateDisplayFormatter.displayDate(from: article.publishedAt),
                 isProminent: isProminent
             )
         }
@@ -468,7 +468,7 @@ private struct BannerCard: View {
                 RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius)
                     .fill(colorScheme.surfaceContainerHigh)
 
-                if let imageURL, let url = URL(string: imageURL) {
+                if let imageURL, let url = Self.validURL(from: imageURL) {
                     AsyncImage(url: url) { phase in
                         switch phase {
                         case .success(let image):
@@ -501,6 +501,22 @@ private struct BannerCard: View {
                 .font(.system(size: 32))
                 .foregroundStyle(colorScheme.onSurfaceVariant.opacity(0.5))
         }
+    }
+
+    /// 清洗并验证 URL：trim 空白、尝试 percent-encoding 修复含空格等字符的 URL
+    private static func validURL(from raw: String) -> URL? {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        // 直接解析
+        if let url = URL(string: trimmed) {
+            return url
+        }
+        // 尝试 percent-encoding 后解析
+        if let encoded = trimmed.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+           let url = URL(string: encoded) {
+            return url
+        }
+        return nil
     }
 }
 

@@ -5,7 +5,6 @@ import SwiftUI
 /// Step 11 范围：详情展示 + 图片预览 + 相关文章
 struct ArticleDetailView: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    @Environment(\.dismiss) private var dismiss
 
     @State private var viewModel: ArticleDetailViewModel
 
@@ -64,14 +63,6 @@ struct ArticleDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .tabBar)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundStyle(colorScheme.onSurface)
-                }
-            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 12) {
                     Button {
@@ -363,8 +354,8 @@ private struct ArticleMetaChips: View {
 
     var body: some View {
         FlowLayout(spacing: 6) {
-            if let date = article.publishedAt, !date.isEmpty {
-                MetaChip(formatDate(date))
+            if let date = DateDisplayFormatter.displayDate(from: article.publishedAt) {
+                MetaChip(date)
             }
             if let author = article.author, !author.isEmpty {
                 MetaChip(author)
@@ -376,22 +367,6 @@ private struct ArticleMetaChips: View {
                 MetaChip(sourceName)
             }
         }
-    }
-
-    /// 简单日期格式化
-    private func formatDate(_ value: String) -> String {
-        // 尝试 ISO 8601
-        if let date = ISO8601DateFormatter().date(from: value) {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            formatter.timeZone = TimeZone(identifier: "Asia/Shanghai")
-            return formatter.string(from: date)
-        }
-        // 尝试 yyyy-MM-dd
-        if value.count >= 10 {
-            return String(value.prefix(10))
-        }
-        return value
     }
 }
 
@@ -435,8 +410,8 @@ private struct RelatedArticleRow: View {
                             .foregroundStyle(colorScheme.onSurface)
                             .lineLimit(2)
                     }
-                    if let date = reference.publishedAt, !date.isEmpty {
-                        Text(formatDate(date))
+                    if let date = DateDisplayFormatter.displayDate(from: reference.publishedAt) {
+                        Text(date)
                             .font(HeritageTypography.labelMedium)
                             .foregroundStyle(colorScheme.onSurfaceVariant)
                     }
@@ -448,13 +423,6 @@ private struct RelatedArticleRow: View {
             }
             .padding(14)
         }
-    }
-
-    private func formatDate(_ value: String) -> String {
-        if value.count >= 10 {
-            return String(value.prefix(10))
-        }
-        return value
     }
 }
 
