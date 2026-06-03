@@ -266,7 +266,7 @@ private struct ArticlesContent: View {
                 .foregroundStyle(colorScheme.onErrorContainer)
             Spacer()
             Button {
-                viewModel.uiState.validationError = nil
+                viewModel.dismissValidationError()
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 10, weight: .bold))
@@ -347,7 +347,7 @@ private struct ArticlesContent: View {
         } else {
             // 文章列表
             LazyVStack(spacing: 12) {
-                ForEach(Array(viewModel.uiState.articles.enumerated()), id: \.element.id) { index, article in
+                ForEach(Array(viewModel.uiState.articles.enumerated()), id: \.offset) { index, article in
                     ArticleRow(
                         article: article,
                         isProminent: index == 0,
@@ -355,10 +355,10 @@ private struct ArticlesContent: View {
                     )
                 }
 
-                // 分页 sentinel
+                // 分页 sentinel（不可见触发器）
                 if viewModel.uiState.hasMore {
-                    ProgressView()
-                        .tint(colorScheme.primary)
+                    Color.clear
+                        .frame(height: 1)
                         .task(id: viewModel.uiState.articles.count) {
                             await viewModel.loadMore()
                         }

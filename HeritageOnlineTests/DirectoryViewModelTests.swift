@@ -142,10 +142,7 @@ final class DirectoryViewModelTests: XCTestCase {
         mockRepository.directoryItemsCallCount = 0
 
         // When
-        viewModel.selectKind(.culturalEcoZone)
-
-        // 等待 Task 完成
-        try? await Task.sleep(nanoseconds: 10_000_000)
+        await viewModel.selectKind(.culturalEcoZone)
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedKind, .culturalEcoZone)
@@ -164,10 +161,7 @@ final class DirectoryViewModelTests: XCTestCase {
         )
 
         // When
-        viewModel.selectTab(.statistics)
-
-        // 等待 Task 完成
-        try? await Task.sleep(nanoseconds: 10_000_000)
+        await viewModel.selectTab(.statistics)
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedTab, .statistics)
@@ -222,6 +216,56 @@ final class DirectoryViewModelTests: XCTestCase {
         // Then - query 中所有筛选字段为 nil
         XCTAssertNil(mockRepository.lastDirectoryItemQuery?.region)
         XCTAssertNil(mockRepository.lastDirectoryItemQuery?.year)
+    }
+
+    // MARK: - validationError 清理
+
+    func testLoadItemsClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", listType: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 重新加载
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [createDirectoryItem(id: "1", title: "名录1")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadItems()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearFilterFieldClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", listType: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除单个筛选字段
+        await viewModel.clearFilterField(.year)
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearAdvancedFiltersClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", listType: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除所有筛选
+        await viewModel.clearAdvancedFilters()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
     }
 
     // MARK: - Helpers

@@ -111,6 +111,7 @@ final class ArticlesViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.appendError = nil
+        uiState.validationError = nil
         uiState.currentPage = 1
         loadingMorePage = nil
 
@@ -204,6 +205,7 @@ final class ArticlesViewModel {
     /// 清除年份筛选
     func clearYearFilter() async {
         uiState.yearFilter = ""
+        uiState.validationError = nil
         await self.loadArticles()
     }
 
@@ -212,7 +214,23 @@ final class ArticlesViewModel {
         uiState.yearFilter = ""
         uiState.searchKeywords = ""
         uiState.selectedCategory = .news
+        uiState.validationError = nil
         await self.loadArticles()
+    }
+
+    /// 关闭校验错误提示
+    func dismissValidationError() {
+        uiState.validationError = nil
+    }
+
+    /// 等待搜索防抖任务完成（测试用）
+    func waitForPendingSearchTask() async {
+        await searchTask?.value
+    }
+
+    /// 等待分类切换防抖任务完成（测试用）
+    func waitForPendingCategoryTask() async {
+        await categoryTask?.value
     }
 
     // MARK: - 内部方法

@@ -89,6 +89,7 @@ final class DirectoryViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.appendError = nil
+        uiState.validationError = nil
         uiState.currentPage = 1
         loadingMorePage = nil
 
@@ -177,22 +178,20 @@ final class DirectoryViewModel {
 
     // MARK: - 筛选操作
 
-    func selectKind(_ kind: DirectoryItemKind) {
+    func selectKind(_ kind: DirectoryItemKind) async {
         guard uiState.selectedKind != kind else { return }
         uiState.selectedKind = kind
-        Task {
-            await loadItems()
-            if uiState.selectedTab == .statistics {
-                await loadStatistics()
-            }
+        await loadItems()
+        if uiState.selectedTab == .statistics {
+            await loadStatistics()
         }
     }
 
-    func selectTab(_ tab: DirectoryPageTab) {
+    func selectTab(_ tab: DirectoryPageTab) async {
         guard uiState.selectedTab != tab else { return }
         uiState.selectedTab = tab
         if tab == .statistics && uiState.statisticsState.overview == nil {
-            Task { await loadStatistics() }
+            await loadStatistics()
         }
     }
 
@@ -230,6 +229,7 @@ final class DirectoryViewModel {
         case .year: uiState.yearFilter = ""
         case .listType: uiState.listTypeFilter = ""
         }
+        uiState.validationError = nil
         await loadItems()
     }
 
@@ -238,7 +238,18 @@ final class DirectoryViewModel {
         uiState.categoryFilter = ""
         uiState.yearFilter = ""
         uiState.listTypeFilter = ""
+        uiState.validationError = nil
         await loadItems()
+    }
+
+    /// 关闭校验错误提示
+    func dismissValidationError() {
+        uiState.validationError = nil
+    }
+
+    /// 等待搜索防抖任务完成（测试用）
+    func waitForPendingSearchTask() async {
+        await searchTask?.value
     }
 
     // MARK: - 内部方法

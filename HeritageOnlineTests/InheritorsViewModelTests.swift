@@ -202,6 +202,56 @@ final class InheritorsViewModelTests: XCTestCase {
         XCTAssertNil(mockRepository.lastInheritorQuery?.gender)
     }
 
+    // MARK: - validationError 清理
+
+    func testLoadItemsClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", gender: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 重新加载
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [createInheritor(id: "1", name: "传承人1")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadItems()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearFilterFieldClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", gender: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除单个筛选字段
+        await viewModel.clearFilterField(.year)
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearAdvancedFiltersClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", gender: "")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除所有筛选
+        await viewModel.clearAdvancedFilters()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
     // MARK: - Helpers
 
     private func createInheritor(id: String, name: String) -> InheritorSummaryDTO {

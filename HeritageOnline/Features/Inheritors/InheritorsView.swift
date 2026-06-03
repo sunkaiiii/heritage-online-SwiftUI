@@ -145,7 +145,7 @@ struct InheritorsView: View {
                 .foregroundStyle(colorScheme.onErrorContainer)
             Spacer()
             Button {
-                viewModel.uiState.validationError = nil
+                viewModel.dismissValidationError()
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 10, weight: .bold))
@@ -196,13 +196,13 @@ struct InheritorsView: View {
             .frame(minHeight: 300)
         } else {
             LazyVStack(spacing: 12) {
-                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.element.id) { _, item in
+                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.offset) { _, item in
                     InheritorRow(item: item)
                 }
-                // 分页 sentinel
+                // 分页 sentinel（不可见触发器）
                 if viewModel.uiState.hasMore {
-                    ProgressView()
-                        .tint(colorScheme.primary)
+                    Color.clear
+                        .frame(height: 1)
                         .task(id: viewModel.uiState.items.count) {
                             await viewModel.loadMore()
                         }

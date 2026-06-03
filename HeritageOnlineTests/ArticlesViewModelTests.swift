@@ -161,7 +161,7 @@ final class ArticlesViewModelTests: XCTestCase {
 
         // When
         viewModel.selectCategory(.forum)
-        try? await Task.sleep(nanoseconds: 10_000_000) // 等待 debounce（0ns + 少量余量）
+        await viewModel.waitForPendingCategoryTask()
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedCategory, .forum)
@@ -238,7 +238,7 @@ final class ArticlesViewModelTests: XCTestCase {
 
         // When
         viewModel.selectCategory(.forum)
-        try? await Task.sleep(nanoseconds: 10_000_000)
+        await viewModel.waitForPendingCategoryTask()
 
         // Then - 验证分类传入 query
         XCTAssertNotNil(mockRepository.lastArticleQuery)
@@ -259,6 +259,71 @@ final class ArticlesViewModelTests: XCTestCase {
         // Then - query 中 year 为 nil
         XCTAssertNil(mockRepository.lastArticleQuery?.year)
         XCTAssertTrue(viewModel.uiState.yearFilter.isEmpty)
+    }
+
+    // MARK: - validationError 清理
+
+    func testLoadArticlesClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyYearFilter("20ab")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 重新加载
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [createArticleSummary(id: "1", title: "文章1")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadArticles()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearYearFilterClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyYearFilter("20ab")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除年份
+        await viewModel.clearYearFilter()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testClearFiltersClearsValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyYearFilter("20ab")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 清除所有筛选
+        await viewModel.clearFilters()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
+    }
+
+    func testDismissValidationError() async {
+        // Given - 先触发校验错误
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyYearFilter("20ab")
+        XCTAssertNotNil(viewModel.uiState.validationError)
+
+        // When - 关闭校验错误
+        viewModel.dismissValidationError()
+
+        // Then - validationError 被清理
+        XCTAssertNil(viewModel.uiState.validationError)
     }
 
     // MARK: - Helpers

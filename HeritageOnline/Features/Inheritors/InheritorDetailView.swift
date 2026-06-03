@@ -198,11 +198,11 @@ private struct InheritorDetailContent: View {
                             NavigationLink {
                                 DirectoryDetailView(sourceId: sourceId, kind: DirectoryItemKind(rawValue: ref.kind ?? "nationalProject") ?? .nationalProject)
                             } label: {
-                                DirectoryReferenceCard(ref: ref)
+                                DirectoryReferenceCard(ref: ref, showsDisclosure: true)
                             }
                             .buttonStyle(.plain)
                         } else {
-                            DirectoryReferenceCard(ref: ref)
+                            DirectoryReferenceCard(ref: ref, showsDisclosure: false)
                         }
                     }
                 }
@@ -215,11 +215,11 @@ private struct InheritorDetailContent: View {
                             NavigationLink {
                                 InheritorDetailView(sourceId: sourceId)
                             } label: {
-                                DirectoryReferenceCard(ref: ref)
+                                DirectoryReferenceCard(ref: ref, showsDisclosure: true)
                             }
                             .buttonStyle(.plain)
                         } else {
-                            DirectoryReferenceCard(ref: ref)
+                            DirectoryReferenceCard(ref: ref, showsDisclosure: false)
                         }
                     }
                 }

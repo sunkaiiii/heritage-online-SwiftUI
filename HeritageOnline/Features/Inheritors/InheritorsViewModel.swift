@@ -53,6 +53,7 @@ final class InheritorsViewModel {
         uiState.isLoading = true
         uiState.error = nil
         uiState.appendError = nil
+        uiState.validationError = nil
         uiState.currentPage = 1
         loadingMorePage = nil
 
@@ -132,6 +133,7 @@ final class InheritorsViewModel {
         case .year: uiState.yearFilter = ""
         case .gender: uiState.genderFilter = ""
         }
+        uiState.validationError = nil
         await loadItems()
     }
 
@@ -140,7 +142,18 @@ final class InheritorsViewModel {
         uiState.categoryFilter = ""
         uiState.yearFilter = ""
         uiState.genderFilter = ""
+        uiState.validationError = nil
         await loadItems()
+    }
+
+    /// 关闭校验错误提示
+    func dismissValidationError() {
+        uiState.validationError = nil
+    }
+
+    /// 等待搜索防抖任务完成（测试用）
+    func waitForPendingSearchTask() async {
+        await searchTask?.value
     }
 
     private func buildQuery(page: Int) -> InheritorQuery {

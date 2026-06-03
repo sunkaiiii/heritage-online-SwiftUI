@@ -38,10 +38,11 @@ struct DetailContentBlockView: View {
                     placeholderText: "E",
                     contentMode: .fit,
                     onTap: {
-                        if let imageIndex {
-                            onPreviewImage(previewURLs, imageIndex)
-                        } else if let urlString, let idx = previewURLs.firstIndex(of: urlString) {
+                        // 优先按当前图片 URL 在 previewURLs 中查找，避免去重后 index 错位
+                        if let urlString, let idx = previewURLs.firstIndex(of: urlString) {
                             onPreviewImage(previewURLs, idx)
+                        } else if let imageIndex, previewURLs.indices.contains(imageIndex) {
+                            onPreviewImage(previewURLs, imageIndex)
                         }
                     }
                 )

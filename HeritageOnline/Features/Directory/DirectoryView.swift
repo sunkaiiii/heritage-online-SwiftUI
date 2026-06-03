@@ -81,7 +81,7 @@ struct DirectoryView: View {
         HStack(spacing: 0) {
             ForEach(DirectoryPageTab.allCases, id: \.self) { tab in
                 Button {
-                    viewModel.selectTab(tab)
+                    Task { await viewModel.selectTab(tab) }
                 } label: {
                     VStack(spacing: 6) {
                         Text(tab.localizationKey)
@@ -112,7 +112,7 @@ struct DirectoryView: View {
             LazyHStack(spacing: 8) {
                 ForEach(DirectoryItemKind.allCases, id: \.self) { kind in
                     Button {
-                        viewModel.selectKind(kind)
+                        Task { await viewModel.selectKind(kind) }
                     } label: {
                         MetaChip(kind.displayName, isSelected: viewModel.uiState.selectedKind == kind)
                     }
@@ -181,13 +181,13 @@ struct DirectoryView: View {
             .frame(minHeight: 300)
         } else {
             LazyVStack(spacing: 12) {
-                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.element.id) { _, item in
+                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.offset) { _, item in
                     DirectoryItemRow(item: item)
                 }
-                // 分页 sentinel
+                // 分页 sentinel（不可见触发器）
                 if viewModel.uiState.hasMore {
-                    ProgressView()
-                        .tint(colorScheme.primary)
+                    Color.clear
+                        .frame(height: 1)
                         .task(id: viewModel.uiState.items.count) {
                             await viewModel.loadMore()
                         }
@@ -262,7 +262,7 @@ struct DirectoryView: View {
                 .foregroundStyle(colorScheme.onErrorContainer)
             Spacer()
             Button {
-                viewModel.uiState.validationError = nil
+                viewModel.dismissValidationError()
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 10, weight: .bold))

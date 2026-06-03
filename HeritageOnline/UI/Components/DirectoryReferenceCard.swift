@@ -7,6 +7,12 @@ struct DirectoryReferenceCard: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 
     let ref: DirectoryReferenceDTO
+    let showsDisclosure: Bool
+
+    init(ref: DirectoryReferenceDTO, showsDisclosure: Bool = true) {
+        self.ref = ref
+        self.showsDisclosure = showsDisclosure
+    }
 
     /// 组装 meta 信息：kind · category · region · year
     private var metaParts: [String] {
@@ -36,9 +42,11 @@ struct DirectoryReferenceCard: View {
                     }
                 }
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14))
-                    .foregroundStyle(colorScheme.onSurfaceVariant)
+                if showsDisclosure {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14))
+                        .foregroundStyle(colorScheme.onSurfaceVariant)
+                }
             }
             .padding(14)
         }
