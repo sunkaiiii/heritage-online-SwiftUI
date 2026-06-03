@@ -60,18 +60,12 @@ struct ContentView: View {
             if showMyPage {
                 MyPageView(
                     onBack: { showMyPage = false },
-                    onNavigate: { destination in
+                    onNavigate: { item in
                         // 从我的页跳转到详情时，先关闭我的页，再切换到对应 tab
                         showMyPage = false
                         showSettings = false
-                        switch destination {
-                        case .article:
-                            selectedTab = .articles
-                        case .directory:
-                            selectedTab = .directory
-                        case .inheritor:
-                            selectedTab = .inheritors
-                        }
+                        selectedTab = item.targetTab
+                        // TODO: Step 7+ 后续实现 pendingNavigation 推入详情
                     }
                 )
                 .transition(.move(edge: .trailing))
@@ -232,53 +226,6 @@ struct DiscoveryView: View {
 
 // MARK: - 设置页（使用独立的 SettingsView）
 
-// MARK: - 我的页占位
-
-enum MyPageDestination {
-    case article
-    case directory
-    case inheritor
-}
-
-struct MyPageView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-    let onBack: () -> Void
-    let onNavigate: (MyPageDestination) -> Void
-
-    var body: some View {
-        NavigationStack {
-            PageBackground {
-                VStack {
-                    PageHeader(titleKey: "page.my")
-
-                    Spacer()
-
-                    Text("page.my")
-                        .font(HeritageTypography.headlineLarge)
-                        .foregroundStyle(colorScheme.onBackground)
-
-                    Text("page.my.placeholder")
-                        .font(HeritageTypography.bodyMedium)
-                        .foregroundStyle(colorScheme.onSurfaceVariant)
-                        .padding(.top, 8)
-
-                    Spacer()
-                }
-            }
-            .navigationTitle("page.my")
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("nav.back") {
-                        onBack()
-                    }
-                }
-            }
-            #endif
-        }
-    }
-}
 
 #Preview {
     ContentView()

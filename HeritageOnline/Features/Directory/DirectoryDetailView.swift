@@ -38,7 +38,7 @@ struct DirectoryDetailView: View {
                     item: item,
                     isContentStale: viewModel.uiState.isContentStale,
                     isFavorite: viewModel.uiState.isFavorite,
-                    onToggleFavorite: { viewModel.toggleFavorite() },
+                    onToggleFavorite: { Task { await viewModel.toggleFavorite() } },
                     onOpenSource: { openSourceURL($0) },
                     onPreviewImage: { urls, index in
                         previewImageURLs = urls
@@ -61,7 +61,7 @@ struct DirectoryDetailView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 12) {
-                    Button { viewModel.toggleFavorite() } label: {
+                    Button { Task { await viewModel.toggleFavorite() } } label: {
                         Image(systemName: viewModel.uiState.isFavorite ? "heart.fill" : "heart")
                             .foregroundStyle(viewModel.uiState.isFavorite ? colorScheme.error : colorScheme.onSurfaceVariant)
                     }

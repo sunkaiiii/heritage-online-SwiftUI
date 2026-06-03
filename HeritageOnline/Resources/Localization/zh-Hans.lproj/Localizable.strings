@@ -236,3 +236,10 @@
 "inheritorDetail.field.batch" = "批次";
 "inheritorDetail.relatedProjects" = "相关项目";
 "inheritorDetail.relatedInheritors" = "相关传承人";
+
+/* My Page - Additional */
+"my.empty.favorites.hint" = "在详情页点击收藏按钮添加";
+"my.empty.recentlyViewed.hint" = "浏览内容后会自动记录";
+"my.clearRecent" = "清空浏览记录";
+"my.clearRecent.confirm" = "确定清空所有浏览记录？";
+"my.removeRecent" = "移除";

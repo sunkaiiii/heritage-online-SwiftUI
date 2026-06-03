@@ -44,7 +44,7 @@ struct ArticleDetailView: View {
                     article: article,
                     isContentStale: viewModel.uiState.isContentStale,
                     isFavorite: viewModel.uiState.isFavorite,
-                    onToggleFavorite: { viewModel.toggleFavorite() },
+                    onToggleFavorite: { Task { await viewModel.toggleFavorite() } },
                     onOpenSource: { url in
                         openSourceURL(url)
                     },
@@ -75,7 +75,7 @@ struct ArticleDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack(spacing: 12) {
                     Button {
-                        viewModel.toggleFavorite()
+                        Task { await viewModel.toggleFavorite() }
                     } label: {
                         Image(systemName: viewModel.uiState.isFavorite ? "heart.fill" : "heart")
                             .foregroundStyle(viewModel.uiState.isFavorite ? colorScheme.error : colorScheme.onSurfaceVariant)

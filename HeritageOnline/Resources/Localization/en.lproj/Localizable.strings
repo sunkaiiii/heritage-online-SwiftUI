@@ -236,3 +236,10 @@
 "inheritorDetail.field.batch" = "Batch";
 "inheritorDetail.relatedProjects" = "Related Projects";
 "inheritorDetail.relatedInheritors" = "Related Inheritors";
+
+/* My Page - Additional */
+"my.empty.favorites.hint" = "Tap the favorite button on detail pages to add";
+"my.empty.recentlyViewed.hint" = "Items will appear here after you view them";
+"my.clearRecent" = "Clear History";
+"my.clearRecent.confirm" = "Clear all viewing history?";
+"my.removeRecent" = "Remove";

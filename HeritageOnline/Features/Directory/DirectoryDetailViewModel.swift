@@ -20,15 +20,19 @@ final class DirectoryDetailUiState {
 final class DirectoryDetailViewModel {
     let uiState = DirectoryDetailUiState()
     private let repository: HeritageRepository
+    private let savedRepository: SavedContentRepository
     private let lookup: DirectoryDetailLookup
+    private var currentSnapshot: SavedContent?
 
     init(
         itemId: String? = nil,
         sourceId: String? = nil,
         kind: DirectoryItemKind = .nationalProject,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = DefaultHeritageRepository(),
+        savedRepository: SavedContentRepository = DefaultSavedContentRepository.shared
     ) {
         self.repository = repository
+        self.savedRepository = savedRepository
         self.lookup = DirectoryDetailLookup(
             itemId: itemId,
             sourceId: sourceId,
@@ -45,6 +49,11 @@ final class DirectoryDetailViewModel {
             uiState.item = item
             uiState.isLoading = false
             uiState.isContentStale = false
+
+            recordViewedIfNew(item)
+            if let key = currentSnapshot?.contentKey {
+                uiState.isFavorite = await savedRepository.isFavorite(key)
+            }
         } catch {
             if uiState.item != nil {
                 uiState.isContentStale = true
@@ -55,7 +64,17 @@ final class DirectoryDetailViewModel {
         }
     }
 
-    func toggleFavorite() {
-        uiState.isFavorite.toggle()
+    func toggleFavorite() async {
+        guard let snapshot = currentSnapshot else { return }
+        await savedRepository.toggleFavorite(snapshot)
+        uiState.isFavorite = await savedRepository.isFavorite(snapshot.contentKey)
+    }
+
+    private func recordViewedIfNew(_ item: DirectoryItemDetailDTO) {
+        let newSnapshot = SavedContent.fromDirectoryItem(item)
+        if currentSnapshot?.contentKey != newSnapshot.contentKey || currentSnapshot?.title != newSnapshot.title {
+            currentSnapshot = newSnapshot
+            Task { await savedRepository.recordViewed(newSnapshot) }
+        }
     }
 }

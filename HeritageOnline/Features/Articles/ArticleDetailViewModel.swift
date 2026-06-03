@@ -3,40 +3,37 @@ import Foundation
 
 /// 文章详情页面状态
 /// 对齐 Android ArticleDetailUiState
-/// Step 11 范围：主体内容 + 收藏占位
 @MainActor
 @Observable
 final class ArticleDetailUiState {
-    /// 加载中
     var isLoading: Bool = true
-    /// 文章详情
     var article: ArticleDetailDTO?
-    /// 错误
     var error: AppError?
-    /// 是否收藏（占位，Step 16 完整实现）
     var isFavorite: Bool = false
-    /// 内容是否过期（网络失败但有旧数据时）
     var isContentStale: Bool = false
 }
 
 /// 文章详情 ViewModel
 /// 对齐 Android ArticleDetailViewModel
-/// Step 11 范围：详情加载 + 收藏占位
 @MainActor
 @Observable
 final class ArticleDetailViewModel {
     let uiState = ArticleDetailUiState()
     private let repository: HeritageRepository
+    private let savedRepository: SavedContentRepository
     private let lookup: ArticleDetailLookup
+    private var currentSnapshot: SavedContent?
 
     init(
         articleId: String? = nil,
         sourceId: String? = nil,
         sourceUrl: String? = nil,
         category: ArticleCategory = .news,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = DefaultHeritageRepository(),
+        savedRepository: SavedContentRepository = DefaultSavedContentRepository.shared
     ) {
         self.repository = repository
+        self.savedRepository = savedRepository
         self.lookup = ArticleDetailLookup(
             articleId: articleId,
             sourceId: sourceId,
@@ -45,7 +42,6 @@ final class ArticleDetailViewModel {
         )
     }
 
-    /// 刷新文章详情
     func refresh() async {
         uiState.isLoading = uiState.article == nil
         uiState.error = nil
@@ -55,9 +51,16 @@ final class ArticleDetailViewModel {
             uiState.article = article
             uiState.isLoading = false
             uiState.isContentStale = false
+
+            // 记录最近浏览
+            recordViewedIfNew(article)
+
+            // 观察收藏状态
+            if let key = currentSnapshot?.contentKey {
+                uiState.isFavorite = await savedRepository.isFavorite(key)
+            }
         } catch {
             if uiState.article != nil {
-                // 有旧数据时标记过期，不覆盖正文
                 uiState.isContentStale = true
             } else {
                 uiState.error = AppError.from(error)
@@ -66,8 +69,17 @@ final class ArticleDetailViewModel {
         }
     }
 
-    /// 切换收藏状态（占位，Step 16 完整实现）
-    func toggleFavorite() {
-        uiState.isFavorite.toggle()
+    func toggleFavorite() async {
+        guard let snapshot = currentSnapshot else { return }
+        await savedRepository.toggleFavorite(snapshot)
+        uiState.isFavorite = await savedRepository.isFavorite(snapshot.contentKey)
+    }
+
+    private func recordViewedIfNew(_ article: ArticleDetailDTO) {
+        let newSnapshot = SavedContent.fromArticle(article)
+        if currentSnapshot?.contentKey != newSnapshot.contentKey || currentSnapshot?.title != newSnapshot.title {
+            currentSnapshot = newSnapshot
+            Task { await savedRepository.recordViewed(newSnapshot) }
+        }
     }
 }
