@@ -152,6 +152,12 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
     var lastDirectoryLookup: DirectoryDetailLookup?
     var lastInheritorLookup: InheritorDetailLookup?
 
+    // MARK: - 列表查询参数记录
+
+    var lastArticleQuery: ArticleQuery?
+    var lastDirectoryItemQuery: DirectoryItemQuery?
+    var lastInheritorQuery: InheritorQuery?
+
     // MARK: - Repository 实现
 
     func homeBanners() async throws -> [HomeBannerDTO] {
@@ -166,6 +172,7 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
 
     func articles(query: ArticleQuery) async throws -> PagedResultDTO<ArticleSummaryDTO> {
         articlesCallCount += 1
+        lastArticleQuery = query
         return try articlesResult.get()
     }
 
@@ -205,6 +212,7 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
 
     func directoryItems(query: DirectoryItemQuery) async throws -> PagedResultDTO<DirectoryItemSummaryDTO> {
         directoryItemsCallCount += 1
+        lastDirectoryItemQuery = query
         return try directoryItemsResult.get()
     }
 
@@ -255,6 +263,7 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
 
     func inheritors(query: InheritorQuery) async throws -> PagedResultDTO<InheritorSummaryDTO> {
         inheritorsCallCount += 1
+        lastInheritorQuery = query
         return try inheritorsResult.get()
     }
 

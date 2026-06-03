@@ -11,7 +11,7 @@ final class ArticlesViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = ArticlesViewModel(repository: mockRepository)
+        viewModel = ArticlesViewModel(repository: mockRepository, debounceNanoseconds: 0)
     }
 
     override func tearDown() {
@@ -110,6 +110,31 @@ final class ArticlesViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.uiState.appendError)
     }
 
+    func testLoadArticlesClearsAppendError() async {
+        // Given - 首次加载成功
+        let page1 = [
+            createArticleSummary(id: "1", title: "文章1")
+        ]
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: page1, page: 1, pageSize: 20, total: 2, hasMore: true)
+        )
+        await viewModel.loadArticles()
+
+        // Given - loadMore 失败
+        mockRepository.articlesResult = .failure(NetworkError.networkUnavailable)
+        await viewModel.loadMore()
+        XCTAssertNotNil(viewModel.uiState.appendError)
+
+        // When - 重新加载成功
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [createArticleSummary(id: "2", title: "文章2")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadArticles()
+
+        // Then - appendError 被清理
+        XCTAssertNil(viewModel.uiState.appendError)
+    }
+
     func testLoadMoreDoesNotLoadWhenNoMore() async {
         // Given - 首次加载，没有更多
         mockRepository.articlesResult = .success(
@@ -136,7 +161,7 @@ final class ArticlesViewModelTests: XCTestCase {
 
         // When
         viewModel.selectCategory(.forum)
-        try? await Task.sleep(nanoseconds: 400_000_000) // 等待防抖
+        try? await Task.sleep(nanoseconds: 10_000_000) // 等待 debounce（0ns + 少量余量）
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedCategory, .forum)
@@ -165,10 +190,11 @@ final class ArticlesViewModelTests: XCTestCase {
         )
 
         // When - 无效年份
-        viewModel.applyYearFilter("20ab")
+        await viewModel.applyYearFilter("20ab")
 
-        // Then
-        XCTAssertNotNil(viewModel.uiState.error)
+        // Then - 校验错误写入 validationError，不写入 error
+        XCTAssertNotNil(viewModel.uiState.validationError)
+        XCTAssertNil(viewModel.uiState.error)
         XCTAssertTrue(viewModel.uiState.yearFilter.isEmpty)
     }
 
@@ -179,12 +205,60 @@ final class ArticlesViewModelTests: XCTestCase {
         )
 
         // When - 有效年份
-        viewModel.applyYearFilter("2024")
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        await viewModel.applyYearFilter("2024")
 
         // Then
         XCTAssertEqual(viewModel.uiState.yearFilter, "2024")
         XCTAssertNil(viewModel.uiState.error)
+    }
+
+    // MARK: - Query 参数验证
+
+    func testApplyYearFilterPassesYearToQuery() async {
+        // Given
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+
+        // When
+        await viewModel.applyYearFilter("2024")
+
+        // Then - 验证年份传入 query
+        XCTAssertNotNil(mockRepository.lastArticleQuery)
+        XCTAssertEqual(mockRepository.lastArticleQuery?.year, 2024)
+    }
+
+    func testSelectCategoryPassesCategoryToQuery() async {
+        // Given
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.loadArticles()
+        mockRepository.articlesCallCount = 0
+
+        // When
+        viewModel.selectCategory(.forum)
+        try? await Task.sleep(nanoseconds: 10_000_000)
+
+        // Then - 验证分类传入 query
+        XCTAssertNotNil(mockRepository.lastArticleQuery)
+        XCTAssertEqual(mockRepository.lastArticleQuery?.category, .forum)
+    }
+
+    func testClearYearFilterClearsQueryYear() async {
+        // Given - 先设置年份
+        mockRepository.articlesResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyYearFilter("2024")
+        XCTAssertEqual(mockRepository.lastArticleQuery?.year, 2024)
+
+        // When - 清除年份
+        await viewModel.clearYearFilter()
+
+        // Then - query 中 year 为 nil
+        XCTAssertNil(mockRepository.lastArticleQuery?.year)
+        XCTAssertTrue(viewModel.uiState.yearFilter.isEmpty)
     }
 
     // MARK: - Helpers

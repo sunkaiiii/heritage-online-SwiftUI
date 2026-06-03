@@ -11,7 +11,7 @@ final class DirectoryViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = DirectoryViewModel(repository: mockRepository)
+        viewModel = DirectoryViewModel(repository: mockRepository, debounceNanoseconds: 0)
     }
 
     override func tearDown() {
@@ -61,6 +61,29 @@ final class DirectoryViewModelTests: XCTestCase {
         // Then
         XCTAssertEqual(viewModel.uiState.items.count, 2)
         XCTAssertEqual(viewModel.uiState.currentPage, 2)
+    }
+
+    func testLoadItemsClearsAppendError() async {
+        // Given - 首次加载成功
+        let page1 = [createDirectoryItem(id: "1", title: "名录1")]
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: page1, page: 1, pageSize: 20, total: 2, hasMore: true)
+        )
+        await viewModel.loadItems()
+
+        // Given - loadMore 失败
+        mockRepository.directoryItemsResult = .failure(NetworkError.networkUnavailable)
+        await viewModel.loadMore()
+        XCTAssertNotNil(viewModel.uiState.appendError)
+
+        // When - 重新加载成功
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [createDirectoryItem(id: "2", title: "名录2")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadItems()
+
+        // Then - appendError 被清理
+        XCTAssertNil(viewModel.uiState.appendError)
     }
 
     // MARK: - 统计
@@ -122,7 +145,7 @@ final class DirectoryViewModelTests: XCTestCase {
         viewModel.selectKind(.culturalEcoZone)
 
         // 等待 Task 完成
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        try? await Task.sleep(nanoseconds: 10_000_000)
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedKind, .culturalEcoZone)
@@ -144,7 +167,7 @@ final class DirectoryViewModelTests: XCTestCase {
         viewModel.selectTab(.statistics)
 
         // 等待 Task 完成
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        try? await Task.sleep(nanoseconds: 10_000_000)
 
         // Then
         XCTAssertEqual(viewModel.uiState.selectedTab, .statistics)
@@ -160,10 +183,45 @@ final class DirectoryViewModelTests: XCTestCase {
         )
 
         // When - 无效年份
-        viewModel.applyFilters(region: "", category: "", year: "20ab", listType: "")
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", listType: "")
 
-        // Then
-        XCTAssertNotNil(viewModel.uiState.error)
+        // Then - 校验错误写入 validationError，不写入 error
+        XCTAssertNotNil(viewModel.uiState.validationError)
+        XCTAssertNil(viewModel.uiState.error)
+    }
+
+    // MARK: - Query 参数验证
+
+    func testApplyFiltersPassesAllParamsToQuery() async {
+        // Given
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+
+        // When
+        await viewModel.applyFilters(region: "北京", category: "传统音乐", year: "2024", listType: "第一批")
+
+        // Then - 验证所有筛选参数传入 query
+        XCTAssertNotNil(mockRepository.lastDirectoryItemQuery)
+        XCTAssertEqual(mockRepository.lastDirectoryItemQuery?.region, "北京")
+        XCTAssertEqual(mockRepository.lastDirectoryItemQuery?.category, "传统音乐")
+        XCTAssertEqual(mockRepository.lastDirectoryItemQuery?.year, 2024)
+        XCTAssertEqual(mockRepository.lastDirectoryItemQuery?.listType, "第一批")
+    }
+
+    func testClearAdvancedFiltersClearsQuery() async {
+        // Given - 先设置筛选
+        mockRepository.directoryItemsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "北京", category: "", year: "2024", listType: "")
+
+        // When - 清除所有筛选
+        await viewModel.clearAdvancedFilters()
+
+        // Then - query 中所有筛选字段为 nil
+        XCTAssertNil(mockRepository.lastDirectoryItemQuery?.region)
+        XCTAssertNil(mockRepository.lastDirectoryItemQuery?.year)
     }
 
     // MARK: - Helpers

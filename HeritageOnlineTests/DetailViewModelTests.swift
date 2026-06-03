@@ -83,9 +83,14 @@ final class DetailViewModelTests: XCTestCase {
         // When
         await viewModel.refresh()
 
-        // Then - 应该使用 articleId
-        XCTAssertNotNil(viewModel.lastArticleLookup)
-        XCTAssertEqual(viewModel.lastArticleLookup?.articleId, "id1")
+        // Then - 应该通过 mockRepository 记录验证 lookup 优先级
+        XCTAssertNotNil(mockRepository.lastArticleLookup)
+        XCTAssertEqual(mockRepository.lastArticleLookup?.articleId, "id1")
+        XCTAssertEqual(mockRepository.lastArticleLookup?.sourceId, "sid1")
+        XCTAssertEqual(mockRepository.lastArticleLookup?.sourceUrl, "http://example.com")
+        XCTAssertEqual(mockRepository.articleCallCount, 1)
+        XCTAssertEqual(mockRepository.articleBySourceIdCallCount, 0)
+        XCTAssertEqual(mockRepository.articleBySourceUrlCallCount, 0)
     }
 
     // MARK: - DirectoryDetailViewModel
@@ -103,6 +108,28 @@ final class DetailViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.uiState.item)
         XCTAssertEqual(viewModel.uiState.item?.title, "测试名录")
         XCTAssertFalse(viewModel.uiState.isLoading)
+    }
+
+    func testDirectoryDetailLookupPriority() async {
+        // Given
+        let item = createDirectoryItemDetail(id: "test", title: "测试名录")
+        mockRepository.directoryItemResult = .success(item)
+        let viewModel = DirectoryDetailViewModel(
+            itemId: "did1",
+            sourceId: "dsid1",
+            kind: .nationalProject,
+            repository: mockRepository
+        )
+
+        // When
+        await viewModel.refresh()
+
+        // Then - 通过 mockRepository 记录验证 lookup 参数
+        XCTAssertNotNil(mockRepository.lastDirectoryLookup)
+        XCTAssertEqual(mockRepository.lastDirectoryLookup?.itemId, "did1")
+        XCTAssertEqual(mockRepository.lastDirectoryLookup?.sourceId, "dsid1")
+        XCTAssertEqual(mockRepository.directoryItemCallCount, 1)
+        XCTAssertEqual(mockRepository.directoryItemBySourceIdCallCount, 0)
     }
 
     func testDirectoryDetailStaleContent() async {
@@ -138,6 +165,27 @@ final class DetailViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.uiState.item)
         XCTAssertEqual(viewModel.uiState.item?.name, "测试传承人")
         XCTAssertFalse(viewModel.uiState.isLoading)
+    }
+
+    func testInheritorDetailLookupPriority() async {
+        // Given
+        let inheritor = createInheritorDetail(id: "test", name: "测试传承人")
+        mockRepository.inheritorResult = .success(inheritor)
+        let viewModel = InheritorDetailViewModel(
+            inheritorId: "iid1",
+            sourceId: "isid1",
+            repository: mockRepository
+        )
+
+        // When
+        await viewModel.refresh()
+
+        // Then - 通过 mockRepository 记录验证 lookup 参数
+        XCTAssertNotNil(mockRepository.lastInheritorLookup)
+        XCTAssertEqual(mockRepository.lastInheritorLookup?.inheritorId, "iid1")
+        XCTAssertEqual(mockRepository.lastInheritorLookup?.sourceId, "isid1")
+        XCTAssertEqual(mockRepository.inheritorCallCount, 1)
+        XCTAssertEqual(mockRepository.inheritorBySourceIdCallCount, 0)
     }
 
     func testInheritorDetailStaleContent() async {
@@ -223,12 +271,4 @@ final class DetailViewModelTests: XCTestCase {
     }
 }
 
-// MARK: - Mock Helper
 
-extension ArticleDetailViewModel {
-    /// 用于测试的 lookup 访问
-    var lastArticleLookup: ArticleDetailLookup? {
-        // 通过反射或其他方式获取，这里简化处理
-        nil
-    }
-}

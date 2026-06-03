@@ -234,11 +234,13 @@ private struct ArticleDetailContent: View {
 
                 // Content Blocks
                 if !article.contentBlocks.isEmpty {
-                    ForEach(Array(article.contentBlocks.enumerated()), id: \.offset) { index, block in
-                        ContentBlockView(
+                    ForEach(Array(article.contentBlocks.enumerated()), id: \.offset) { blockIndex, block in
+                        let imageStartIndex = (article.coverImage != nil ? 1 : 0)
+                        let imageBlockIndex = imageStartIndex + article.contentBlocks.prefix(blockIndex).filter { $0.type == .image }.count
+                        DetailContentBlockView(
                             block: block,
                             previewURLs: previewURLs,
-                            coverImageURL: ImagePreviewUrl.previewUrl(from: article.coverImage),
+                            imageIndex: block.type == .image ? imageBlockIndex : nil,
                             onPreviewImage: onPreviewImage
                         )
                     }
@@ -393,75 +395,7 @@ private struct ArticleMetaChips: View {
     }
 }
 
-// MARK: - 内容块视图
-
-/// 渲染单个 contentBlock
-private struct ContentBlockView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-
-    let block: ArticleContentBlockDTO
-    let previewURLs: [String]
-    let coverImageURL: String?
-    let onPreviewImage: ([String], Int) -> Void
-
-    var body: some View {
-        switch block.type {
-        case .heading:
-            if let text = block.text, !text.isEmpty {
-                SectionHeader(title: text)
-            }
-
-        case .text:
-            if let text = block.text, !text.isEmpty {
-                if isStandaloneSectionTitle(text) {
-                    Text(text)
-                        .font(HeritageTypography.titleMedium)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(colorScheme.onSurface)
-                } else {
-                    Text(text)
-                        .font(HeritageTypography.bodyLarge)
-                        .foregroundStyle(colorScheme.onSurface)
-                        .lineSpacing(6)
-                }
-            }
-
-        case .image:
-            if let image = block.image {
-                let urlString = ImagePreviewUrl.previewUrl(from: image)
-                HeritageDetailImage(
-                    urlString: urlString,
-                    placeholderText: "E",
-                    contentMode: .fit,
-                    onTap: {
-                        // 计算当前图片在 previewURLs 中的索引
-                        if let urlString, let idx = previewURLs.firstIndex(of: urlString) {
-                            onPreviewImage(previewURLs, idx)
-                        }
-                    }
-                )
-                .aspectRatio(4/3, contentMode: .fit)
-            }
-        }
-    }
-
-    /// 判断是否为独立短标题
-    /// 对齐 Android isStandaloneSectionTitle
-    private func isStandaloneSectionTitle(_ text: String) -> Bool {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
-        // 以冒号结尾
-        if trimmed.hasSuffix("：") || trimmed.hasSuffix(":") {
-            return trimmed.count <= 32
-        }
-        // 无句末标点且短
-        let sentenceEnders: [Character] = ["。", "！", "？", ".", "!", "?", "；", ";"]
-        let hasSentenceEnder = trimmed.contains(where: { sentenceEnders.contains($0) })
-        return !hasSentenceEnder && trimmed.count <= 18
-    }
-}
-
-// MARK: - 相关文章行
+// MARK: - Preview
 
 /// 相关文章卡片
 private struct RelatedArticleRow: View {
@@ -521,52 +455,6 @@ private struct RelatedArticleRow: View {
             return String(value.prefix(10))
         }
         return value
-    }
-}
-
-// MARK: - FlowLayout
-
-/// 横向流式布局，用于元信息 chips
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 6
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = layout(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(proposal: proposal, subviews: subviews)
-        for (index, position) in result.positions.enumerated() {
-            subviews[index].place(
-                at: CGPoint(x: bounds.minX + position.x, y: bounds.minY + position.y),
-                proposal: .unspecified
-            )
-        }
-    }
-
-    private func layout(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        var maxX: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth && x > 0 {
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            positions.append(CGPoint(x: x, y: y))
-            rowHeight = max(rowHeight, size.height)
-            x += size.width + spacing
-            maxX = max(maxX, x - spacing)
-        }
-
-        return (CGSize(width: maxX, height: y + rowHeight), positions)
     }
 }
 

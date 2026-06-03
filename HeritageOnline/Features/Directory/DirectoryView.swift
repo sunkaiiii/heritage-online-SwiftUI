@@ -42,12 +42,12 @@ struct DirectoryView: View {
                 year: viewModel.uiState.yearFilter,
                 listType: viewModel.uiState.listTypeFilter,
                 onApply: { r, c, y, lt in
-                    viewModel.applyFilters(region: r, category: c, year: y, listType: lt)
                     showFilterSheet = false
+                    Task { await viewModel.applyFilters(region: r, category: c, year: y, listType: lt) }
                 },
                 onClear: {
-                    viewModel.clearAdvancedFilters()
                     showFilterSheet = false
+                    Task { await viewModel.clearAdvancedFilters() }
                 },
                 onDismiss: { showFilterSheet = false }
             )
@@ -144,6 +144,11 @@ struct DirectoryView: View {
             activeFilterChips
         }
 
+        // 校验错误提示
+        if let validationError = viewModel.uiState.validationError {
+            validationBanner(validationError)
+        }
+
         // 列表内容
         if viewModel.uiState.isLoading {
             ListLoadingPlaceholder(count: 5)
@@ -176,12 +181,15 @@ struct DirectoryView: View {
             .frame(minHeight: 300)
         } else {
             LazyVStack(spacing: 12) {
-                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.element.id) { index, item in
+                ForEach(Array(viewModel.uiState.items.enumerated()), id: \.element.id) { _, item in
                     DirectoryItemRow(item: item)
-                        .onAppear {
-                            if index >= viewModel.uiState.items.count - 5 {
-                                Task { await viewModel.loadMore() }
-                            }
+                }
+                // 分页 sentinel
+                if viewModel.uiState.hasMore {
+                    ProgressView()
+                        .tint(colorScheme.primary)
+                        .task(id: viewModel.uiState.items.count) {
+                            await viewModel.loadMore()
                         }
                 }
                 if viewModel.uiState.isLoadingMore {
@@ -222,7 +230,7 @@ struct DirectoryView: View {
             let trimmed = value.trimmingCharacters(in: .whitespaces)
             if !trimmed.isEmpty {
                 Button {
-                    viewModel.clearFilterField(field)
+                    Task { await viewModel.clearFilterField(field) }
                 } label: {
                     HStack(spacing: 4) {
                         (Text(field.localizationKey) + Text(": \(trimmed)"))
@@ -241,6 +249,33 @@ struct DirectoryView: View {
                 .buttonStyle(.plain)
             }
         }
+    }
+
+    /// 校验错误提示（不隐藏列表）
+    private func validationBanner(_ error: AppError) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 14))
+                .foregroundStyle(colorScheme.onErrorContainer)
+            Text(verbatim: error.localizedDescription)
+                .font(HeritageTypography.bodyMedium)
+                .foregroundStyle(colorScheme.onErrorContainer)
+            Spacer()
+            Button {
+                viewModel.uiState.validationError = nil
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(colorScheme.onErrorContainer)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(colorScheme.errorContainer)
+        .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
+        .padding(.horizontal, 20)
+        .padding(.bottom, 8)
+        .transition(.move(edge: .top).combined(with: .opacity))
     }
 
     // MARK: - 统计内容
@@ -320,51 +355,6 @@ private struct DirectoryItemRow: View {
             }
         }
         .buttonStyle(.plain)
-    }
-}
-
-// MARK: - FlowLayout
-
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 6
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = layout(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(proposal: proposal, subviews: subviews)
-        for (index, position) in result.positions.enumerated() {
-            subviews[index].place(
-                at: CGPoint(x: bounds.minX + position.x, y: bounds.minY + position.y),
-                proposal: .unspecified
-            )
-        }
-    }
-
-    private func layout(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        var maxX: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth && x > 0 {
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            positions.append(CGPoint(x: x, y: y))
-            rowHeight = max(rowHeight, size.height)
-            x += size.width + spacing
-            maxX = max(maxX, x - spacing)
-        }
-
-        return (CGSize(width: maxX, height: y + rowHeight), positions)
     }
 }
 
@@ -455,8 +445,8 @@ private struct DirectoryFilterSheet: View {
 
     private func validateAndApply() {
         let y = yearText.trimmingCharacters(in: .whitespaces)
-        if !y.isEmpty && (y.count != 4 || Int(y) == nil) {
-            validationError = String(localized: "articles.filter.invalidYear")
+        if !y.isEmpty && !YearFilterValidator.isValidYear(y) {
+            validationError = String(localized: "filter.invalidYear")
             return
         }
         onApply(regionText, categoryText, yearText, listTypeText)

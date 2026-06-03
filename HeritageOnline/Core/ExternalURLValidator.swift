@@ -7,10 +7,10 @@ enum ExternalURLValidator {
     /// - Parameter rawValue: 原始 URL 字符串
     /// - Returns: 合法的 http/https URL，否则返回 nil
     static func httpURL(from rawValue: String?) -> URL? {
+        let trimmed = rawValue?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard
-            let rawValue,
-            !rawValue.trimmingCharacters(in: .whitespaces).isEmpty,
-            let url = URL(string: rawValue),
+            !trimmed.isEmpty,
+            let url = URL(string: trimmed),
             let scheme = url.scheme?.lowercased(),
             ["http", "https"].contains(scheme)
         else { return nil }

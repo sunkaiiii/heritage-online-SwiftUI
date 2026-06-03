@@ -81,6 +81,11 @@
 		B2000061 /* DirectoryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000061 /* DirectoryViewModelTests.swift */; };
 		B2000062 /* InheritorsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000062 /* InheritorsViewModelTests.swift */; };
 		B2000063 /* DetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000063 /* DetailViewModelTests.swift */; };
+		B2000070 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000070 /* FlowLayout.swift */; };
+		B2000071 /* DetailContentBlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000071 /* DetailContentBlockView.swift */; };
+		B2000072 /* YearFilterValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000072 /* YearFilterValidatorTests.swift */; };
+		B2000073 /* ExternalURLValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000073 /* ExternalURLValidatorTests.swift */; };
+		B2000074 /* DirectoryReferenceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000074 /* DirectoryReferenceCard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -180,6 +185,11 @@
 		B1000061 /* DirectoryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryViewModelTests.swift; sourceTree = "<group>"; };
 		B1000062 /* InheritorsViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InheritorsViewModelTests.swift; sourceTree = "<group>"; };
 		B1000063 /* DetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModelTests.swift; sourceTree = "<group>"; };
+		B1000070 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		B1000071 /* DetailContentBlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContentBlockView.swift; sourceTree = "<group>"; };
+		B1000072 /* YearFilterValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YearFilterValidatorTests.swift; sourceTree = "<group>"; };
+		B1000073 /* ExternalURLValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalURLValidatorTests.swift; sourceTree = "<group>"; };
+		B1000074 /* DirectoryReferenceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryReferenceCard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,7 +252,9 @@
 				B1000061 /* DirectoryViewModelTests.swift */,
 				B1000062 /* InheritorsViewModelTests.swift */,
 				B1000063 /* DetailViewModelTests.swift */,
-				B3000030 /* Fixtures */,
+				B3000030 /* Fixtures */,				B1000072 /* YearFilterValidatorTests.swift */,
+				B1000073 /* ExternalURLValidatorTests.swift */,
+
 			);
 			path = HeritageOnlineTests;
 			sourceTree = "<group>";
@@ -486,7 +498,10 @@
 				B100000F /* ErrorRetryRow.swift */,
 				B1000010 /* LoadingPlaceholder.swift */,
 				B1000011 /* EmptyState.swift */,
-				B1000025 /* HeritageAsyncImage.swift */,
+				B1000025 /* HeritageAsyncImage.swift */,				B1000070 /* FlowLayout.swift */,
+				B1000071 /* DetailContentBlockView.swift */,
+				B1000074 /* DirectoryReferenceCard.swift */,
+
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -700,6 +715,9 @@
 				B2000052 /* InheritorDetailView.swift in Sources */,
 				B2000053 /* YearFilterValidator.swift in Sources */,
 				B2000054 /* ExternalURLValidator.swift in Sources */,
+				B2000070 /* FlowLayout.swift in Sources */,
+				B2000071 /* DetailContentBlockView.swift in Sources */,
+				B2000074 /* DirectoryReferenceCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -716,6 +734,8 @@
 				B2000061 /* DirectoryViewModelTests.swift in Sources */,
 				B2000062 /* InheritorsViewModelTests.swift in Sources */,
 				B2000063 /* DetailViewModelTests.swift in Sources */,
+				B2000072 /* YearFilterValidatorTests.swift in Sources */,
+				B2000073 /* ExternalURLValidatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

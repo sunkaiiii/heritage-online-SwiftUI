@@ -46,6 +46,9 @@ final class ArticlesUiState {
     /// 追加加载错误
     var appendError: AppError? = nil
 
+    /// 校验错误（不隐藏列表）
+    var validationError: AppError? = nil
+
     /// 活跃筛选数量
     var activeFilterCount: Int {
         var count = 0
@@ -75,8 +78,15 @@ final class ArticlesViewModel {
     /// 分页防重入：记录正在加载的页码
     private var loadingMorePage: Int?
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    /// 防抖间隔（纳秒），可注入用于测试
+    private let debounceNanoseconds: UInt64
+
+    init(
+        repository: HeritageRepository = DefaultHeritageRepository(),
+        debounceNanoseconds: UInt64 = 350_000_000
+    ) {
         self.repository = repository
+        self.debounceNanoseconds = debounceNanoseconds
     }
 
     // MARK: - 数据加载
@@ -100,6 +110,7 @@ final class ArticlesViewModel {
     func loadArticles() async {
         uiState.isLoading = true
         uiState.error = nil
+        uiState.appendError = nil
         uiState.currentPage = 1
         loadingMorePage = nil
 
@@ -156,10 +167,9 @@ final class ArticlesViewModel {
     func selectCategory(_ category: ArticleCategory) {
         guard uiState.selectedCategory != category else { return }
         uiState.selectedCategory = category
-        // 防抖：350ms 后重新加载
         categoryTask?.cancel()
         categoryTask = Task {
-            try? await Task.sleep(nanoseconds: 350_000_000)
+            try? await Task.sleep(nanoseconds: debounceNanoseconds)
             guard !Task.isCancelled else { return }
             await self.loadArticles()
         }
@@ -168,42 +178,41 @@ final class ArticlesViewModel {
     /// 更新搜索关键词
     func updateSearchKeywords(_ keywords: String) {
         uiState.searchKeywords = keywords
-        // 防抖：350ms 后重新加载
         searchTask?.cancel()
         searchTask = Task {
-            try? await Task.sleep(nanoseconds: 350_000_000)
+            try? await Task.sleep(nanoseconds: debounceNanoseconds)
             guard !Task.isCancelled else { return }
             await self.loadArticles()
         }
     }
 
     /// 应用年份筛选
-    func applyYearFilter(_ year: String) {
+    func applyYearFilter(_ year: String) async {
         let trimmed = year.trimmingCharacters(in: .whitespaces)
-        // 非空时校验必须为 4 位数字
+        // 非空时校验必须为合法年份
         if !trimmed.isEmpty {
             guard YearFilterValidator.isValidYear(trimmed) else {
-                uiState.error = .validationError(String(localized: "filter.invalidYear"))
+                uiState.validationError = .validationError(String(localized: "filter.invalidYear"))
                 return
             }
         }
         uiState.yearFilter = year
-        uiState.error = nil
-        Task { await self.loadArticles() }
+        uiState.validationError = nil
+        await self.loadArticles()
     }
 
     /// 清除年份筛选
-    func clearYearFilter() {
+    func clearYearFilter() async {
         uiState.yearFilter = ""
-        Task { await self.loadArticles() }
+        await self.loadArticles()
     }
 
     /// 清除所有筛选
-    func clearFilters() {
+    func clearFilters() async {
         uiState.yearFilter = ""
         uiState.searchKeywords = ""
         uiState.selectedCategory = .news
-        Task { await self.loadArticles() }
+        await self.loadArticles()
     }
 
     // MARK: - 内部方法

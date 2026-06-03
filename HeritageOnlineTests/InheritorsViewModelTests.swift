@@ -11,7 +11,7 @@ final class InheritorsViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = InheritorsViewModel(repository: mockRepository)
+        viewModel = InheritorsViewModel(repository: mockRepository, debounceNanoseconds: 0)
     }
 
     override func tearDown() {
@@ -97,6 +97,29 @@ final class InheritorsViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.uiState.appendError)
     }
 
+    func testLoadItemsClearsAppendError() async {
+        // Given - 首次加载成功
+        let page1 = [createInheritor(id: "1", name: "传承人1")]
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: page1, page: 1, pageSize: 20, total: 2, hasMore: true)
+        )
+        await viewModel.loadItems()
+
+        // Given - loadMore 失败
+        mockRepository.inheritorsResult = .failure(NetworkError.networkUnavailable)
+        await viewModel.loadMore()
+        XCTAssertNotNil(viewModel.uiState.appendError)
+
+        // When - 重新加载成功
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [createInheritor(id: "2", name: "传承人2")], page: 1, pageSize: 20, total: 1, hasMore: false)
+        )
+        await viewModel.loadItems()
+
+        // Then - appendError 被清理
+        XCTAssertNil(viewModel.uiState.appendError)
+    }
+
     // MARK: - 筛选
 
     func testApplyFiltersValidatesYear() async {
@@ -106,10 +129,11 @@ final class InheritorsViewModelTests: XCTestCase {
         )
 
         // When - 无效年份
-        viewModel.applyFilters(region: "", category: "", year: "20ab", gender: "")
+        await viewModel.applyFilters(region: "", category: "", year: "20ab", gender: "")
 
-        // Then
-        XCTAssertNotNil(viewModel.uiState.error)
+        // Then - 校验错误写入 validationError，不写入 error
+        XCTAssertNotNil(viewModel.uiState.validationError)
+        XCTAssertNil(viewModel.uiState.error)
     }
 
     func testApplyFiltersValidYear() async {
@@ -119,8 +143,7 @@ final class InheritorsViewModelTests: XCTestCase {
         )
 
         // When - 有效年份
-        viewModel.applyFilters(region: "北京", category: "", year: "2024", gender: "")
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        await viewModel.applyFilters(region: "北京", category: "", year: "2024", gender: "")
 
         // Then
         XCTAssertEqual(viewModel.uiState.regionFilter, "北京")
@@ -133,16 +156,50 @@ final class InheritorsViewModelTests: XCTestCase {
         mockRepository.inheritorsResult = .success(
             PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
         )
-        viewModel.applyFilters(region: "北京", category: "传统音乐", year: "2024", gender: "male")
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        await viewModel.applyFilters(region: "北京", category: "传统音乐", year: "2024", gender: "male")
 
         // When
-        viewModel.clearFilterField(.region)
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        await viewModel.clearFilterField(.region)
 
         // Then
         XCTAssertTrue(viewModel.uiState.regionFilter.isEmpty)
         XCTAssertEqual(viewModel.uiState.categoryFilter, "传统音乐")
+    }
+
+    // MARK: - Query 参数验证
+
+    func testApplyFiltersPassesAllParamsToQuery() async {
+        // Given
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+
+        // When
+        await viewModel.applyFilters(region: "北京", category: "传统音乐", year: "2024", gender: "male")
+
+        // Then - 验证所有筛选参数传入 query
+        XCTAssertNotNil(mockRepository.lastInheritorQuery)
+        XCTAssertEqual(mockRepository.lastInheritorQuery?.region, "北京")
+        XCTAssertEqual(mockRepository.lastInheritorQuery?.category, "传统音乐")
+        XCTAssertEqual(mockRepository.lastInheritorQuery?.year, 2024)
+        XCTAssertEqual(mockRepository.lastInheritorQuery?.gender, "male")
+    }
+
+    func testClearAdvancedFiltersClearsQuery() async {
+        // Given - 先设置筛选
+        mockRepository.inheritorsResult = .success(
+            PagedResultDTO(items: [], page: 1, pageSize: 20, total: 0, hasMore: false)
+        )
+        await viewModel.applyFilters(region: "北京", category: "传统音乐", year: "2024", gender: "male")
+
+        // When - 清除所有筛选
+        await viewModel.clearAdvancedFilters()
+
+        // Then - query 中所有筛选字段为 nil
+        XCTAssertNil(mockRepository.lastInheritorQuery?.region)
+        XCTAssertNil(mockRepository.lastInheritorQuery?.category)
+        XCTAssertNil(mockRepository.lastInheritorQuery?.year)
+        XCTAssertNil(mockRepository.lastInheritorQuery?.gender)
     }
 
     // MARK: - Helpers

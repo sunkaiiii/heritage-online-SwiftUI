@@ -48,6 +48,7 @@ final class DirectoryUiState {
     var isLoadingMore: Bool = false
     var error: AppError?
     var appendError: AppError?
+    var validationError: AppError?
 
     /// 活跃筛选数量
     var activeFilterCount: Int {
@@ -71,8 +72,15 @@ final class DirectoryViewModel {
     /// 分页防重入：记录正在加载的页码
     private var loadingMorePage: Int?
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    /// 防抖间隔（纳秒），可注入用于测试
+    private let debounceNanoseconds: UInt64
+
+    init(
+        repository: HeritageRepository = DefaultHeritageRepository(),
+        debounceNanoseconds: UInt64 = 350_000_000
+    ) {
         self.repository = repository
+        self.debounceNanoseconds = debounceNanoseconds
     }
 
     // MARK: - 名录列表
@@ -80,6 +88,7 @@ final class DirectoryViewModel {
     func loadItems() async {
         uiState.isLoading = true
         uiState.error = nil
+        uiState.appendError = nil
         uiState.currentPage = 1
         loadingMorePage = nil
 
@@ -191,18 +200,18 @@ final class DirectoryViewModel {
         uiState.searchKeywords = keywords
         searchTask?.cancel()
         searchTask = Task {
-            try? await Task.sleep(nanoseconds: 350_000_000)
+            try? await Task.sleep(nanoseconds: debounceNanoseconds)
             guard !Task.isCancelled else { return }
             await self.loadItems()
         }
     }
 
-    func applyFilters(region: String, category: String, year: String, listType: String) {
+    func applyFilters(region: String, category: String, year: String, listType: String) async {
         let trimmedYear = year.trimmingCharacters(in: .whitespaces)
-        // 非空时校验必须为 4 位数字
+        // 非空时校验必须为合法年份
         if !trimmedYear.isEmpty {
             guard YearFilterValidator.isValidYear(trimmedYear) else {
-                uiState.error = .validationError(String(localized: "filter.invalidYear"))
+                uiState.validationError = .validationError(String(localized: "filter.invalidYear"))
                 return
             }
         }
@@ -210,26 +219,26 @@ final class DirectoryViewModel {
         uiState.categoryFilter = category
         uiState.yearFilter = year
         uiState.listTypeFilter = listType
-        uiState.error = nil
-        Task { await loadItems() }
+        uiState.validationError = nil
+        await loadItems()
     }
 
-    func clearFilterField(_ field: DirectoryFilterField) {
+    func clearFilterField(_ field: DirectoryFilterField) async {
         switch field {
         case .region: uiState.regionFilter = ""
         case .category: uiState.categoryFilter = ""
         case .year: uiState.yearFilter = ""
         case .listType: uiState.listTypeFilter = ""
         }
-        Task { await loadItems() }
+        await loadItems()
     }
 
-    func clearAdvancedFilters() {
+    func clearAdvancedFilters() async {
         uiState.regionFilter = ""
         uiState.categoryFilter = ""
         uiState.yearFilter = ""
         uiState.listTypeFilter = ""
-        Task { await loadItems() }
+        await loadItems()
     }
 
     // MARK: - 内部方法

@@ -51,12 +51,12 @@ struct ArticlesView: View {
             ArticleFilterSheet(
                 yearFilter: viewModel.uiState.yearFilter,
                 onApply: { year in
-                    viewModel.applyYearFilter(year)
                     showFilterSheet = false
+                    Task { await viewModel.applyYearFilter(year) }
                 },
                 onClear: {
-                    viewModel.clearYearFilter()
                     showFilterSheet = false
+                    Task { await viewModel.clearYearFilter() }
                 },
                 onDismiss: {
                     showFilterSheet = false
@@ -118,6 +118,11 @@ private struct ArticlesContent: View {
                     // MARK: - 活跃筛选 chips
                     if !viewModel.uiState.yearFilter.trimmingCharacters(in: .whitespaces).isEmpty {
                         activeFilterChips
+                    }
+
+                    // MARK: - 校验错误提示
+                    if let validationError = viewModel.uiState.validationError {
+                        validationBanner(validationError)
                     }
 
                     // MARK: - 分类 tabs
@@ -231,7 +236,7 @@ private struct ArticlesContent: View {
                         .foregroundStyle(colorScheme.onPrimaryContainer)
 
                     Button {
-                        viewModel.clearYearFilter()
+                        Task { await viewModel.clearYearFilter() }
                     } label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 10, weight: .bold))
@@ -248,6 +253,33 @@ private struct ArticlesContent: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 8)
+    }
+
+    /// 校验错误提示（不隐藏列表）
+    private func validationBanner(_ error: AppError) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle")
+                .font(.system(size: 14))
+                .foregroundStyle(colorScheme.onErrorContainer)
+            Text(verbatim: error.localizedDescription)
+                .font(HeritageTypography.bodyMedium)
+                .foregroundStyle(colorScheme.onErrorContainer)
+            Spacer()
+            Button {
+                viewModel.uiState.validationError = nil
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(colorScheme.onErrorContainer)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(colorScheme.errorContainer)
+        .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
+        .padding(.horizontal, 20)
+        .padding(.bottom, 8)
+        .transition(.move(edge: .top).combined(with: .opacity))
     }
 
     // MARK: - 分类 tabs
@@ -321,12 +353,15 @@ private struct ArticlesContent: View {
                         isProminent: index == 0,
                         onImagePreview: onImagePreview
                     )
-                    .onAppear {
-                        // 到达最后 5 个时加载更多
-                        if index >= viewModel.uiState.articles.count - 5 {
-                            Task { await viewModel.loadMore() }
+                }
+
+                // 分页 sentinel
+                if viewModel.uiState.hasMore {
+                    ProgressView()
+                        .tint(colorScheme.primary)
+                        .task(id: viewModel.uiState.articles.count) {
+                            await viewModel.loadMore()
                         }
-                    }
                 }
 
                 // 追加加载状态
@@ -559,8 +594,8 @@ private struct ArticleFilterSheet: View {
             onApply("")
             return
         }
-        guard trimmed.count == 4, Int(trimmed) != nil else {
-            validationError = String(localized: "articles.filter.invalidYear")
+        guard YearFilterValidator.isValidYear(trimmed) else {
+            validationError = String(localized: "filter.invalidYear")
             return
         }
         onApply(trimmed)

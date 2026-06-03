@@ -174,7 +174,7 @@ private struct DirectoryDetailContent: View {
                 let imageStartIndex = galleryOffset + item.gallery.count
                 ForEach(Array(item.contentBlocks.enumerated()), id: \.offset) { blockIndex, block in
                     let imageBlockIndex = imageStartIndex + item.contentBlocks.prefix(blockIndex).filter { $0.type == .image }.count
-                    ContentBlockView(
+                    DetailContentBlockView(
                         block: block,
                         previewURLs: previewURLs,
                         imageIndex: block.type == .image ? imageBlockIndex : nil,
@@ -202,12 +202,16 @@ private struct DirectoryDetailContent: View {
                 if !item.relatedInheritors.isEmpty {
                     SectionHeader(title: String(localized: "directoryDetail.relatedInheritors"))
                     ForEach(Array(item.relatedInheritors.enumerated()), id: \.offset) { _, ref in
-                        NavigationLink {
-                            InheritorDetailView(sourceId: ref.sourceId)
-                        } label: {
-                            referenceCard(ref)
+                        if let sourceId = ref.sourceId, !sourceId.isEmpty {
+                            NavigationLink {
+                                InheritorDetailView(sourceId: sourceId)
+                            } label: {
+                                DirectoryReferenceCard(ref: ref)
+                            }
+                            .buttonStyle(.plain)
+                        } else {
+                            DirectoryReferenceCard(ref: ref)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
 
@@ -269,44 +273,13 @@ private struct DirectoryDetailContent: View {
                     NavigationLink {
                         DirectoryDetailView(sourceId: ref.sourceId, kind: DirectoryItemKind(rawValue: ref.kind ?? "nationalProject") ?? .nationalProject)
                     } label: {
-                        referenceCard(ref)
+                        DirectoryReferenceCard(ref: ref)
                     }
                     .buttonStyle(.plain)
                 } else {
-                    referenceCard(ref)
+                    DirectoryReferenceCard(ref: ref)
                 }
             }
-        }
-    }
-
-    private func referenceCard(_ ref: DirectoryReferenceDTO) -> some View {
-        ContentCard {
-            HStack(spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
-                    if let title = ref.title, !title.isEmpty {
-                        Text(title)
-                            .font(HeritageTypography.titleMedium)
-                            .foregroundStyle(colorScheme.onSurface)
-                            .lineLimit(2)
-                    }
-                    // Meta: kind . category . region . year
-                    let metaParts = [
-                        ref.kind.flatMap { ContentLabels.localizedDirectoryKind($0) }.map { String(localized: String.LocalizationValue($0)) },
-                        ref.category,
-                        ref.region,
-                        ref.publishedYear.map { String(format: String(localized: "directory.yearFormat"), $0) }
-                    ].compactMap { $0 }.filter { !$0.isEmpty }
-                    if !metaParts.isEmpty {
-                        Text(metaParts.joined(separator: " · "))
-                            .font(HeritageTypography.bodyMedium)
-                            .foregroundStyle(colorScheme.onSurfaceVariant)
-                            .lineLimit(1)
-                    }
-                }
-                Spacer()
-                Image(systemName: "chevron.right").font(.system(size: 14)).foregroundStyle(colorScheme.onSurfaceVariant)
-            }
-            .padding(14)
         }
     }
 }
@@ -425,94 +398,6 @@ private struct DirectoryFacts: View {
                 .padding(14)
             }
         }
-    }
-}
-
-// MARK: - 内容块视图
-
-private struct ContentBlockView: View {
-    @Environment(\.heritageColorScheme) private var colorScheme
-
-    let block: ArticleContentBlockDTO
-    let previewURLs: [String]
-    let imageIndex: Int?
-    let onPreviewImage: ([String], Int) -> Void
-
-    var body: some View {
-        switch block.type {
-        case .heading:
-            if let text = block.text, !text.isEmpty {
-                SectionHeader(title: text)
-            }
-        case .text:
-            if let text = block.text, !text.isEmpty {
-                if isStandaloneSectionTitle(text) {
-                    Text(text).font(HeritageTypography.titleMedium).fontWeight(.semibold).foregroundStyle(colorScheme.onSurface)
-                } else {
-                    Text(text).font(HeritageTypography.bodyLarge).foregroundStyle(colorScheme.onSurface).lineSpacing(6)
-                }
-            }
-        case .image:
-            if let image = block.image {
-                let urlString = ImagePreviewUrl.previewUrl(from: image)
-                HeritageDetailImage(
-                    urlString: urlString,
-                    placeholderText: "E",
-                    contentMode: .fit,
-                    onTap: {
-                        // 优先使用预计算的 imageIndex，回退到 URL 查找
-                        if let imageIndex {
-                            onPreviewImage(previewURLs, imageIndex)
-                        } else if let urlString, let idx = previewURLs.firstIndex(of: urlString) {
-                            onPreviewImage(previewURLs, idx)
-                        }
-                    }
-                )
-                .aspectRatio(4/3, contentMode: .fit)
-            }
-        }
-    }
-
-    private func isStandaloneSectionTitle(_ text: String) -> Bool {
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
-        if trimmed.hasSuffix("：") || trimmed.hasSuffix(":") { return trimmed.count <= 32 }
-        let sentenceEnders: [Character] = ["。", "！", "？", ".", "!", "?", "；", ";"]
-        let hasSentenceEnder = trimmed.contains(where: { sentenceEnders.contains($0) })
-        return !hasSentenceEnder && trimmed.count <= 18
-    }
-}
-
-// MARK: - FlowLayout
-
-private struct FlowLayout: Layout {
-    var spacing: CGFloat = 6
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = layout(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(proposal: proposal, subviews: subviews)
-        for (index, position) in result.positions.enumerated() {
-            subviews[index].place(at: CGPoint(x: bounds.minX + position.x, y: bounds.minY + position.y), proposal: .unspecified)
-        }
-    }
-
-    private func layout(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var x: CGFloat = 0, y: CGFloat = 0, rowHeight: CGFloat = 0, maxX: CGFloat = 0
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth && x > 0 { x = 0; y += rowHeight + spacing; rowHeight = 0 }
-            positions.append(CGPoint(x: x, y: y))
-            rowHeight = max(rowHeight, size.height)
-            x += size.width + spacing
-            maxX = max(maxX, x - spacing)
-        }
-        return (CGSize(width: maxX, height: y + rowHeight), positions)
     }
 }
 
