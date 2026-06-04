@@ -119,10 +119,10 @@ struct DiscoveryView: View {
             )
         }
         .navigationDestination(item: $navigateToTopic) { topic in
-            PlaceholderDetailView(titleKey: "contentType.topic")
+            ExploreTopicView(type: topic.type ?? "", key: topic.key ?? "")
         }
         .navigationDestination(item: $navigateToLearningPath) { path in
-            PlaceholderDetailView(titleKey: "discovery.learningPaths")
+            LearningPathView(id: path.id ?? "")
         }
         .navigationDestination(item: $navigateToCollection) { collection in
             PlaceholderDetailView(titleKey: "contentType.collection")

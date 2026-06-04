@@ -128,6 +128,10 @@
 "loading.searching" = "Searching...";
 "loading.exploring" = "Exploring...";
 
+/* Learning Path */
+"learning.steps" = "Steps";
+"learning.featuredItems" = "Featured Items";
+
 /* Discovery */
 "discovery.today" = "Today's Discovery";
 "discovery.trending" = "Trending";

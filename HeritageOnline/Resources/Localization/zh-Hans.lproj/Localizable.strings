@@ -128,6 +128,10 @@
 "loading.searching" = "搜索中...";
 "loading.exploring" = "探索中...";
 
+/* Learning Path */
+"learning.steps" = "步骤";
+"learning.featuredItems" = "精选内容";
+
 /* Discovery */
 "discovery.today" = "今日发现";
 "discovery.trending" = "正在被看见";
