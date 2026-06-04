@@ -132,6 +132,9 @@
 "learning.steps" = "步骤";
 "learning.featuredItems" = "精选内容";
 
+/* Timeline */
+"timeline.selectYear" = "选择一个年份浏览非遗内容";
+
 /* Discovery */
 "discovery.today" = "今日发现";
 "discovery.trending" = "正在被看见";

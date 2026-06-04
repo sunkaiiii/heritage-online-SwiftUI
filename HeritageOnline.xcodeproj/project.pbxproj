@@ -110,6 +110,8 @@
 		B20000D1 /* ExploreTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D1 /* ExploreTopicView.swift */; };
 		B20000D2 /* LearningPathViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D2 /* LearningPathViewModel.swift */; };
 		B20000D3 /* LearningPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D3 /* LearningPathView.swift */; };
+		B20000D4 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D4 /* TimelineViewModel.swift */; };
+		B20000D5 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D5 /* TimelineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,6 +240,8 @@
 		B10000D1 /* ExploreTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreTopicView.swift; sourceTree = "<group>"; };
 		B10000D2 /* LearningPathViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningPathViewModel.swift; sourceTree = "<group>"; };
 		B10000D3 /* LearningPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningPathView.swift; sourceTree = "<group>"; };
+		B10000D4 /* TimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
+		B10000D5 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -363,6 +367,7 @@
 				A5000012 /* Discovery */,
 				A500001B /* Explore */,
 				A500001C /* Learning */,
+				A500001D /* Timeline */,
 				A5000013 /* Search */,
 				A5000014 /* My */,
 				A5000015 /* Settings */,
@@ -524,6 +529,15 @@
 				B10000D3 /* LearningPathView.swift */,
 			);
 			path = Learning;
+			sourceTree = "<group>";
+		};
+		A500001D /* Timeline */ = {
+			isa = PBXGroup;
+			children = (
+				B10000D4 /* TimelineViewModel.swift */,
+				B10000D5 /* TimelineView.swift */,
+			);
+			path = Timeline;
 			sourceTree = "<group>";
 		};
 		A5000013 /* Search */ = {
@@ -828,6 +842,8 @@
 				B20000D1 /* ExploreTopicView.swift in Sources */,
 				B20000D2 /* LearningPathViewModel.swift in Sources */,
 				B20000D3 /* LearningPathView.swift in Sources */,
+				B20000D4 /* TimelineViewModel.swift in Sources */,
+				B20000D5 /* TimelineView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

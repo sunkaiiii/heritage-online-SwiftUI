@@ -131,7 +131,7 @@ struct DiscoveryView: View {
             PlaceholderDetailView(titleKey: "page.regionAtlas")
         }
         .navigationDestination(isPresented: $navigateToTimeline) {
-            PlaceholderDetailView(titleKey: "page.timeline")
+            TimelineView()
         }
         .navigationDestination(isPresented: $navigateToTaxonomy) {
             PlaceholderDetailView(titleKey: "page.taxonomy")

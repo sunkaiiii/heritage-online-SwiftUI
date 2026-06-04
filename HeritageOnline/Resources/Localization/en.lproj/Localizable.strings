@@ -132,6 +132,9 @@
 "learning.steps" = "Steps";
 "learning.featuredItems" = "Featured Items";
 
+/* Timeline */
+"timeline.selectYear" = "Select a year to browse heritage content";
+
 /* Discovery */
 "discovery.today" = "Today's Discovery";
 "discovery.trending" = "Trending";
