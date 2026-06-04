@@ -584,6 +584,64 @@ struct RegionAtlasDTO: Decodable, Sendable {
     }
 }
 
+// MARK: - 地区图谱详情 DTO
+
+/// 地区图谱详情统计 DTO
+/// 对齐 Android RegionAtlasDetailStatsDto
+struct RegionAtlasDetailStatsDTO: Decodable, Sendable {
+    let directoryItemCount: Int
+    let inheritorCount: Int
+    let total: Int
+
+    enum CodingKeys: String, CodingKey {
+        case directoryItemCount, inheritorCount, total
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        directoryItemCount = try container.decodeIfPresent(Int.self, forKey: .directoryItemCount) ?? 0
+        inheritorCount = try container.decodeIfPresent(Int.self, forKey: .inheritorCount) ?? 0
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+    }
+}
+
+/// 地区图谱详情 DTO
+/// 对齐 Android RegionAtlasDetailDto
+struct RegionAtlasDetailDTO: Decodable, Sendable {
+    let region: String?
+    let displayName: String?
+    let stats: RegionAtlasDetailStatsDTO?
+    let categoryBreakdown: [FacetBucketDTO]
+    let kindBreakdown: [FacetBucketDTO]
+    let featuredDirectoryItems: [DirectoryItemSummaryDTO]
+    let featuredInheritors: [InheritorSummaryDTO]
+    let relatedArticles: [ArticleSummaryDTO]
+    let timeline: [ExploreTopicItemDTO]
+    let relatedRegions: [ExploreTopicLinkDTO]
+    let generatedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case region, displayName, stats, categoryBreakdown, kindBreakdown
+        case featuredDirectoryItems, featuredInheritors, relatedArticles
+        case timeline, relatedRegions, generatedAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        region = try container.decodeIfPresent(String.self, forKey: .region)
+        displayName = try container.decodeIfPresent(String.self, forKey: .displayName)
+        stats = try container.decodeIfPresent(RegionAtlasDetailStatsDTO.self, forKey: .stats)
+        categoryBreakdown = try container.decodeIfPresent([FacetBucketDTO].self, forKey: .categoryBreakdown) ?? []
+        kindBreakdown = try container.decodeIfPresent([FacetBucketDTO].self, forKey: .kindBreakdown) ?? []
+        featuredDirectoryItems = try container.decodeIfPresent([DirectoryItemSummaryDTO].self, forKey: .featuredDirectoryItems) ?? []
+        featuredInheritors = try container.decodeIfPresent([InheritorSummaryDTO].self, forKey: .featuredInheritors) ?? []
+        relatedArticles = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .relatedArticles) ?? []
+        timeline = try container.decodeIfPresent([ExploreTopicItemDTO].self, forKey: .timeline) ?? []
+        relatedRegions = try container.decodeIfPresent([ExploreTopicLinkDTO].self, forKey: .relatedRegions) ?? []
+        generatedAt = try container.decodeIfPresent(String.self, forKey: .generatedAt)
+    }
+}
+
 // MARK: - 合集 DTO
 
 /// 合集项 DTO

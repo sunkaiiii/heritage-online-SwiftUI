@@ -135,6 +135,17 @@
 /* Timeline */
 "timeline.selectYear" = "选择一个年份浏览非遗内容";
 
+/* Region Atlas */
+"region.totalDirectory" = "名录";
+"region.totalInheritors" = "传承人";
+"region.itemsFormat %lld" = "%lld 项名录";
+"region.inheritorsFormat %lld" = "%lld 位传承人";
+"region.categoryBreakdown" = "分类分布";
+"region.kindBreakdown" = "种类分布";
+"region.featuredItems" = "精选名录";
+"region.featuredInheritors" = "精选传承人";
+"region.relatedRegions" = "相关地区";
+
 /* Discovery */
 "discovery.today" = "今日发现";
 "discovery.trending" = "正在被看见";

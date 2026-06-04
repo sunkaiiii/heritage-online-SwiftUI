@@ -176,7 +176,7 @@ protocol HeritageRepository: Sendable {
     func regionAtlas() async throws -> RegionAtlasDTO
 
     /// 获取地区图谱详情
-    func regionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDTO
+    func regionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDetailDTO
 
     // MARK: - 合集
 

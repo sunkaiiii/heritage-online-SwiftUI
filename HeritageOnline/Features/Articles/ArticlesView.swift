@@ -621,7 +621,7 @@ private struct ArticleFilterSheet: View {
 // MARK: - ArticleCategory CaseIterable
 
 extension ArticleCategory: CaseIterable {
-    public static var allCases: [ArticleCategory] = [.news, .forum, .specialTopic]
+    public static let allCases: [ArticleCategory] = [.news, .forum, .specialTopic]
 }
 
 // MARK: - Preview

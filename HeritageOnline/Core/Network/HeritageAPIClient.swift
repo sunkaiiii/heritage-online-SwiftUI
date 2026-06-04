@@ -121,7 +121,7 @@ protocol HeritageAPIClient: Sendable {
     func getRegionAtlas() async throws -> RegionAtlasDTO
 
     /// 获取地区图谱详情
-    func getRegionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDTO
+    func getRegionAtlasDetail(region: String, limit: Int) async throws -> RegionAtlasDetailDTO
 
     // MARK: - 合集
 

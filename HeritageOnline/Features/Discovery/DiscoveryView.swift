@@ -128,7 +128,7 @@ struct DiscoveryView: View {
             PlaceholderDetailView(titleKey: "contentType.collection")
         }
         .navigationDestination(isPresented: $navigateToRegionAtlas) {
-            PlaceholderDetailView(titleKey: "page.regionAtlas")
+            RegionAtlasView()
         }
         .navigationDestination(isPresented: $navigateToTimeline) {
             TimelineView()
@@ -933,7 +933,7 @@ private struct DiscoveryErrorContent: View {
 
 // MARK: - Identifiable Extensions
 
-extension ExploreTopicInfoDTO: @retroactive Identifiable, @retroactive Hashable {
+extension ExploreTopicInfoDTO: Identifiable, Hashable {
     public var id: String { key ?? UUID().uuidString }
 
     public func hash(into hasher: inout Hasher) {
@@ -945,7 +945,7 @@ extension ExploreTopicInfoDTO: @retroactive Identifiable, @retroactive Hashable 
     }
 }
 
-extension LearningPathDTO: @retroactive Hashable {
+extension LearningPathDTO: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -955,7 +955,7 @@ extension LearningPathDTO: @retroactive Hashable {
     }
 }
 
-extension FeaturedCollectionDTO: @retroactive Hashable {
+extension FeaturedCollectionDTO: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -965,7 +965,7 @@ extension FeaturedCollectionDTO: @retroactive Hashable {
     }
 }
 
-extension DiscoveryItemDTO: @retroactive Hashable {
+extension DiscoveryItemDTO: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

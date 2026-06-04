@@ -159,7 +159,7 @@ final class DefaultHeritageRepository: HeritageRepository {
         try await apiClient.getRegionAtlas()
     }
 
-    func regionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDTO {
+    func regionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDetailDTO {
         try await apiClient.getRegionAtlasDetail(region: region, limit: limit)
     }
 

@@ -243,7 +243,7 @@ final class DefaultHeritageAPIClient: HeritageAPIClient {
         try await httpClient.get("api/regions/atlas")
     }
 
-    func getRegionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDTO {
+    func getRegionAtlasDetail(region: String, limit: Int = 6) async throws -> RegionAtlasDetailDTO {
         var builder = QueryBuilder()
         builder.add("limit", value: limit)
         return try await httpClient.get(["api", "regions", region, "atlas"], queryItems: builder.build())

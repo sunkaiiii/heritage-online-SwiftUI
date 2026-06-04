@@ -1,6 +1,7 @@
 import SwiftUI
 
 /// 设置管理器，管理主题和语言设置
+@MainActor
 @Observable
 final class SettingsManager {
     /// 共享实例

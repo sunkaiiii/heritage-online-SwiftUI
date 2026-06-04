@@ -135,6 +135,17 @@
 /* Timeline */
 "timeline.selectYear" = "Select a year to browse heritage content";
 
+/* Region Atlas */
+"region.totalDirectory" = "Directory Items";
+"region.totalInheritors" = "Inheritors";
+"region.itemsFormat %lld" = "%lld items";
+"region.inheritorsFormat %lld" = "%lld inheritors";
+"region.categoryBreakdown" = "Category Breakdown";
+"region.kindBreakdown" = "Kind Breakdown";
+"region.featuredItems" = "Featured Directory Items";
+"region.featuredInheritors" = "Featured Inheritors";
+"region.relatedRegions" = "Related Regions";
+
 /* Discovery */
 "discovery.today" = "Today's Discovery";
 "discovery.trending" = "Trending";

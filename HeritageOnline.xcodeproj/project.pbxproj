@@ -112,6 +112,10 @@
 		B20000D3 /* LearningPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D3 /* LearningPathView.swift */; };
 		B20000D4 /* TimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D4 /* TimelineViewModel.swift */; };
 		B20000D5 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D5 /* TimelineView.swift */; };
+		B20000D6 /* RegionAtlasViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D6 /* RegionAtlasViewModel.swift */; };
+		B20000D7 /* RegionAtlasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D7 /* RegionAtlasView.swift */; };
+		B20000D8 /* RegionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D8 /* RegionDetailViewModel.swift */; };
+		B20000D9 /* RegionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D9 /* RegionDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -242,6 +246,10 @@
 		B10000D3 /* LearningPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningPathView.swift; sourceTree = "<group>"; };
 		B10000D4 /* TimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModel.swift; sourceTree = "<group>"; };
 		B10000D5 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		B10000D6 /* RegionAtlasViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionAtlasViewModel.swift; sourceTree = "<group>"; };
+		B10000D7 /* RegionAtlasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionAtlasView.swift; sourceTree = "<group>"; };
+		B10000D8 /* RegionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetailViewModel.swift; sourceTree = "<group>"; };
+		B10000D9 /* RegionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -368,6 +376,7 @@
 				A500001B /* Explore */,
 				A500001C /* Learning */,
 				A500001D /* Timeline */,
+				A500001E /* Regions */,
 				A5000013 /* Search */,
 				A5000014 /* My */,
 				A5000015 /* Settings */,
@@ -538,6 +547,17 @@
 				B10000D5 /* TimelineView.swift */,
 			);
 			path = Timeline;
+			sourceTree = "<group>";
+		};
+		A500001E /* Regions */ = {
+			isa = PBXGroup;
+			children = (
+				B10000D6 /* RegionAtlasViewModel.swift */,
+				B10000D7 /* RegionAtlasView.swift */,
+				B10000D8 /* RegionDetailViewModel.swift */,
+				B10000D9 /* RegionDetailView.swift */,
+			);
+			path = Regions;
 			sourceTree = "<group>";
 		};
 		A5000013 /* Search */ = {
@@ -844,6 +864,10 @@
 				B20000D3 /* LearningPathView.swift in Sources */,
 				B20000D4 /* TimelineViewModel.swift in Sources */,
 				B20000D5 /* TimelineView.swift in Sources */,
+				B20000D6 /* RegionAtlasViewModel.swift in Sources */,
+				B20000D7 /* RegionAtlasView.swift in Sources */,
+				B20000D8 /* RegionDetailViewModel.swift in Sources */,
+				B20000D9 /* RegionDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -953,7 +977,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -1009,7 +1033,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1043,7 +1067,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1077,7 +1101,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1095,7 +1119,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeritageOnline.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HeritageOnline";
 			};
 			name = Debug;
@@ -1113,7 +1137,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HeritageOnline.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HeritageOnline";
 			};
 			name = Release;
@@ -1130,7 +1154,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = HeritageOnline;
 			};
 			name = Debug;
@@ -1147,7 +1171,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_TARGET_NAME = HeritageOnline;
 			};
 			name = Release;

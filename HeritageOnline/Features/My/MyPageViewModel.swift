@@ -18,6 +18,7 @@ enum MyPageTab: String, CaseIterable {
 
 /// 我的页 ViewModel
 /// 对齐 Android MyPageViewModel
+@MainActor
 @Observable
 final class MyPageViewModel {
     var selectedTab: MyPageTab = .favorites
