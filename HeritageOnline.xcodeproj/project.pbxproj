@@ -95,6 +95,14 @@
 		B2000092 /* SavedContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000092 /* SavedContentTests.swift */; };
 		B9000003 /* ReadingPathRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9000001 /* ReadingPathRecorderTests.swift */; };
 		B9000004 /* ReadingPathRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9000002 /* ReadingPathRepositoryTests.swift */; };
+		B8000002 /* DiscoveryViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8000001 /* DiscoveryViewModelTests.swift */; };
+		B8000004 /* SearchViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8000003 /* SearchViewModelTests.swift */; };
+		B8000006 /* TimelineViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8000005 /* TimelineViewModelTests.swift */; };
+		B8000008 /* MyPageNavigationMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8000007 /* MyPageNavigationMappingTests.swift */; };
+		B800000A /* DiscoveryDeepDiveViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8000009 /* DiscoveryDeepDiveViewModelTests.swift */; };
+		B800000C /* TaxonomyViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B800000B /* TaxonomyViewModelTests.swift */; };
+		B800000E /* StoriesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B800000D /* StoriesViewModelTests.swift */; };
+		B8000010 /* CompareViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B800000F /* CompareViewModelTests.swift */; };
 		B2000075 /* DateDisplayFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000075 /* DateDisplayFormatter.swift */; };
 		B2000095 /* ReadingPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000095 /* ReadingPath.swift */; };
 		B2000096 /* ReadingPathRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000096 /* ReadingPathRepository.swift */; };
@@ -264,6 +272,14 @@
 		B1000092 /* SavedContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentTests.swift; sourceTree = "<group>"; };
 		B9000001 /* ReadingPathRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRecorderTests.swift; sourceTree = "<group>"; };
 		B9000002 /* ReadingPathRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepositoryTests.swift; sourceTree = "<group>"; };
+		B8000001 /* DiscoveryViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewModelTests.swift; sourceTree = "<group>"; };
+		B8000003 /* SearchViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
+		B8000005 /* TimelineViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModelTests.swift; sourceTree = "<group>"; };
+		B8000007 /* MyPageNavigationMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageNavigationMappingTests.swift; sourceTree = "<group>"; };
+		B8000009 /* DiscoveryDeepDiveViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryDeepDiveViewModelTests.swift; sourceTree = "<group>"; };
+		B800000B /* TaxonomyViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyViewModelTests.swift; sourceTree = "<group>"; };
+		B800000D /* StoriesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesViewModelTests.swift; sourceTree = "<group>"; };
+		B800000F /* CompareViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViewModelTests.swift; sourceTree = "<group>"; };
 		B1000075 /* DateDisplayFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateDisplayFormatter.swift; sourceTree = "<group>"; };
 		B1000095 /* ReadingPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPath.swift; sourceTree = "<group>"; };
 		B1000096 /* ReadingPathRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepository.swift; sourceTree = "<group>"; };
@@ -374,6 +390,14 @@
 				B1000092 /* SavedContentTests.swift */,
 				B9000001 /* ReadingPathRecorderTests.swift */,
 				B9000002 /* ReadingPathRepositoryTests.swift */,
+				B8000001 /* DiscoveryViewModelTests.swift */,
+				B8000003 /* SearchViewModelTests.swift */,
+				B8000005 /* TimelineViewModelTests.swift */,
+				B8000007 /* MyPageNavigationMappingTests.swift */,
+				B8000009 /* DiscoveryDeepDiveViewModelTests.swift */,
+				B800000B /* TaxonomyViewModelTests.swift */,
+				B800000D /* StoriesViewModelTests.swift */,
+				B800000F /* CompareViewModelTests.swift */,
 
 
 			);
@@ -1033,6 +1057,14 @@
 				B2000092 /* SavedContentTests.swift in Sources */,
 				B9000003 /* ReadingPathRecorderTests.swift in Sources */,
 				B9000004 /* ReadingPathRepositoryTests.swift in Sources */,
+				B8000002 /* DiscoveryViewModelTests.swift in Sources */,
+				B8000004 /* SearchViewModelTests.swift in Sources */,
+				B8000006 /* TimelineViewModelTests.swift in Sources */,
+				B8000008 /* MyPageNavigationMappingTests.swift in Sources */,
+				B800000A /* DiscoveryDeepDiveViewModelTests.swift in Sources */,
+				B800000C /* TaxonomyViewModelTests.swift in Sources */,
+				B800000E /* StoriesViewModelTests.swift in Sources */,
+				B8000010 /* CompareViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
