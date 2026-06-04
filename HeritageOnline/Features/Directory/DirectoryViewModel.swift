@@ -40,7 +40,7 @@ final class DirectoryUiState {
     var selectedTab: DirectoryPageTab = .list
     var statisticsState = DirectoryStatisticsState()
 
-    /// 文章列表
+    /// 名录列表
     var items: [DirectoryItemSummaryDTO] = []
     var currentPage: Int = 1
     var hasMore: Bool = true

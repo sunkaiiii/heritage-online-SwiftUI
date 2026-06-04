@@ -70,12 +70,12 @@ struct ArticleDetailView: View {
                     onRefresh: {
                         Task { await viewModel.refresh() }
                     },
-                    onRecordReadingPath: { source, toSourceId, toTitle in
+                    onRecordReadingPath: { source, toId, toSourceId, toTitle in
                         Task {
                             await ReadingPathRecorder.shared.record(
                                 from: ReadingPathEvent.fromRef(article),
                                 toType: .article,
-                                toId: toSourceId ?? "",
+                                toId: toId ?? "",
                                 toTitle: toTitle ?? "",
                                 source: source,
                                 toSourceId: toSourceId
@@ -277,7 +277,7 @@ private struct ArticleDetailContent: View {
     let onOpenSource: (String) -> Void
     let onPreviewImage: ([String], Int) -> Void
     let onRefresh: () -> Void
-    let onRecordReadingPath: (ReadingPathSource, String?, String?) -> Void
+    let onRecordReadingPath: (ReadingPathSource, String?, String?, String?) -> Void
     let onRetryContext: () -> Void
     let onRetryDigest: () -> Void
     let onExploreTargetClick: (DetailExploreTargetClick) -> Void
@@ -344,7 +344,7 @@ private struct ArticleDetailContent: View {
                     SectionHeader(title: String(localized: "articleDetail.relatedArticles"))
                     ForEach(Array(article.relatedArticles.enumerated()), id: \.offset) { _, reference in
                         RelatedArticleRow(reference: reference) {
-                            onRecordReadingPath(.related, reference.sourceId, reference.title)
+                            onRecordReadingPath(.related, nil, reference.sourceId, reference.title)
                         }
                     }
                 }

@@ -176,6 +176,7 @@ struct DetailExploreSection: View {
             subtitle: item.subtitle,
             category: item.category,
             region: item.region,
+            sourceUrl: item.sourceUrl,
             imageUrl: item.coverImage?.displayUrl
         ))
     }
