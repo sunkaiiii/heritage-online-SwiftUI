@@ -28,11 +28,13 @@ final class InheritorsUiState {
 
 /// 传承人 ViewModel
 /// 对齐 Android InheritorsViewModel
+/// 支持列表分页缓存：先读缓存，再刷新网络
 @MainActor
 @Observable
 final class InheritorsViewModel {
     let uiState = InheritorsUiState()
     private let repository: HeritageRepository
+    private let listCache: ListCacheRepository
     private var searchTask: Task<Void, Never>?
 
     /// 分页防重入：记录正在加载的页码
@@ -43,9 +45,11 @@ final class InheritorsViewModel {
 
     init(
         repository: HeritageRepository = AppDependencies.shared.heritageRepository,
+        listCache: ListCacheRepository = DefaultListCacheRepository.shared,
         debounceNanoseconds: UInt64 = 350_000_000
     ) {
         self.repository = repository
+        self.listCache = listCache
         self.debounceNanoseconds = debounceNanoseconds
     }
 
@@ -58,14 +62,43 @@ final class InheritorsViewModel {
         loadingMorePage = nil
 
         let query = buildQuery(page: 1)
+        let queryKey = query.queryKey
 
+        // 先从缓存读取
+        let cached = await listCache.cachedInheritors(queryKey: queryKey)
+        if !cached.isEmpty {
+            uiState.items = cached
+            uiState.isLoading = false
+
+            if let remoteKey = await listCache.inheritorRemoteKey(queryKey: queryKey) {
+                uiState.hasMore = remoteKey.hasMore
+                if let nextPage = remoteKey.nextPage {
+                    uiState.currentPage = nextPage - 1
+                }
+            }
+        }
+
+        // 发起网络请求
         do {
             let result = try await repository.inheritors(query: query)
             uiState.items = result.items
             uiState.hasMore = result.hasMore
             uiState.isLoading = false
+
+            // 写入缓存
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: 1, positionInPage: index)
+            }
+            await listCache.cacheInheritors(entities, queryKey: queryKey, loadType: .refresh)
+            await listCache.saveInheritorRemoteKey(InheritorRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? 2 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
-            uiState.error = AppError.from(error)
+            if cached.isEmpty {
+                uiState.error = AppError.from(error)
+            }
             uiState.isLoading = false
         }
     }
@@ -81,6 +114,7 @@ final class InheritorsViewModel {
         loadingMorePage = nextPage
 
         let query = buildQuery(page: nextPage)
+        let queryKey = query.queryKey
 
         do {
             let result = try await repository.inheritors(query: query)
@@ -88,6 +122,18 @@ final class InheritorsViewModel {
             uiState.hasMore = result.hasMore
             uiState.currentPage = nextPage
             uiState.isLoadingMore = false
+
+            // 写入缓存
+            let startIndex = uiState.items.count - result.items.count
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: nextPage, positionInPage: startIndex + index)
+            }
+            await listCache.cacheInheritors(entities, queryKey: queryKey, loadType: .append)
+            await listCache.saveInheritorRemoteKey(InheritorRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? nextPage + 1 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false

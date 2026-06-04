@@ -60,6 +60,7 @@ final class ArticlesUiState {
 /// 文章列表 ViewModel
 /// 对齐 Android ArticlesViewModel
 /// 管理文章列表、Banner、搜索、筛选状态
+/// 支持列表分页缓存：先读缓存，再刷新网络
 @MainActor
 @Observable
 final class ArticlesViewModel {
@@ -68,6 +69,9 @@ final class ArticlesViewModel {
 
     /// Repository 引用
     private let repository: HeritageRepository
+
+    /// 列表缓存 Repository
+    private let listCache: ListCacheRepository
 
     /// 搜索防抖 Task
     private var searchTask: Task<Void, Never>?
@@ -83,9 +87,11 @@ final class ArticlesViewModel {
 
     init(
         repository: HeritageRepository = AppDependencies.shared.heritageRepository,
+        listCache: ListCacheRepository = DefaultListCacheRepository.shared,
         debounceNanoseconds: UInt64 = 350_000_000
     ) {
         self.repository = repository
+        self.listCache = listCache
         self.debounceNanoseconds = debounceNanoseconds
     }
 
@@ -107,6 +113,7 @@ final class ArticlesViewModel {
     }
 
     /// 加载文章列表（首次或刷新）
+    /// 先读取缓存，再发起网络请求
     func loadArticles() async {
         uiState.isLoading = true
         uiState.error = nil
@@ -116,14 +123,45 @@ final class ArticlesViewModel {
         loadingMorePage = nil
 
         let query = buildQuery(page: 1)
+        let queryKey = query.queryKey
 
+        // 先从缓存读取
+        let cached = await listCache.cachedArticles(queryKey: queryKey)
+        if !cached.isEmpty {
+            uiState.articles = cached
+            uiState.isLoading = false
+
+            // 读取缓存的分页状态
+            if let remoteKey = await listCache.articleRemoteKey(queryKey: queryKey) {
+                uiState.hasMore = remoteKey.hasMore
+                if let nextPage = remoteKey.nextPage {
+                    uiState.currentPage = nextPage - 1
+                }
+            }
+        }
+
+        // 发起网络请求
         do {
             let result = try await repository.articles(query: query)
             uiState.articles = result.items
             uiState.hasMore = result.hasMore
             uiState.isLoading = false
+
+            // 写入缓存（REFRESH 模式）
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: 1, positionInPage: index)
+            }
+            await listCache.cacheArticles(entities, queryKey: queryKey, loadType: .refresh)
+            await listCache.saveArticleRemoteKey(ArticleRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? 2 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
-            uiState.error = AppError.from(error)
+            // 网络失败但有缓存时不显示错误
+            if cached.isEmpty {
+                uiState.error = AppError.from(error)
+            }
             uiState.isLoading = false
         }
     }
@@ -140,6 +178,7 @@ final class ArticlesViewModel {
         loadingMorePage = nextPage
 
         let query = buildQuery(page: nextPage)
+        let queryKey = query.queryKey
 
         do {
             let result = try await repository.articles(query: query)
@@ -147,6 +186,18 @@ final class ArticlesViewModel {
             uiState.hasMore = result.hasMore
             uiState.currentPage = nextPage
             uiState.isLoadingMore = false
+
+            // 写入缓存（APPEND 模式）
+            let startIndex = uiState.articles.count - result.items.count
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: nextPage, positionInPage: startIndex + index)
+            }
+            await listCache.cacheArticles(entities, queryKey: queryKey, loadType: .append)
+            await listCache.saveArticleRemoteKey(ArticleRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? nextPage + 1 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false

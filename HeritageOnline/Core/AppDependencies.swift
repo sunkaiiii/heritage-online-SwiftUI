@@ -21,13 +21,18 @@ final class AppDependencies {
     /// 详情缓存 Repository
     let detailCacheRepository: DetailCacheRepository
 
+    /// 列表缓存 Repository
+    let listCacheRepository: ListCacheRepository
+
     init(
         heritageRepository: HeritageRepository? = nil,
         savedContentRepository: SavedContentRepository? = nil,
         readingPathRepository: ReadingPathRepository? = nil,
-        detailCacheRepository: DetailCacheRepository? = nil
+        detailCacheRepository: DetailCacheRepository? = nil,
+        listCacheRepository: ListCacheRepository? = nil
     ) {
         self.detailCacheRepository = detailCacheRepository ?? DefaultDetailCacheRepository.shared
+        self.listCacheRepository = listCacheRepository ?? DefaultListCacheRepository.shared
         self.heritageRepository = heritageRepository ?? DefaultHeritageRepository(detailCache: self.detailCacheRepository)
         self.savedContentRepository = savedContentRepository ?? DefaultSavedContentRepository.shared
         self.readingPathRepository = readingPathRepository ?? DefaultReadingPathRepository.shared

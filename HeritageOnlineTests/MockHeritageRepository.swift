@@ -454,6 +454,20 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
         try inheritorContextResult.get()
     }
 
+    // MARK: - 详情缓存读取（Mock 直接返回 nil）
+
+    func cachedArticleDetail(lookup: ArticleDetailLookup) async -> ArticleDetailDTO? {
+        nil
+    }
+
+    func cachedDirectoryDetail(lookup: DirectoryDetailLookup) async -> DirectoryItemDetailDTO? {
+        nil
+    }
+
+    func cachedInheritorDetail(lookup: InheritorDetailLookup) async -> InheritorDetailDTO? {
+        nil
+    }
+
     // MARK: - Repository 实现 - 搜索
 
     func searchV2(query: SearchV2Query) async throws -> SearchV2ResponseDTO {

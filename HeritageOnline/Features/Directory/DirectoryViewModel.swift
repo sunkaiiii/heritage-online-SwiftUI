@@ -58,11 +58,13 @@ final class DirectoryUiState {
 
 /// 名录 ViewModel
 /// 对齐 Android DirectoryViewModel
+/// 支持列表分页缓存：先读缓存，再刷新网络
 @MainActor
 @Observable
 final class DirectoryViewModel {
     let uiState = DirectoryUiState()
     private let repository: HeritageRepository
+    private let listCache: ListCacheRepository
     private var searchTask: Task<Void, Never>?
     private var statisticsTask: Task<Void, Never>?
 
@@ -77,9 +79,11 @@ final class DirectoryViewModel {
 
     init(
         repository: HeritageRepository = AppDependencies.shared.heritageRepository,
+        listCache: ListCacheRepository = DefaultListCacheRepository.shared,
         debounceNanoseconds: UInt64 = 350_000_000
     ) {
         self.repository = repository
+        self.listCache = listCache
         self.debounceNanoseconds = debounceNanoseconds
     }
 
@@ -94,14 +98,43 @@ final class DirectoryViewModel {
         loadingMorePage = nil
 
         let query = buildQuery(page: 1)
+        let queryKey = query.queryKey
 
+        // 先从缓存读取
+        let cached = await listCache.cachedDirectoryItems(queryKey: queryKey)
+        if !cached.isEmpty {
+            uiState.items = cached
+            uiState.isLoading = false
+
+            if let remoteKey = await listCache.directoryRemoteKey(queryKey: queryKey) {
+                uiState.hasMore = remoteKey.hasMore
+                if let nextPage = remoteKey.nextPage {
+                    uiState.currentPage = nextPage - 1
+                }
+            }
+        }
+
+        // 发起网络请求
         do {
             let result = try await repository.directoryItems(query: query)
             uiState.items = result.items
             uiState.hasMore = result.hasMore
             uiState.isLoading = false
+
+            // 写入缓存
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: 1, positionInPage: index)
+            }
+            await listCache.cacheDirectoryItems(entities, queryKey: queryKey, loadType: .refresh)
+            await listCache.saveDirectoryRemoteKey(DirectoryRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? 2 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
-            uiState.error = AppError.from(error)
+            if cached.isEmpty {
+                uiState.error = AppError.from(error)
+            }
             uiState.isLoading = false
         }
     }
@@ -117,6 +150,7 @@ final class DirectoryViewModel {
         loadingMorePage = nextPage
 
         let query = buildQuery(page: nextPage)
+        let queryKey = query.queryKey
 
         do {
             let result = try await repository.directoryItems(query: query)
@@ -124,6 +158,18 @@ final class DirectoryViewModel {
             uiState.hasMore = result.hasMore
             uiState.currentPage = nextPage
             uiState.isLoadingMore = false
+
+            // 写入缓存
+            let startIndex = uiState.items.count - result.items.count
+            let entities = result.items.enumerated().map { index, item in
+                item.toListEntity(query: query, page: nextPage, positionInPage: startIndex + index)
+            }
+            await listCache.cacheDirectoryItems(entities, queryKey: queryKey, loadType: .append)
+            await listCache.saveDirectoryRemoteKey(DirectoryRemoteKeyEntity(
+                queryKey: queryKey,
+                nextPage: result.hasMore ? nextPage + 1 : nil,
+                hasMore: result.hasMore
+            ))
         } catch {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false

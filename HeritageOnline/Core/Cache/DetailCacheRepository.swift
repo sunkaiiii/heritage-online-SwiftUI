@@ -181,41 +181,49 @@ final class DefaultDetailCacheRepository: DetailCacheRepository {
 
     // 文章缓存路径
     private func articleCacheURL(id: String) -> URL {
-        cacheDir.appendingPathComponent("articles").appendingPathComponent("\(id.safeFilename).json")
+        cacheDir.appendingPathComponent("articles").appendingPathComponent("\(id.sha256Hash).json")
     }
 
     private func articleIndexURL(sourceId: String? = nil, sourceUrl: String? = nil, category: String) -> URL {
+        let key: String
         if let sourceId {
-            return cacheDir.appendingPathComponent("articles_idx").appendingPathComponent("sid_\(sourceId)_\(category).json")
+            key = "sid_\(sourceId)_\(category)"
+        } else if let sourceUrl {
+            key = "url_\(sourceUrl)_\(category)"
+        } else {
+            key = "unknown_\(UUID().uuidString)"
         }
-        if let sourceUrl {
-            return cacheDir.appendingPathComponent("articles_idx").appendingPathComponent("url_\(sourceUrl.safeFilename)_\(category).json")
-        }
-        return cacheDir.appendingPathComponent("articles_idx").appendingPathComponent("unknown_\(UUID().uuidString).json")
+        return cacheDir.appendingPathComponent("articles_idx").appendingPathComponent("\(key.sha256Hash).json")
     }
 
     // 名录缓存路径
     private func directoryCacheURL(id: String) -> URL {
-        cacheDir.appendingPathComponent("directory").appendingPathComponent("\(id.safeFilename).json")
+        cacheDir.appendingPathComponent("directory").appendingPathComponent("\(id.sha256Hash).json")
     }
 
     private func directoryIndexURL(sourceId: String?, kind: String) -> URL {
+        let key: String
         if let sourceId {
-            return cacheDir.appendingPathComponent("directory_idx").appendingPathComponent("sid_\(sourceId)_\(kind).json")
+            key = "sid_\(sourceId)_\(kind)"
+        } else {
+            key = "unknown_\(UUID().uuidString)"
         }
-        return cacheDir.appendingPathComponent("directory_idx").appendingPathComponent("unknown_\(UUID().uuidString).json")
+        return cacheDir.appendingPathComponent("directory_idx").appendingPathComponent("\(key.sha256Hash).json")
     }
 
     // 传承人缓存路径
     private func inheritorCacheURL(id: String) -> URL {
-        cacheDir.appendingPathComponent("inheritors").appendingPathComponent("\(id.safeFilename).json")
+        cacheDir.appendingPathComponent("inheritors").appendingPathComponent("\(id.sha256Hash).json")
     }
 
     private func inheritorIndexURL(sourceId: String?) -> URL {
+        let key: String
         if let sourceId {
-            return cacheDir.appendingPathComponent("inheritors_idx").appendingPathComponent("sid_\(sourceId).json")
+            key = "sid_\(sourceId)"
+        } else {
+            key = "unknown_\(UUID().uuidString)"
         }
-        return cacheDir.appendingPathComponent("inheritors_idx").appendingPathComponent("unknown_\(UUID().uuidString).json")
+        return cacheDir.appendingPathComponent("inheritors_idx").appendingPathComponent("\(key.sha256Hash).json")
     }
 
     // 通用读写
@@ -232,15 +240,5 @@ final class DefaultDetailCacheRepository: DetailCacheRepository {
     private func load<T: Decodable>(from url: URL) -> T? {
         guard let data = try? Data(contentsOf: url) else { return nil }
         return try? decoder.decode(T.self, from: data)
-    }
-}
-
-// MARK: - String 安全文件名扩展
-
-private extension String {
-    /// 将字符串转换为安全的文件名（替换非法字符）
-    var safeFilename: String {
-        let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
-        return unicodeScalars.map { allowed.contains($0) ? String(Character($0)) : "_" }.reduce("", +)
     }
 }

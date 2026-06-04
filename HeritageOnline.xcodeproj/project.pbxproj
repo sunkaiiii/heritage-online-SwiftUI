@@ -161,6 +161,15 @@
 		CC9C4E678BC78BE5D097BF27 /* DetailCacheMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1993456E81C80B072F1748B4 /* DetailCacheMapper.swift */; };
 		CF4E4540A4EC1727A1B41455 /* DetailCacheEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA742A78E75DDD27A313CAD /* DetailCacheEntity.swift */; };
 		DDB44A138C35C62B0FBD99E3 /* DetailCacheMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1993456E81C80B072F1748B4 /* DetailCacheMapper.swift */; };
+		C2000001 /* ListCacheEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000001 /* ListCacheEntity.swift */; };
+		C2000002 /* ListCacheEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000001 /* ListCacheEntity.swift */; };
+		C2000003 /* ListCacheEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000001 /* ListCacheEntity.swift */; };
+		C2000004 /* ListCacheMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000002 /* ListCacheMapper.swift */; };
+		C2000005 /* ListCacheMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000002 /* ListCacheMapper.swift */; };
+		C2000006 /* ListCacheMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000002 /* ListCacheMapper.swift */; };
+		C2000007 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
+		C2000008 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
+		C2000009 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -334,6 +343,9 @@
 		'B800000F' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViewModelTests.swift; sourceTree = "<group>"; };
 		'B9000001' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRecorderTests.swift; sourceTree = "<group>"; };
 		'B9000002' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepositoryTests.swift; sourceTree = "<group>"; };
+		C1000001 /* ListCacheEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheEntity.swift; path = HeritageOnline/Core/Cache/ListCacheEntity.swift; sourceTree = SOURCE_ROOT; };
+		C1000002 /* ListCacheMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheMapper.swift; path = HeritageOnline/Core/Cache/ListCacheMapper.swift; sourceTree = SOURCE_ROOT; };
+		C1000003 /* ListCacheRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheRepository.swift; path = HeritageOnline/Core/Cache/ListCacheRepository.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -365,6 +377,10 @@
 			isa = PBXGroup;
 			children = (
 				4AA742A78E75DDD27A313CAD /* DetailCacheEntity.swift */,
+				C1000001 /* ListCacheEntity.swift */,
+				C1000002 /* ListCacheMapper.swift */,
+				C1000003 /* ListCacheRepository.swift */,
+
 				1993456E81C80B072F1748B4 /* DetailCacheMapper.swift */,
 				8DE34EF984B1A3BB626BFC3D /* DetailCacheRepository.swift */,
 			);
@@ -944,6 +960,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2000001 /* ListCacheEntity.swift in Sources */,
+				C2000004 /* ListCacheMapper.swift in Sources */,
+				C2000007 /* ListCacheRepository.swift in Sources */,
 				A1000001,
 				A1000002,
 				A1000003,
@@ -1091,9 +1110,6 @@
 				B800000C,
 				B800000E,
 				B8000010,
-				9CEC4F41B5DD5586122836F8 /* DetailCacheEntity.swift in Sources */,
-				BFAD4F978A5C16DC9E75732E /* DetailCacheMapper.swift in Sources */,
-				33664732A2884937FF0008A4 /* DetailCacheRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1103,9 +1119,6 @@
 			files = (
 				A100000F,
 				A1000010,
-				CF4E4540A4EC1727A1B41455 /* DetailCacheEntity.swift in Sources */,
-				DDB44A138C35C62B0FBD99E3 /* DetailCacheMapper.swift in Sources */,
-				A5BB4855964B5E7DB9473486 /* DetailCacheRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
