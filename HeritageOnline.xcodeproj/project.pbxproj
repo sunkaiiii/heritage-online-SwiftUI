@@ -113,6 +113,12 @@
 		B20000AA5 /* DiscoveryItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A5 /* DiscoveryItemCard.swift */; };
 		B20000F0 /* DiscoveryDeepDiveViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000EA /* DiscoveryDeepDiveViewModel.swift */; };
 		B20000F1 /* DiscoveryDeepDiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000EB /* DiscoveryDeepDiveView.swift */; };
+		B10000F4 /* DiscoveryContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryContentView.swift; sourceTree = "<group>"; };
+		B10000F5 /* DiscoverySections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverySections.swift; sourceTree = "<group>"; };
+		B10000F6 /* DiscoveryComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryComponents.swift; sourceTree = "<group>"; };
+		B20000F7 /* DiscoveryContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F4 /* DiscoveryContentView.swift */; };
+		B20000F8 /* DiscoverySections.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F5 /* DiscoverySections.swift */; };
+		B20000F9 /* DiscoveryComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F6 /* DiscoveryComponents.swift */; };
 		B20000F2 /* AppDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000EC /* AppDependencies.swift */; };
 		B20000C0 /* SearchUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000C0 /* SearchUiState.swift */; };
 		B20000C1 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000C1 /* SearchViewModel.swift */; };
@@ -574,6 +580,9 @@
 				B10000A3 /* DiscoveryViewModel.swift */,
 				B10000A4 /* DiscoveryView.swift */,
 				B10000EA /* DiscoveryDeepDiveViewModel.swift */,
+				B10000F4 /* DiscoveryContentView.swift */,
+				B10000F5 /* DiscoverySections.swift */,
+				B10000F6 /* DiscoveryComponents.swift */,
 				B10000EB /* DiscoveryDeepDiveView.swift */,
 			);
 			path = Discovery;
@@ -958,6 +967,9 @@
 				B20000AA5 /* DiscoveryItemCard.swift in Sources */,
 				B20000F0 /* DiscoveryDeepDiveViewModel.swift in Sources */,
 				B20000F1 /* DiscoveryDeepDiveView.swift in Sources */,
+				B20000F7 /* DiscoveryContentView.swift in Sources */,
+				B20000F8 /* DiscoverySections.swift in Sources */,
+				B20000F9 /* DiscoveryComponents.swift in Sources */,
 				B20000F2 /* AppDependencies.swift in Sources */,
 				B20000F3 /* SearchDtos.swift in Sources */,
 				B20000F4 /* StoryDtos.swift in Sources */,
