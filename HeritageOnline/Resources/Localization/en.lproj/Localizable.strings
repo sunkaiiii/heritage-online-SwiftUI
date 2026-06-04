@@ -160,6 +160,9 @@
 "discovery.stories" = "Data Stories";
 "discovery.serendipity" = "Serendipity";
 "discovery.deepDive" = "Deep Dive";
+"discovery.deepDive.seed" = "Seed Content";
+"discovery.deepDive.related" = "Related Content";
+"discovery.generatedAt" = "Generated at %@";
 "discovery.tryLuck" = "Try Your Luck";
 "discovery.searchPlaceholder" = "Search heritage content";
 "discovery.stepCount %lld" = "%lld steps";

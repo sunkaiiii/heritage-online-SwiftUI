@@ -3,15 +3,15 @@ import XCTest
 
 /// SavedContentRepository 单元测试
 /// 覆盖：收藏 toggle、最近浏览记录、删除、清空、重复打开
-@MainActor
+@preconcurrency @MainActor
 final class SavedContentRepositoryTests: XCTestCase {
     var repository: DefaultSavedContentRepository!
 
     override func setUp() {
         super.setUp()
-        repository = DefaultSavedContentRepository.shared
-        // 清理 UserDefaults 中的测试数据
+        // 清理 UserDefaults 中的测试数据（先清再创建 repository）
         clearTestData()
+        repository = DefaultSavedContentRepository.shared
     }
 
     override func tearDown() {
@@ -248,9 +248,10 @@ final class SavedContentRepositoryTests: XCTestCase {
         let directory = createSnapshot(id: "d1", title: "名录", type: .directoryItem)
         let inheritor = createSnapshot(id: "i1", title: "传承人", type: .inheritor)
 
-        // When
+        // When - 三种类型分别收藏和浏览
         await repository.toggleFavorite(article)
         await repository.recordViewed(directory)
+        await repository.recordViewed(inheritor)
         await repository.toggleFavorite(inheritor)
 
         // Then
@@ -302,5 +303,7 @@ final class SavedContentRepositoryTests: XCTestCase {
     private func clearTestData() {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "saved_content_favorites")
+        defaults.removeObject(forKey: "saved_content_recent")
+        defaults.synchronize()
     }
 }

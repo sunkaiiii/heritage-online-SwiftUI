@@ -3,7 +3,7 @@ import XCTest
 
 /// InheritorsViewModel 单元测试
 /// 覆盖：列表加载、分页、筛选参数传递
-@MainActor
+@preconcurrency @MainActor
 final class InheritorsViewModelTests: XCTestCase {
     var mockRepository: MockHeritageRepository!
     var viewModel: InheritorsViewModel!

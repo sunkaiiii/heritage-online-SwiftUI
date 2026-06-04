@@ -140,7 +140,9 @@ struct DiscoveryView: View {
             StoriesIndexView()
         }
         .navigationDestination(item: $navigateToDeepDive) { item in
-            PlaceholderDetailView(titleKey: "discovery.deepDive")
+            if let seedType = SearchResultType(rawValue: item.type), let seedId = item.id {
+                DiscoveryDeepDiveView(seedType: seedType, seedId: seedId)
+            }
         }
         .navigationDestination(item: $navigateToArticleDetail) { id in
             ArticleDetailView(articleId: id)

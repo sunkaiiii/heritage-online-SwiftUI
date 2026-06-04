@@ -3,7 +3,7 @@ import XCTest
 
 /// 详情 ViewModel 单元测试
 /// 覆盖：ArticleDetailViewModel、DirectoryDetailViewModel、InheritorDetailViewModel
-@MainActor
+@preconcurrency @MainActor
 final class DetailViewModelTests: XCTestCase {
     var mockRepository: MockHeritageRepository!
 

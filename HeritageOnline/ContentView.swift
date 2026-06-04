@@ -1,5 +1,13 @@
 import SwiftUI
 
+/// 应用级路由
+/// 用于跨 tab 详情导航（我的页 -> 详情页）
+enum AppRoute: Hashable {
+    case article(articleId: String?, sourceId: String?, sourceUrl: String?, category: ArticleCategory)
+    case directory(itemId: String?, sourceId: String?, kind: DirectoryItemKind)
+    case inheritor(inheritorId: String?, sourceId: String?)
+}
+
 /// 应用主视图 - App Shell
 /// 对齐 Android MainActivity HeritageApp
 /// 实现四个底部导航、隐藏入口、二级页隐藏底部导航
@@ -16,29 +24,38 @@ struct ContentView: View {
     /// 是否显示我的页
     @State private var showMyPage = false
 
+    /// 每个 tab 独立的导航路径
+    @State private var articlesPath = NavigationPath()
+    @State private var directoryPath = NavigationPath()
+    @State private var inheritorsPath = NavigationPath()
+    @State private var discoveryPath = NavigationPath()
+
     var body: some View {
         ZStack {
             // 主内容
             TabView(selection: $selectedTab) {
-                ArticlesTab(onSettingsSelected: { showSettings = true })
-                    .tabItem {
-                        Label(HomeTab.articles.localizationKey, systemImage: HomeTab.articles.icon)
-                    }
-                    .tag(HomeTab.articles)
+                ArticlesTab(
+                    path: $articlesPath,
+                    onSettingsSelected: { showSettings = true }
+                )
+                .tabItem {
+                    Label(HomeTab.articles.localizationKey, systemImage: HomeTab.articles.icon)
+                }
+                .tag(HomeTab.articles)
 
-                DirectoryTab()
+                DirectoryTab(path: $directoryPath)
                     .tabItem {
                         Label(HomeTab.directory.localizationKey, systemImage: HomeTab.directory.icon)
                     }
                     .tag(HomeTab.directory)
 
-                InheritorsTab()
+                InheritorsTab(path: $inheritorsPath)
                     .tabItem {
                         Label(HomeTab.inheritors.localizationKey, systemImage: HomeTab.inheritors.icon)
                     }
                     .tag(HomeTab.inheritors)
 
-                DiscoveryTab()
+                DiscoveryTab(path: $discoveryPath)
                     .tabItem {
                         Label(HomeTab.discovery.localizationKey, systemImage: HomeTab.discovery.icon)
                     }
@@ -61,14 +78,10 @@ struct ContentView: View {
                 MyPageView(
                     onBack: { showMyPage = false },
                     onNavigate: { item in
-                        showMyPage = false
-                        showSettings = false
-                        selectedTab = item.targetTab
+                        navigateFromSavedContent(item)
                     },
                     onNavigateReadingPath: { event in
-                        showMyPage = false
-                        showSettings = false
-                        selectedTab = event.targetTab
+                        navigateFromReadingPath(event)
                     }
                 )
                 .transition(.move(edge: .trailing))
@@ -77,6 +90,100 @@ struct ContentView: View {
         }
         .animation(.default, value: showSettings)
         .animation(.default, value: showMyPage)
+    }
+
+    // MARK: - 导航方法
+
+    /// 从收藏/最近浏览导航到详情
+    private func navigateFromSavedContent(_ item: SavedContent) {
+        showMyPage = false
+        showSettings = false
+
+        let tab = item.targetTab
+        selectedTab = tab
+
+        // 构造路由并推入对应导航栈
+        let route = buildRoute(for: item)
+        appendRoute(route, to: tab)
+    }
+
+    /// 从阅读路径导航到详情
+    private func navigateFromReadingPath(_ event: ReadingPathEvent) {
+        showMyPage = false
+        showSettings = false
+
+        let tab = event.targetTab
+        selectedTab = tab
+
+        // 构造路由并推入对应导航栈
+        let route = buildRoute(for: event)
+        appendRoute(route, to: tab)
+    }
+
+    /// 根据 SavedContent 构造路由
+    private func buildRoute(for item: SavedContent) -> AppRoute {
+        switch item.contentType {
+        case .article:
+            let category = ArticleCategory(rawValue: item.targetCategory ?? "") ?? .news
+            return .article(
+                articleId: item.targetId,
+                sourceId: item.targetSourceId,
+                sourceUrl: item.targetSourceUrl,
+                category: category
+            )
+        case .directoryItem:
+            let kind = DirectoryItemKind(rawValue: item.targetKind ?? "") ?? .nationalProject
+            return .directory(
+                itemId: item.targetId,
+                sourceId: item.targetSourceId,
+                kind: kind
+            )
+        case .inheritor:
+            return .inheritor(
+                inheritorId: item.targetId,
+                sourceId: item.targetSourceId
+            )
+        }
+    }
+
+    /// 根据 ReadingPathEvent 构造路由
+    private func buildRoute(for event: ReadingPathEvent) -> AppRoute {
+        switch event.toType {
+        case .article:
+            let category = ArticleCategory(rawValue: event.toCategory ?? "") ?? .news
+            return .article(
+                articleId: event.toId,
+                sourceId: event.toSourceId,
+                sourceUrl: event.toSourceUrl,
+                category: category
+            )
+        case .directoryItem:
+            let kind = DirectoryItemKind(rawValue: event.toKind ?? "") ?? .nationalProject
+            return .directory(
+                itemId: event.toId,
+                sourceId: event.toSourceId,
+                kind: kind
+            )
+        case .inheritor:
+            return .inheritor(
+                inheritorId: event.toId,
+                sourceId: event.toSourceId
+            )
+        }
+    }
+
+    /// 将路由追加到对应 tab 的导航栈
+    private func appendRoute(_ route: AppRoute, to tab: HomeTab) {
+        switch tab {
+        case .articles:
+            articlesPath.append(route)
+        case .directory:
+            directoryPath.append(route)
+        case .inheritors:
+            inheritorsPath.append(route)
+        case .discovery:
+            discoveryPath.append(route)
+        }
     }
 }
 
@@ -117,39 +224,85 @@ enum HomeTab: String, CaseIterable, Identifiable {
 
 /// 文章 Tab
 struct ArticlesTab: View {
+    @Binding var path: NavigationPath
     let onSettingsSelected: () -> Void
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ArticlesView(onSettingsSelected: onSettingsSelected)
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationView(for: route)
+                }
         }
     }
 }
 
 /// 名录 Tab
 struct DirectoryTab: View {
+    @Binding var path: NavigationPath
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             DirectoryView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationView(for: route)
+                }
         }
     }
 }
 
 /// 传承人 Tab
 struct InheritorsTab: View {
+    @Binding var path: NavigationPath
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             InheritorsView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationView(for: route)
+                }
         }
     }
 }
 
 /// 发现 Tab
 struct DiscoveryTab: View {
+    @Binding var path: NavigationPath
+
     var body: some View {
-        NavigationStack {
-            DiscoveryView()  // 使用 Features/Discovery/DiscoveryView.swift
+        NavigationStack(path: $path) {
+            DiscoveryView()
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationView(for: route)
+                }
         }
+    }
+}
+
+// MARK: - 路由目标视图
+
+/// 根据 AppRoute 创建对应的详情视图
+@ViewBuilder
+private func destinationView(for route: AppRoute) -> some View {
+    switch route {
+    case .article(let articleId, let sourceId, let sourceUrl, let category):
+        ArticleDetailView(
+            articleId: articleId,
+            sourceId: sourceId,
+            sourceUrl: sourceUrl,
+            category: category
+        )
+    case .directory(let itemId, let sourceId, let kind):
+        DirectoryDetailView(
+            itemId: itemId,
+            sourceId: sourceId,
+            kind: kind
+        )
+    case .inheritor(let inheritorId, let sourceId):
+        InheritorDetailView(
+            inheritorId: inheritorId,
+            sourceId: sourceId
+        )
     }
 }
 
@@ -204,4 +357,3 @@ struct PlaceholderDetailView: View {
         .environment(SettingsManager.shared)
         .heritageTheme()
 }
-

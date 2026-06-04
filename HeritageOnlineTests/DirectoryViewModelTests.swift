@@ -3,7 +3,7 @@ import XCTest
 
 /// DirectoryViewModel 单元测试
 /// 覆盖：列表加载、分页、筛选、统计 tab、kind 切换
-@MainActor
+@preconcurrency @MainActor
 final class DirectoryViewModelTests: XCTestCase {
     var mockRepository: MockHeritageRepository!
     var viewModel: DirectoryViewModel!

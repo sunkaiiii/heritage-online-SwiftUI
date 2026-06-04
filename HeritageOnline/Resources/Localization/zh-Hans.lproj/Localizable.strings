@@ -160,6 +160,9 @@
 "discovery.stories" = "数据故事";
 "discovery.serendipity" = "随便看看";
 "discovery.deepDive" = "深度探索";
+"discovery.deepDive.seed" = "探索起点";
+"discovery.deepDive.related" = "相关内容";
+"discovery.generatedAt" = "生成于 %@";
 "discovery.tryLuck" = "随便看看";
 "discovery.searchPlaceholder" = "搜索非遗内容";
 "discovery.stepCount %lld" = "%lld 步";

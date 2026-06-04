@@ -3,7 +3,7 @@ import XCTest
 
 /// ArticlesViewModel 单元测试
 /// 覆盖：加载、分页、筛选、防重入
-@MainActor
+@preconcurrency @MainActor
 final class ArticlesViewModelTests: XCTestCase {
     var mockRepository: MockHeritageRepository!
     var viewModel: ArticlesViewModel!
