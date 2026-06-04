@@ -125,7 +125,7 @@ struct DiscoveryView: View {
             LearningPathView(id: path.id ?? "")
         }
         .navigationDestination(item: $navigateToCollection) { collection in
-            PlaceholderDetailView(titleKey: "contentType.collection")
+            CollectionDetailView(id: collection.id ?? "")
         }
         .navigationDestination(isPresented: $navigateToRegionAtlas) {
             RegionAtlasView()
@@ -142,26 +142,27 @@ struct DiscoveryView: View {
         .navigationDestination(item: $navigateToDeepDive) { item in
             PlaceholderDetailView(titleKey: "discovery.deepDive")
         }
-        .navigationDestination(item: $navigateToArticleDetail) { title in
-            PlaceholderDetailView(titleKey: "contentType.article", subtitleKey: LocalizedStringKey(title))
+        .navigationDestination(item: $navigateToArticleDetail) { id in
+            ArticleDetailView(articleId: id)
         }
-        .navigationDestination(item: $navigateToDirectoryDetail) { title in
-            PlaceholderDetailView(titleKey: "contentType.directoryItem", subtitleKey: LocalizedStringKey(title))
+        .navigationDestination(item: $navigateToDirectoryDetail) { id in
+            DirectoryDetailView(itemId: id)
         }
-        .navigationDestination(item: $navigateToInheritorDetail) { title in
-            PlaceholderDetailView(titleKey: "contentType.inheritor", subtitleKey: LocalizedStringKey(title))
+        .navigationDestination(item: $navigateToInheritorDetail) { id in
+            InheritorDetailView(inheritorId: id)
         }
     }
 
     /// 处理内容项点击
     private func handleItemClick(_ item: DiscoveryItemDTO) {
+        guard let id = item.id, !id.isEmpty else { return }
         switch item.type {
         case "article":
-            navigateToArticleDetail = item.title
+            navigateToArticleDetail = id
         case "directoryItem":
-            navigateToDirectoryDetail = item.title
+            navigateToDirectoryDetail = id
         case "inheritor":
-            navigateToInheritorDetail = item.title
+            navigateToInheritorDetail = id
         default:
             break
         }

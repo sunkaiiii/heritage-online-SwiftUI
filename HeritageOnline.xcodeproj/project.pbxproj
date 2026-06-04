@@ -116,6 +116,8 @@
 		B20000D7 /* RegionAtlasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D7 /* RegionAtlasView.swift */; };
 		B20000D8 /* RegionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D8 /* RegionDetailViewModel.swift */; };
 		B20000D9 /* RegionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D9 /* RegionDetailView.swift */; };
+		B20000DA /* CollectionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DA /* CollectionDetailViewModel.swift */; };
+		B20000DB /* CollectionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DB /* CollectionDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -250,6 +252,8 @@
 		B10000D7 /* RegionAtlasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionAtlasView.swift; sourceTree = "<group>"; };
 		B10000D8 /* RegionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetailViewModel.swift; sourceTree = "<group>"; };
 		B10000D9 /* RegionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetailView.swift; sourceTree = "<group>"; };
+		B10000DA /* CollectionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailViewModel.swift; sourceTree = "<group>"; };
+		B10000DB /* CollectionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -377,6 +381,7 @@
 				A500001C /* Learning */,
 				A500001D /* Timeline */,
 				A500001E /* Regions */,
+				B3000031 /* Collections */,
 				A5000013 /* Search */,
 				A5000014 /* My */,
 				A5000015 /* Settings */,
@@ -558,6 +563,15 @@
 				B10000D9 /* RegionDetailView.swift */,
 			);
 			path = Regions;
+			sourceTree = "<group>";
+		};
+		B3000031 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				B10000DA /* CollectionDetailViewModel.swift */,
+				B10000DB /* CollectionDetailView.swift */,
+			);
+			path = Collections;
 			sourceTree = "<group>";
 		};
 		A5000013 /* Search */ = {
@@ -868,6 +882,8 @@
 				B20000D7 /* RegionAtlasView.swift in Sources */,
 				B20000D8 /* RegionDetailViewModel.swift in Sources */,
 				B20000D9 /* RegionDetailView.swift in Sources */,
+				B20000DA /* CollectionDetailViewModel.swift in Sources */,
+				B20000DB /* CollectionDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
