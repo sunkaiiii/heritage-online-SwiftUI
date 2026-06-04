@@ -1,57 +1,5 @@
 import SwiftUI
 
-// MARK: - 自定义图片加载器
-
-/// 使用 HeritageHTTPClient 的 URLSession 加载图片（支持自签名证书）
-@MainActor
-@Observable
-private final class HeritageImageLoader {
-    var state: LoadState = .idle
-
-    enum LoadState {
-        case idle
-        case loading
-        case success(Image)
-        case failure
-    }
-
-    private var task: Task<Void, Never>?
-
-    func load(url: URL) {
-        task?.cancel()
-        state = .loading
-
-        task = Task {
-            let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 15)
-            do {
-                let session = HeritageHTTPClient.shared.session
-                let (data, _) = try await session.data(for: request)
-                guard !Task.isCancelled else { return }
-                #if os(macOS)
-                if let nsImage = NSImage(data: data) {
-                    state = .success(Image(nsImage: nsImage))
-                } else {
-                    state = .failure
-                }
-                #else
-                if let uiImage = UIImage(data: data) {
-                    state = .success(Image(uiImage: uiImage))
-                } else {
-                    state = .failure
-                }
-                #endif
-            } catch {
-                guard !Task.isCancelled else { return }
-                state = .failure
-            }
-        }
-    }
-
-    func cancel() {
-        task?.cancel()
-    }
-}
-
 // MARK: - 统一图片加载组件
 
 /// 统一图片加载组件
@@ -60,7 +8,6 @@ private final class HeritageImageLoader {
 /// 支持 URL 为空时显示占位、加载失败占位
 struct HeritageAsyncImage: View {
     @Environment(\.heritageColorScheme) private var colorScheme
-    private let loader = HeritageImageLoader()
 
     /// 图片 URL
     let urlString: String?
@@ -73,6 +20,11 @@ struct HeritageAsyncImage: View {
 
     /// 是否允许点击预览
     let onTap: (() -> Void)?
+
+    /// 加载状态（使用 @State 保持跨重绘持久化）
+    @State private var loadedImage: Image?
+    @State private var isLoading = false
+    @State private var didFail = false
 
     init(
         urlString: String?,
@@ -102,24 +54,14 @@ struct HeritageAsyncImage: View {
 
     var body: some View {
         Group {
-            if let urlString, !urlString.isEmpty, let url = URL(string: urlString) {
-                switch loader.state {
-                case .idle:
-                    imagePlaceholder
-                        .onAppear { loader.load(url: url) }
-                        .onDisappear { loader.cancel() }
-
-                case .loading:
-                    loadingPlaceholder
-
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: contentMode)
-
-                case .failure:
-                    imagePlaceholder
-                }
+            if let loadedImage {
+                loadedImage
+                    .resizable()
+                    .aspectRatio(contentMode: contentMode)
+            } else if isLoading {
+                loadingPlaceholder
+            } else if didFail {
+                imagePlaceholder
             } else {
                 imagePlaceholder
             }
@@ -131,11 +73,50 @@ struct HeritageAsyncImage: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            // 只在有有效 URL 时触发预览
             if urlString != nil, !(urlString?.isEmpty ?? true) {
                 onTap?()
             }
         }
+        .task(id: urlString) {
+            await loadImage()
+        }
+    }
+
+    @Sendable
+    private func loadImage() async {
+        guard let urlString, !urlString.isEmpty, let url = URL(string: urlString) else {
+            return
+        }
+
+        // 已经加载过同一张图，不重复加载
+        if loadedImage != nil { return }
+
+        isLoading = true
+        didFail = false
+
+        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 15)
+        do {
+            let session = HeritageHTTPClient.shared.session
+            let (data, _) = try await session.data(for: request)
+            guard !Task.isCancelled else { return }
+            #if os(macOS)
+            if let nsImage = NSImage(data: data) {
+                loadedImage = Image(nsImage: nsImage)
+            } else {
+                didFail = true
+            }
+            #else
+            if let uiImage = UIImage(data: data) {
+                loadedImage = Image(uiImage: uiImage)
+            } else {
+                didFail = true
+            }
+            #endif
+        } catch {
+            guard !Task.isCancelled else { return }
+            didFail = true
+        }
+        isLoading = false
     }
 
     /// 图片占位
