@@ -103,10 +103,13 @@ struct ZoomableImageView: View {
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
 
+    @State private var loadedImage: Image?
+    @State private var isLoading = true
+    @State private var loadFailed = false
+
     var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .success(let image):
+        Group {
+            if let image = loadedImage {
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -157,7 +160,10 @@ struct ZoomableImageView: View {
                         }
                     }
 
-            case .failure:
+            } else if isLoading {
+                ProgressView()
+                    .tint(.white)
+            } else if loadFailed {
                 VStack(spacing: 16) {
                     Image(systemName: "photo")
                         .font(.system(size: 48))
@@ -167,14 +173,30 @@ struct ZoomableImageView: View {
                         .font(HeritageTypography.bodyMedium)
                         .foregroundStyle(.white.opacity(0.6))
                 }
-
-            case .empty:
-                ProgressView()
-                    .tint(.white)
-
-            @unknown default:
-                EmptyView()
             }
+        }
+        .task {
+            let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 15)
+            do {
+                let session = HeritageHTTPClient.shared.session
+                let (data, _) = try await session.data(for: request)
+                #if os(macOS)
+                if let nsImage = NSImage(data: data) {
+                    loadedImage = Image(nsImage: nsImage)
+                } else {
+                    loadFailed = true
+                }
+                #else
+                if let uiImage = UIImage(data: data) {
+                    loadedImage = Image(uiImage: uiImage)
+                } else {
+                    loadFailed = true
+                }
+                #endif
+            } catch {
+                loadFailed = true
+            }
+            isLoading = false
         }
     }
 }

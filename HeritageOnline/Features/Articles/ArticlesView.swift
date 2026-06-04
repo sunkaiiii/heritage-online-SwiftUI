@@ -469,21 +469,7 @@ private struct BannerCard: View {
                     .fill(colorScheme.surfaceContainerHigh)
 
                 if let imageURL, let url = Self.validURL(from: imageURL) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        case .failure:
-                            bannerPlaceholder
-                        case .empty:
-                            ProgressView()
-                                .tint(colorScheme.primary)
-                        @unknown default:
-                            bannerPlaceholder
-                        }
-                    }
+                    BannerAsyncImage(url: url, placeholder: bannerPlaceholder)
                 } else {
                     bannerPlaceholder
                 }
@@ -622,6 +608,55 @@ private struct ArticleFilterSheet: View {
 
 extension ArticleCategory: CaseIterable {
     public static let allCases: [ArticleCategory] = [.news, .forum, .specialTopic]
+}
+
+// MARK: - Banner 自定义图片加载
+
+/// Banner 专用图片加载组件，使用 HeritageHTTPClient 的 URLSession（支持自签名证书）
+private struct BannerAsyncImage: View {
+    let url: URL
+    let placeholder: AnyView
+
+    @State private var loadedImage: Image?
+    @State private var isLoading = true
+
+    init(url: URL, placeholder: some View) {
+        self.url = url
+        self.placeholder = AnyView(placeholder)
+    }
+
+    var body: some View {
+        Group {
+            if let image = loadedImage {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else if isLoading {
+                ProgressView()
+            } else {
+                placeholder
+            }
+        }
+        .task {
+            let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 15)
+            do {
+                let session = HeritageHTTPClient.shared.session
+                let (data, _) = try await session.data(for: request)
+                #if os(macOS)
+                if let nsImage = NSImage(data: data) {
+                    loadedImage = Image(nsImage: nsImage)
+                }
+                #else
+                if let uiImage = UIImage(data: data) {
+                    loadedImage = Image(uiImage: uiImage)
+                }
+                #endif
+            } catch {
+                // 加载失败，显示占位
+            }
+            isLoading = false
+        }
+    }
 }
 
 // MARK: - Preview

@@ -9,8 +9,8 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
     /// API 配置
     private let config: APIConfig
 
-    /// URL 会话
-    private nonisolated(unsafe) var session: URLSession
+    /// URL 会话（暴露给图片加载等场景复用自定义 SSL 配置）
+    nonisolated(unsafe) var session: URLSession
 
     /// JSON 解码器
     let decoder: JSONDecoder
@@ -32,12 +32,12 @@ final class HeritageHTTPClient: NSObject, URLSessionDelegate, Sendable {
         // 配置 JSON 解码器
         self.decoder = JSONDecoder()
 
-        // 初始创建 URLSession（不带 delegate）
+        // 先创建不带 delegate 的 session（满足 let 初始化要求）
         self.session = URLSession(configuration: sessionConfig)
 
         super.init()
 
-        // 在 DEBUG 环境下，如果需要信任自签名证书，重新创建带 delegate 的 session
+        // DEBUG 环境下信任自签名证书时，替换为带 delegate 的 session
         #if DEBUG
         if config.trustSelfSigned {
             self.session = URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)

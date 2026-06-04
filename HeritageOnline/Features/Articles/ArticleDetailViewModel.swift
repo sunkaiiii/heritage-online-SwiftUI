@@ -27,6 +27,7 @@ final class ArticleDetailUiState {
 
 /// 文章详情 ViewModel
 /// 对齐 Android ArticleDetailViewModel
+/// 先观察缓存，再刷新网络；网络失败但有缓存时显示正文和 stale 提示
 @MainActor
 @Observable
 final class ArticleDetailViewModel {
@@ -63,7 +64,6 @@ final class ArticleDetailViewModel {
     }
 
     func refresh() async {
-        // 生成新请求 ID，旧的附加区块 task 结果将被丢弃
         let id = UUID()
         requestId = id
 
@@ -71,6 +71,16 @@ final class ArticleDetailViewModel {
         contextTask?.cancel()
         digestTask?.cancel()
         blendedTask?.cancel()
+
+        // 先尝试从缓存读取（如果有缓存，立即显示）
+        if uiState.article == nil {
+            let cached = await repository.cachedArticleDetail(lookup: lookup)
+            if let cached, requestId == id {
+                uiState.article = cached
+                uiState.isLoading = false
+                recordViewedIfNew(cached)
+            }
+        }
 
         uiState.isLoading = uiState.article == nil
         uiState.error = nil
@@ -102,6 +112,7 @@ final class ArticleDetailViewModel {
         } catch {
             guard requestId == id else { return }
             if uiState.article != nil {
+                // 有缓存内容，标记为 stale
                 uiState.isContentStale = true
             } else {
                 uiState.error = AppError.from(error)

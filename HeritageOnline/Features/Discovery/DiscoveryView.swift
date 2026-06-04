@@ -77,6 +77,9 @@ struct DiscoveryView: View {
                             handleItemClick(item)
                         },
                         onDeepDiveClick: { item in
+                            // 只有 id 非空且 type 合法才允许导航
+                            guard let id = item.id, !id.isEmpty,
+                                  SearchResultType(rawValue: item.type) != nil else { return }
                             navigateToDeepDive = item
                         },
                         onTaxonomyClick: {
@@ -142,6 +145,9 @@ struct DiscoveryView: View {
         .navigationDestination(item: $navigateToDeepDive) { item in
             if let seedType = SearchResultType(rawValue: item.type), let seedId = item.id {
                 DiscoveryDeepDiveView(seedType: seedType, seedId: seedId)
+            } else {
+                // 防御性兜底：上游 guard 正常时不会走到这里
+                PlaceholderDetailView(titleKey: "discovery.deepDive")
             }
         }
         .navigationDestination(item: $navigateToArticleDetail) { id in

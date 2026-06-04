@@ -257,4 +257,15 @@ protocol HeritageRepository: Sendable {
     /// 根据 lookup 参数获取传承人详情
     /// 优先级：inheritorId -> sourceId
     func inheritor(lookup: InheritorDetailLookup) async throws -> InheritorDetailDTO
+
+    // MARK: - 详情缓存读取
+
+    /// 从缓存读取文章详情（如果存在）
+    func cachedArticleDetail(lookup: ArticleDetailLookup) async -> ArticleDetailDTO?
+
+    /// 从缓存读取名录详情（如果存在）
+    func cachedDirectoryDetail(lookup: DirectoryDetailLookup) async -> DirectoryItemDetailDTO?
+
+    /// 从缓存读取传承人详情（如果存在）
+    func cachedInheritorDetail(lookup: InheritorDetailLookup) async -> InheritorDetailDTO?
 }

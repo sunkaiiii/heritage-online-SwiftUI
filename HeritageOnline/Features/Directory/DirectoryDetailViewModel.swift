@@ -27,6 +27,7 @@ final class DirectoryDetailUiState {
 
 /// 名录详情 ViewModel
 /// 对齐 Android DirectoryDetailViewModel
+/// 先观察缓存，再刷新网络；网络失败但有缓存时显示正文和 stale 提示
 @MainActor
 @Observable
 final class DirectoryDetailViewModel {
@@ -68,6 +69,16 @@ final class DirectoryDetailViewModel {
         digestTask?.cancel()
         blendedTask?.cancel()
 
+        // 先尝试从缓存读取（如果有缓存，立即显示）
+        if uiState.item == nil {
+            let cached = await repository.cachedDirectoryDetail(lookup: lookup)
+            if let cached, requestId == id {
+                uiState.item = cached
+                uiState.isLoading = false
+                recordViewedIfNew(cached)
+            }
+        }
+
         uiState.isLoading = uiState.item == nil
         uiState.error = nil
 
@@ -92,6 +103,7 @@ final class DirectoryDetailViewModel {
         } catch {
             guard requestId == id else { return }
             if uiState.item != nil {
+                // 有缓存内容，标记为 stale
                 uiState.isContentStale = true
             } else {
                 uiState.error = AppError.from(error)

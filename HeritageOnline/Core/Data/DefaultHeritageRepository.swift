@@ -1,12 +1,19 @@
 import Foundation
 
 /// Heritage Repository 默认实现
-/// 当前阶段不做本地缓存，直接委托给 API client
+/// 对齐 Android DefaultHeritageRepository，支持详情缓存
+/// 详情页先观察缓存，再刷新网络；网络失败但有缓存时显示正文和 stale 提示
+@MainActor
 final class DefaultHeritageRepository: HeritageRepository {
     private let apiClient: HeritageAPIClient
+    private let detailCache: DetailCacheRepository
 
-    init(apiClient: HeritageAPIClient = DefaultHeritageAPIClient()) {
+    init(
+        apiClient: HeritageAPIClient = DefaultHeritageAPIClient(),
+        detailCache: DetailCacheRepository = DefaultDetailCacheRepository.shared
+    ) {
         self.apiClient = apiClient
+        self.detailCache = detailCache
     }
 
     // MARK: - 首页
@@ -26,15 +33,15 @@ final class DefaultHeritageRepository: HeritageRepository {
     }
 
     func article(id: String) async throws -> ArticleDetailDTO {
-        try await apiClient.getArticle(id: id)
+        try await refreshArticleDetail(ArticleDetailLookup(articleId: id))
     }
 
     func articleBySourceId(sourceId: String, category: ArticleCategory) async throws -> ArticleDetailDTO {
-        try await apiClient.getArticleBySourceId(sourceId: sourceId, category: category)
+        try await refreshArticleDetail(ArticleDetailLookup(sourceId: sourceId, category: category))
     }
 
     func articleBySourceUrl(sourceUrl: String, category: ArticleCategory) async throws -> ArticleDetailDTO {
-        try await apiClient.getArticleBySourceUrl(sourceUrl: sourceUrl, category: category)
+        try await refreshArticleDetail(ArticleDetailLookup(sourceUrl: sourceUrl, category: category))
     }
 
     func articleContext(id: String) async throws -> DetailContextDTO {
@@ -48,11 +55,11 @@ final class DefaultHeritageRepository: HeritageRepository {
     }
 
     func directoryItem(id: String) async throws -> DirectoryItemDetailDTO {
-        try await apiClient.getDirectoryItem(id: id)
+        try await refreshDirectoryDetail(DirectoryDetailLookup(itemId: id))
     }
 
     func directoryItemBySourceId(sourceId: String, kind: DirectoryItemKind) async throws -> DirectoryItemDetailDTO {
-        try await apiClient.getDirectoryItemBySourceId(sourceId: sourceId, kind: kind)
+        try await refreshDirectoryDetail(DirectoryDetailLookup(sourceId: sourceId, kind: kind))
     }
 
     func directoryItemContext(id: String) async throws -> DetailContextDTO {
@@ -74,11 +81,11 @@ final class DefaultHeritageRepository: HeritageRepository {
     }
 
     func inheritor(id: String) async throws -> InheritorDetailDTO {
-        try await apiClient.getInheritor(id: id)
+        try await refreshInheritorDetail(InheritorDetailLookup(inheritorId: id))
     }
 
     func inheritorBySourceId(sourceId: String) async throws -> InheritorDetailDTO {
-        try await apiClient.getInheritorBySourceId(sourceId: sourceId)
+        try await refreshInheritorDetail(InheritorDetailLookup(sourceId: sourceId))
     }
 
     func inheritorContext(id: String) async throws -> DetailContextDTO {
@@ -250,34 +257,134 @@ final class DefaultHeritageRepository: HeritageRepository {
     // MARK: - Lookup（详情查找）
 
     func article(lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO {
+        let result: ArticleDetailDTO
         if let articleId = lookup.articleId, !articleId.isEmpty {
-            return try await apiClient.getArticle(id: articleId)
+            result = try await apiClient.getArticle(id: articleId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try await apiClient.getArticleBySourceId(sourceId: sourceId, category: lookup.category)
+            result = try await apiClient.getArticleBySourceId(sourceId: sourceId, category: lookup.category)
         } else if let sourceUrl = lookup.sourceUrl, !sourceUrl.isEmpty {
-            return try await apiClient.getArticleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
+            result = try await apiClient.getArticleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
         } else {
             throw NetworkError.badRequest
         }
+        // 写入缓存
+        await detailCache.cacheArticle(result, lookup: lookup)
+        return result
     }
 
     func directoryItem(lookup: DirectoryDetailLookup) async throws -> DirectoryItemDetailDTO {
+        let result: DirectoryItemDetailDTO
         if let itemId = lookup.itemId, !itemId.isEmpty {
-            return try await apiClient.getDirectoryItem(id: itemId)
+            result = try await apiClient.getDirectoryItem(id: itemId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try await apiClient.getDirectoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
+            result = try await apiClient.getDirectoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
         } else {
             throw NetworkError.badRequest
         }
+        // 写入缓存
+        await detailCache.cacheDirectoryItem(result, lookup: lookup)
+        return result
     }
 
     func inheritor(lookup: InheritorDetailLookup) async throws -> InheritorDetailDTO {
+        let result: InheritorDetailDTO
         if let inheritorId = lookup.inheritorId, !inheritorId.isEmpty {
-            return try await apiClient.getInheritor(id: inheritorId)
+            result = try await apiClient.getInheritor(id: inheritorId)
         } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
-            return try await apiClient.getInheritorBySourceId(sourceId: sourceId)
+            result = try await apiClient.getInheritorBySourceId(sourceId: sourceId)
         } else {
             throw NetworkError.badRequest
         }
+        // 写入缓存
+        await detailCache.cacheInheritor(result, lookup: lookup)
+        return result
+    }
+
+    // MARK: - 详情缓存读取
+
+    /// 从缓存读取文章详情
+    /// 优先级：articleId -> sourceId -> sourceUrl
+    func cachedArticleDetail(lookup: ArticleDetailLookup) async -> ArticleDetailDTO? {
+        if let articleId = lookup.articleId, !articleId.isEmpty {
+            return await detailCache.cachedArticle(id: articleId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return await detailCache.cachedArticleBySourceId(sourceId: sourceId, category: lookup.category.rawValue)
+        } else if let sourceUrl = lookup.sourceUrl, !sourceUrl.isEmpty {
+            return await detailCache.cachedArticleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category.rawValue)
+        }
+        return nil
+    }
+
+    /// 从缓存读取名录详情
+    /// 优先级：itemId -> sourceId
+    func cachedDirectoryDetail(lookup: DirectoryDetailLookup) async -> DirectoryItemDetailDTO? {
+        if let itemId = lookup.itemId, !itemId.isEmpty {
+            return await detailCache.cachedDirectoryItem(id: itemId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return await detailCache.cachedDirectoryItemBySourceId(sourceId: sourceId, kind: lookup.kind.rawValue)
+        }
+        return nil
+    }
+
+    /// 从缓存读取传承人详情
+    /// 优先级：inheritorId -> sourceId
+    func cachedInheritorDetail(lookup: InheritorDetailLookup) async -> InheritorDetailDTO? {
+        if let inheritorId = lookup.inheritorId, !inheritorId.isEmpty {
+            return await detailCache.cachedInheritor(id: inheritorId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            return await detailCache.cachedInheritorBySourceId(sourceId: sourceId)
+        }
+        return nil
+    }
+
+    // MARK: - 详情刷新（网络请求 + 写入缓存）
+
+    /// 刷新文章详情
+    /// 刷新成功后统一写入缓存；界面再从缓存拿到同一份数据，
+    /// 这样在线、离线和重试路径的状态来源是一致的。
+    private func refreshArticleDetail(_ lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO {
+        let article: ArticleDetailDTO
+        if let articleId = lookup.articleId, !articleId.isEmpty {
+            article = try await apiClient.getArticle(id: articleId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            article = try await apiClient.getArticleBySourceId(sourceId: sourceId, category: lookup.category)
+        } else if let sourceUrl = lookup.sourceUrl, !sourceUrl.isEmpty {
+            article = try await apiClient.getArticleBySourceUrl(sourceUrl: sourceUrl, category: lookup.category)
+        } else {
+            throw NetworkError.badRequest
+        }
+
+        await detailCache.cacheArticle(article, lookup: lookup)
+        return article
+    }
+
+    /// 刷新名录详情
+    private func refreshDirectoryDetail(_ lookup: DirectoryDetailLookup) async throws -> DirectoryItemDetailDTO {
+        let item: DirectoryItemDetailDTO
+        if let itemId = lookup.itemId, !itemId.isEmpty {
+            item = try await apiClient.getDirectoryItem(id: itemId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            item = try await apiClient.getDirectoryItemBySourceId(sourceId: sourceId, kind: lookup.kind)
+        } else {
+            throw NetworkError.badRequest
+        }
+
+        await detailCache.cacheDirectoryItem(item, lookup: lookup)
+        return item
+    }
+
+    /// 刷新传承人详情
+    private func refreshInheritorDetail(_ lookup: InheritorDetailLookup) async throws -> InheritorDetailDTO {
+        let item: InheritorDetailDTO
+        if let inheritorId = lookup.inheritorId, !inheritorId.isEmpty {
+            item = try await apiClient.getInheritor(id: inheritorId)
+        } else if let sourceId = lookup.sourceId, !sourceId.isEmpty {
+            item = try await apiClient.getInheritorBySourceId(sourceId: sourceId)
+        } else {
+            throw NetworkError.badRequest
+        }
+
+        await detailCache.cacheInheritor(item, lookup: lookup)
+        return item
     }
 }
