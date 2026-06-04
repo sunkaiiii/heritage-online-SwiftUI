@@ -36,7 +36,6 @@ final class DefaultSavedContentRepository: SavedContentRepository {
     static let shared = DefaultSavedContentRepository()
 
     private let favoritesKey = "saved_content_favorites"
-    private let recentKey = "saved_content_recent"
     private let maxRecent = 100
 
     private let defaults = UserDefaults.standard

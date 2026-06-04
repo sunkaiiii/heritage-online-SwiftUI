@@ -61,7 +61,7 @@ extension SavedContent {
         let key = computeKey(
             targetId: article.id,
             targetSourceUrl: article.sourceUrl,
-            targetSourceId: nil
+            targetSourceId: article.sourceId
         )
         return SavedContent(
             contentKey: key,
@@ -73,7 +73,7 @@ extension SavedContent {
             category: article.category,
             region: nil,
             targetId: article.id,
-            targetSourceId: nil,
+            targetSourceId: article.sourceId,
             targetSourceUrl: article.sourceUrl,
             targetCategory: article.category,
             targetKind: nil,
@@ -88,7 +88,7 @@ extension SavedContent {
         let key = computeKey(
             targetId: item.id,
             targetSourceUrl: item.sourceUrl,
-            targetSourceId: nil
+            targetSourceId: item.sourceId
         )
         return SavedContent(
             contentKey: key,
@@ -100,7 +100,7 @@ extension SavedContent {
             category: item.category,
             region: item.region,
             targetId: item.id,
-            targetSourceId: nil,
+            targetSourceId: item.sourceId,
             targetSourceUrl: item.sourceUrl,
             targetCategory: item.category,
             targetKind: item.kind,
@@ -115,7 +115,7 @@ extension SavedContent {
         let key = computeKey(
             targetId: item.id,
             targetSourceUrl: item.sourceUrl,
-            targetSourceId: nil
+            targetSourceId: item.sourceId
         )
         return SavedContent(
             contentKey: key,
@@ -127,7 +127,7 @@ extension SavedContent {
             category: item.category,
             region: item.region,
             targetId: item.id,
-            targetSourceId: nil,
+            targetSourceId: item.sourceId,
             targetSourceUrl: item.sourceUrl,
             targetCategory: item.category,
             targetKind: nil,

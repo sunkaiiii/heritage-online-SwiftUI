@@ -98,6 +98,14 @@
 		B2000096 /* ReadingPathRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000096 /* ReadingPathRepository.swift */; };
 		B2000097 /* ReadingPathRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000097 /* ReadingPathRecorder.swift */; };
 		B20000AA0 /* DiscoveryDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A0 /* DiscoveryDtos.swift */; };
+		B10000F0 /* SearchDtos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDtos.swift; sourceTree = "<group>"; };
+		B10000F1 /* StoryDtos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDtos.swift; sourceTree = "<group>"; };
+		B10000F2 /* TaxonomyDtos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyDtos.swift; sourceTree = "<group>"; };
+		B10000F3 /* CompareDtos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareDtos.swift; sourceTree = "<group>"; };
+		B20000F3 /* SearchDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F0 /* SearchDtos.swift */; };
+		B20000F4 /* StoryDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F1 /* StoryDtos.swift */; };
+		B20000F5 /* TaxonomyDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F2 /* TaxonomyDtos.swift */; };
+		B20000F6 /* CompareDtos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000F3 /* CompareDtos.swift */; };
 		B20000AA1 /* DiscoverySectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A1 /* DiscoverySectionState.swift */; };
 		B20000AA2 /* DiscoveryUiState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A2 /* DiscoveryUiState.swift */; };
 		B20000AA3 /* DiscoveryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000A3 /* DiscoveryViewModel.swift */; };
@@ -477,6 +485,10 @@
 			children = (
 				B100001B /* CommonDtos.swift */,
 				B10000A0 /* DiscoveryDtos.swift */,
+				B10000F0 /* SearchDtos.swift */,
+				B10000F1 /* StoryDtos.swift */,
+				B10000F2 /* TaxonomyDtos.swift */,
+				B10000F3 /* CompareDtos.swift */,
 				B100001C /* ContentDtos.swift */,
 			);
 			path = DTOs;
@@ -947,6 +959,10 @@
 				B20000F0 /* DiscoveryDeepDiveViewModel.swift in Sources */,
 				B20000F1 /* DiscoveryDeepDiveView.swift in Sources */,
 				B20000F2 /* AppDependencies.swift in Sources */,
+				B20000F3 /* SearchDtos.swift in Sources */,
+				B20000F4 /* StoryDtos.swift in Sources */,
+				B20000F5 /* TaxonomyDtos.swift in Sources */,
+				B20000F6 /* CompareDtos.swift in Sources */,
 				B20000C0 /* SearchUiState.swift in Sources */,
 				B20000C1 /* SearchViewModel.swift in Sources */,
 				B20000C2 /* SearchView.swift in Sources */,

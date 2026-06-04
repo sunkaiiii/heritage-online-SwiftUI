@@ -79,3 +79,152 @@ struct ExploreTopicLinkDTO: Codable, Sendable {
         title = try container.decodeIfPresent(String.self, forKey: .title)
     }
 }
+
+// MARK: - 分页结果 DTO
+
+struct PagedResultDTO<T: Decodable & Sendable>: Decodable, Sendable {
+    let items: [T]
+    let page: Int
+    let pageSize: Int
+    let total: Int
+    let hasMore: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case items, page, pageSize, total, hasMore
+    }
+
+    init(items: [T], page: Int, pageSize: Int, total: Int, hasMore: Bool) {
+        self.items = items
+        self.page = page
+        self.pageSize = pageSize
+        self.total = total
+        self.hasMore = hasMore
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        items = try container.decodeIfPresent([T].self, forKey: .items) ?? []
+        page = try container.decodeIfPresent(Int.self, forKey: .page) ?? 1
+        pageSize = try container.decodeIfPresent(Int.self, forKey: .pageSize) ?? 20
+        total = try container.decodeIfPresent(Int.self, forKey: .total) ?? 0
+        hasMore = try container.decodeIfPresent(Bool.self, forKey: .hasMore) ?? false
+    }
+}
+
+// MARK: - 首页 DTO
+
+struct HomeBannerDTO: Decodable, Sendable {
+    let id: String?
+    let sortOrder: Int?
+    let targetUrl: String?
+    let displayImage: MediaAssetDTO?
+    let mobileImage: MediaAssetDTO?
+    let desktopImage: MediaAssetDTO?
+}
+
+struct HomeFeedDTO: Decodable, Sendable {
+    let banners: [HomeBannerDTO]
+    let latestNews: [ArticleSummaryDTO]
+    let latestSpecialTopics: [ArticleSummaryDTO]
+    let latestForumArticles: [ArticleSummaryDTO]
+    let featuredDirectoryItems: [DirectoryItemSummaryDTO]
+    let featuredInheritors: [InheritorSummaryDTO]
+    let summary: HomeFeedSummaryDTO?
+
+    enum CodingKeys: String, CodingKey {
+        case banners, latestNews, latestSpecialTopics, latestForumArticles
+        case featuredDirectoryItems, featuredInheritors, summary
+    }
+
+    init(banners: [HomeBannerDTO], latestNews: [ArticleSummaryDTO], latestSpecialTopics: [ArticleSummaryDTO], latestForumArticles: [ArticleSummaryDTO], featuredDirectoryItems: [DirectoryItemSummaryDTO], featuredInheritors: [InheritorSummaryDTO], summary: HomeFeedSummaryDTO?) {
+        self.banners = banners
+        self.latestNews = latestNews
+        self.latestSpecialTopics = latestSpecialTopics
+        self.latestForumArticles = latestForumArticles
+        self.featuredDirectoryItems = featuredDirectoryItems
+        self.featuredInheritors = featuredInheritors
+        self.summary = summary
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        banners = try container.decodeIfPresent([HomeBannerDTO].self, forKey: .banners) ?? []
+        latestNews = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestNews) ?? []
+        latestSpecialTopics = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestSpecialTopics) ?? []
+        latestForumArticles = try container.decodeIfPresent([ArticleSummaryDTO].self, forKey: .latestForumArticles) ?? []
+        featuredDirectoryItems = try container.decodeIfPresent([DirectoryItemSummaryDTO].self, forKey: .featuredDirectoryItems) ?? []
+        featuredInheritors = try container.decodeIfPresent([InheritorSummaryDTO].self, forKey: .featuredInheritors) ?? []
+        summary = try container.decodeIfPresent(HomeFeedSummaryDTO.self, forKey: .summary)
+    }
+}
+
+// MARK: - 详情 Context DTO
+
+struct DetailContextDTO: Decodable, Sendable {
+    let related: [RelatedItemDTO]
+    let recommendations: [RelatedItemDTO]
+    let semanticRecommendations: [RelatedItemDTO]
+    let collections: [CollectionRefDTO]
+    let exploreTopics: [ExploreTopicRefDTO]
+    let graph: [GraphEdgeDTO]
+
+    enum CodingKeys: String, CodingKey {
+        case related, recommendations, semanticRecommendations, collections, exploreTopics, graph
+    }
+
+    init(related: [RelatedItemDTO], recommendations: [RelatedItemDTO], semanticRecommendations: [RelatedItemDTO], collections: [CollectionRefDTO], exploreTopics: [ExploreTopicRefDTO], graph: [GraphEdgeDTO]) {
+        self.related = related
+        self.recommendations = recommendations
+        self.semanticRecommendations = semanticRecommendations
+        self.collections = collections
+        self.exploreTopics = exploreTopics
+        self.graph = graph
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        related = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .related) ?? []
+        recommendations = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .recommendations) ?? []
+        semanticRecommendations = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .semanticRecommendations) ?? []
+        collections = try container.decodeIfPresent([CollectionRefDTO].self, forKey: .collections) ?? []
+        exploreTopics = try container.decodeIfPresent([ExploreTopicRefDTO].self, forKey: .exploreTopics) ?? []
+        graph = try container.decodeIfPresent([GraphEdgeDTO].self, forKey: .graph) ?? []
+    }
+}
+
+struct RelatedItemDTO: Decodable, Sendable {
+    let id: String?
+    let title: String?
+    let type: String?
+    let kind: String?
+    let category: String?
+    let summary: String?
+    let imageUrl: String?
+    let coverImage: MediaAssetDTO?
+    let sourceId: String?
+    let sourceUrl: String?
+}
+
+struct CollectionRefDTO: Decodable, Sendable {
+    let id: String?
+    let title: String?
+    let subtitle: String?
+    let type: String?
+}
+
+struct ExploreTopicRefDTO: Decodable, Sendable {
+    let type: String?
+    let key: String?
+    let title: String?
+}
+
+struct GraphEdgeDTO: Decodable, Sendable {
+    let fromId: String?
+    let fromType: String?
+    let fromTitle: String?
+    let toId: String?
+    let toType: String?
+    let toTitle: String?
+    let relation: String?
+}
+
