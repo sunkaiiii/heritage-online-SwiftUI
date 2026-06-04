@@ -16,6 +16,13 @@ struct ArticleDetailView: View {
     /// 查看原文错误提示
     @State private var showSourceError = false
 
+    /// 探索区子导航状态
+    @State private var navigateToExploreArticle: String?
+    @State private var navigateToExploreDirectory: String?
+    @State private var navigateToExploreInheritor: String?
+    @State private var navigateToExploreCollection: String?
+    @State private var navigateToExploreTopic: TopicNavigation?
+
     init(
         articleId: String? = nil,
         sourceId: String? = nil,
@@ -43,6 +50,14 @@ struct ArticleDetailView: View {
                     article: article,
                     isContentStale: viewModel.uiState.isContentStale,
                     isFavorite: viewModel.uiState.isFavorite,
+                    // 探索区状态
+                    digest: viewModel.uiState.digest,
+                    digestLoading: viewModel.uiState.digestLoading,
+                    digestError: viewModel.uiState.digestError,
+                    context: viewModel.uiState.context,
+                    contextLoading: viewModel.uiState.contextLoading,
+                    contextError: viewModel.uiState.contextError,
+                    blendedRecommendations: viewModel.uiState.blendedRecommendations,
                     onToggleFavorite: { Task { await viewModel.toggleFavorite() } },
                     onOpenSource: { url in
                         openSourceURL(url)
@@ -66,6 +81,11 @@ struct ArticleDetailView: View {
                                 toSourceId: toSourceId
                             )
                         }
+                    },
+                    onRetryContext: { viewModel.retryContext() },
+                    onRetryDigest: { viewModel.retryDigest() },
+                    onExploreTargetClick: { click in
+                        handleExploreTargetClick(click, from: article)
                     }
                 )
             }
@@ -117,6 +137,57 @@ struct ArticleDetailView: View {
             if showSourceError {
                 sourceErrorSnackbar
             }
+        }
+        // 探索区子导航
+        .navigationDestination(item: $navigateToExploreArticle) { id in
+            ArticleDetailView(articleId: id)
+        }
+        .navigationDestination(item: $navigateToExploreDirectory) { id in
+            DirectoryDetailView(itemId: id)
+        }
+        .navigationDestination(item: $navigateToExploreInheritor) { id in
+            InheritorDetailView(inheritorId: id)
+        }
+        .navigationDestination(item: $navigateToExploreCollection) { id in
+            CollectionDetailView(id: id)
+        }
+        .navigationDestination(item: $navigateToExploreTopic) { topic in
+            ExploreTopicView(type: topic.type, key: topic.key)
+        }
+    }
+
+    /// 处理探索区目标点击
+    private func handleExploreTargetClick(_ click: DetailExploreTargetClick, from article: ArticleDetailDTO) {
+        // 先记录阅读路径（异步，不阻塞导航）
+        if let toId = click.targetId, let toType = click.targetContentType {
+            Task {
+                await ReadingPathRecorder.shared.record(
+                    from: ReadingPathEvent.fromRef(article),
+                    toType: toType,
+                    toId: toId,
+                    toTitle: click.title ?? "",
+                    source: click.source,
+                    toCategory: click.category,
+                    toKind: click.kind,
+                    toSourceId: click.sourceId,
+                    toSourceUrl: click.sourceUrl,
+                    toImageUrl: click.imageUrl
+                )
+            }
+        }
+
+        // 立即导航
+        switch click.target {
+        case .article(let id):
+            navigateToExploreArticle = id
+        case .directoryItem(let id):
+            navigateToExploreDirectory = id
+        case .inheritor(let id):
+            navigateToExploreInheritor = id
+        case .collection(let id):
+            navigateToExploreCollection = id
+        case .topic(let type, let key):
+            navigateToExploreTopic = TopicNavigation(type: type, key: key)
         }
     }
 
@@ -194,11 +265,22 @@ private struct ArticleDetailContent: View {
     let article: ArticleDetailDTO
     let isContentStale: Bool
     let isFavorite: Bool
+    // 探索区状态
+    let digest: ContentDigestDTO?
+    let digestLoading: Bool
+    let digestError: AppError?
+    let context: DetailContextDTO?
+    let contextLoading: Bool
+    let contextError: AppError?
+    let blendedRecommendations: [BlendedRecommendationItemDTO]
     let onToggleFavorite: () -> Void
     let onOpenSource: (String) -> Void
     let onPreviewImage: ([String], Int) -> Void
     let onRefresh: () -> Void
     let onRecordReadingPath: (ReadingPathSource, String?, String?) -> Void
+    let onRetryContext: () -> Void
+    let onRetryDigest: () -> Void
+    let onExploreTargetClick: (DetailExploreTargetClick) -> Void
 
     /// 收集所有可预览图片 URL
     private var previewURLs: [String] {
@@ -266,6 +348,20 @@ private struct ArticleDetailContent: View {
                         }
                     }
                 }
+
+                // 底部探索区
+                DetailExploreSection(
+                    digest: digest,
+                    digestLoading: digestLoading,
+                    digestError: digestError,
+                    onDigestRetry: onRetryDigest,
+                    blendedRecommendations: blendedRecommendations,
+                    context: context,
+                    contextLoading: contextLoading,
+                    contextError: contextError,
+                    onContextRetry: onRetryContext,
+                    onExploreTargetClick: onExploreTargetClick
+                )
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 18)
@@ -293,6 +389,14 @@ private struct ArticleDetailContent: View {
         .background(colorScheme.tertiaryContainer)
         .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
     }
+}
+
+// MARK: - Topic Navigation Helper
+
+/// 主题导航辅助结构体（Hashable）
+struct TopicNavigation: Hashable {
+    let type: String
+    let key: String
 }
 
 // MARK: - 文章 Hero 区

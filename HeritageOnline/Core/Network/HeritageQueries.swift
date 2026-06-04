@@ -199,6 +199,16 @@ enum TaxonomyRegionSort: String, Sendable {
     var wireName: String { rawValue }
 }
 
+/// 对比类型枚举
+enum CompareType: String, Sendable {
+    case region
+    case category
+    case kind
+
+    /// wire value
+    var wireName: String { rawValue }
+}
+
 /// 发现随便看看查询参数
 struct DiscoverySerendipityQuery: Sendable {
     let type: SearchResultType

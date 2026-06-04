@@ -300,3 +300,57 @@
 "readingPathSource.semanticRecommendation" = "Similar";
 "readingPathSource.graph" = "Graph";
 "readingPathSource.list" = "List";
+
+/* Detail Explore Section */
+"detail.explore.title" = "Continue Exploring";
+"detail.explore.subtitle" = "Recommendations and connections based on current content";
+
+/* Digest */
+"digest.title" = "Content Digest";
+"digest.readingTime %lld" = "Estimated reading time: %lld min";
+"digest.highlights" = "Highlights";
+"digest.keyFacts" = "Key Facts";
+"digest.keywords" = "Keywords";
+"digest.showMore" = "Show more";
+"digest.showLess" = "Show less";
+
+/* Blended Recommendations */
+"blended.title" = "Blended Recommendations";
+"blended.subtitle" = "Mixed recommendations based on rules, semantics, and content connections";
+"blended.reasons" = "Recommendation reasons";
+"blended.showMoreReasons" = "Show more reasons";
+"blended.score" = "Recommendation score";
+
+/* Taxonomy */
+"taxonomy.tab.categories" = "Categories";
+"taxonomy.tab.regions" = "Regions";
+"taxonomy.tab.kinds" = "Kinds";
+"taxonomy.topRegions" = "Top Regions";
+"taxonomy.topCategories" = "Top Categories";
+"taxonomy.relatedCategories" = "Related Categories";
+"taxonomy.relatedRegions" = "Related Regions";
+"taxonomy.viewStory" = "View Story";
+"taxonomy.compare" = "Compare";
+
+/* Stories */
+"stories.byRegion" = "By Region";
+"stories.byCategory" = "By Category";
+"stories.byYear" = "By Year";
+
+/* Compare */
+"compare.start" = "Start Compare";
+"compare.left" = "Left";
+"compare.right" = "Right";
+"compare.leftPlaceholder" = "Enter left name";
+"compare.rightPlaceholder" = "Enter right name";
+"compare.selectKind" = "Select kind";
+"compare.summary" = "Summary";
+"compare.sharedCategories" = "Shared Categories";
+"compare.sharedRegions" = "Shared Regions";
+"compare.uniqueLeft %@" = "%@ Only";
+"compare.uniqueRight %@" = "%@ Only";
+"compare.featuredLeft %@" = "%@ Featured";
+"compare.featuredRight %@" = "%@ Featured";
+"compare.error.empty" = "Both inputs are required";
+"compare.error.same" = "Both inputs must be different";
+"compare.error.invalidKind" = "Please enter a valid kind";

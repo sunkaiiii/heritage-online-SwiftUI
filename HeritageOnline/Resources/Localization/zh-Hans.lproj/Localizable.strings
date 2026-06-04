@@ -300,3 +300,57 @@
 "readingPathSource.semanticRecommendation" = "相似";
 "readingPathSource.graph" = "图谱";
 "readingPathSource.list" = "列表";
+
+/* Detail Explore Section */
+"detail.explore.title" = "继续探索";
+"detail.explore.subtitle" = "基于当前内容的推荐和关联";
+
+/* Digest */
+"digest.title" = "内容速览";
+"digest.readingTime %lld" = "阅读时间约 %lld 分钟";
+"digest.highlights" = "要点";
+"digest.keyFacts" = "关键信息";
+"digest.keywords" = "关键词";
+"digest.showMore" = "展开更多";
+"digest.showLess" = "收起";
+
+/* Blended Recommendations */
+"blended.title" = "综合推荐";
+"blended.subtitle" = "基于规则、语义和内容关联的混合推荐";
+"blended.reasons" = "推荐理由";
+"blended.showMoreReasons" = "查看更多理由";
+"blended.score" = "推荐分数";
+
+/* Taxonomy */
+"taxonomy.tab.categories" = "分类";
+"taxonomy.tab.regions" = "地区";
+"taxonomy.tab.kinds" = "种类";
+"taxonomy.topRegions" = "热门地区";
+"taxonomy.topCategories" = "热门分类";
+"taxonomy.relatedCategories" = "相关分类";
+"taxonomy.relatedRegions" = "相关地区";
+"taxonomy.viewStory" = "查看故事";
+"taxonomy.compare" = "发起对比";
+
+/* Stories */
+"stories.byRegion" = "按地区阅读";
+"stories.byCategory" = "按分类阅读";
+"stories.byYear" = "按年份阅读";
+
+/* Compare */
+"compare.start" = "开始对比";
+"compare.left" = "左侧";
+"compare.right" = "右侧";
+"compare.leftPlaceholder" = "输入左侧名称";
+"compare.rightPlaceholder" = "输入右侧名称";
+"compare.selectKind" = "选择种类";
+"compare.summary" = "对比摘要";
+"compare.sharedCategories" = "共同分类";
+"compare.sharedRegions" = "共同地区";
+"compare.uniqueLeft %@" = "%@ 独有";
+"compare.uniqueRight %@" = "%@ 独有";
+"compare.featuredLeft %@" = "%@ 精选";
+"compare.featuredRight %@" = "%@ 精选";
+"compare.error.empty" = "两侧输入不能为空";
+"compare.error.same" = "两侧输入不能相同";
+"compare.error.invalidKind" = "请输入有效的种类";

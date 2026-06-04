@@ -118,6 +118,20 @@
 		B20000D9 /* RegionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000D9 /* RegionDetailView.swift */; };
 		B20000DA /* CollectionDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DA /* CollectionDetailViewModel.swift */; };
 		B20000DB /* CollectionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DB /* CollectionDetailView.swift */; };
+		B20000DC /* DigestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DC /* DigestCard.swift */; };
+		B20000DD /* BlendedRecommendationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DD /* BlendedRecommendationCard.swift */; };
+		B20000DE /* DetailContextSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DE /* DetailContextSection.swift */; };
+		B20000DF /* DetailExploreSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000DF /* DetailExploreSection.swift */; };
+		B20000E0 /* TaxonomyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E0 /* TaxonomyViewModel.swift */; };
+		B20000E1 /* TaxonomyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E1 /* TaxonomyView.swift */; };
+		B20000E2 /* TaxonomyDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E2 /* TaxonomyDetailViewModel.swift */; };
+		B20000E3 /* TaxonomyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E3 /* TaxonomyDetailView.swift */; };
+		B20000E4 /* StoriesIndexViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E4 /* StoriesIndexViewModel.swift */; };
+		B20000E5 /* StoriesIndexView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E5 /* StoriesIndexView.swift */; };
+		B20000E6 /* StoryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E6 /* StoryDetailViewModel.swift */; };
+		B20000E7 /* StoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E7 /* StoryDetailView.swift */; };
+		B20000E8 /* CompareViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E8 /* CompareViewModel.swift */; };
+		B20000E9 /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000E9 /* CompareView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -254,6 +268,20 @@
 		B10000D9 /* RegionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionDetailView.swift; sourceTree = "<group>"; };
 		B10000DA /* CollectionDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailViewModel.swift; sourceTree = "<group>"; };
 		B10000DB /* CollectionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetailView.swift; sourceTree = "<group>"; };
+		B10000DC /* DigestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestCard.swift; sourceTree = "<group>"; };
+		B10000DD /* BlendedRecommendationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlendedRecommendationCard.swift; sourceTree = "<group>"; };
+		B10000DE /* DetailContextSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailContextSection.swift; sourceTree = "<group>"; };
+		B10000DF /* DetailExploreSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailExploreSection.swift; sourceTree = "<group>"; };
+		B10000E0 /* TaxonomyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyViewModel.swift; sourceTree = "<group>"; };
+		B10000E1 /* TaxonomyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyView.swift; sourceTree = "<group>"; };
+		B10000E2 /* TaxonomyDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyDetailViewModel.swift; sourceTree = "<group>"; };
+		B10000E3 /* TaxonomyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyDetailView.swift; sourceTree = "<group>"; };
+		B10000E4 /* StoriesIndexViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesIndexViewModel.swift; sourceTree = "<group>"; };
+		B10000E5 /* StoriesIndexView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoriesIndexView.swift; sourceTree = "<group>"; };
+		B10000E6 /* StoryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailViewModel.swift; sourceTree = "<group>"; };
+		B10000E7 /* StoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDetailView.swift; sourceTree = "<group>"; };
+		B10000E8 /* CompareViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViewModel.swift; sourceTree = "<group>"; };
+		B10000E9 /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -382,6 +410,9 @@
 				A500001D /* Timeline */,
 				A500001E /* Regions */,
 				B3000031 /* Collections */,
+				B3000032 /* Taxonomy */,
+				B3000033 /* Stories */,
+				B3000034 /* Compare */,
 				A5000013 /* Search */,
 				A5000014 /* My */,
 				A5000015 /* Settings */,
@@ -574,6 +605,37 @@
 			path = Collections;
 			sourceTree = "<group>";
 		};
+		B3000032 /* Taxonomy */ = {
+			isa = PBXGroup;
+			children = (
+				B10000E0 /* TaxonomyViewModel.swift */,
+				B10000E1 /* TaxonomyView.swift */,
+				B10000E2 /* TaxonomyDetailViewModel.swift */,
+				B10000E3 /* TaxonomyDetailView.swift */,
+			);
+			path = Taxonomy;
+			sourceTree = "<group>";
+		};
+		B3000033 /* Stories */ = {
+			isa = PBXGroup;
+			children = (
+				B10000E4 /* StoriesIndexViewModel.swift */,
+				B10000E5 /* StoriesIndexView.swift */,
+				B10000E6 /* StoryDetailViewModel.swift */,
+				B10000E7 /* StoryDetailView.swift */,
+			);
+			path = Stories;
+			sourceTree = "<group>";
+		};
+		B3000034 /* Compare */ = {
+			isa = PBXGroup;
+			children = (
+				B10000E8 /* CompareViewModel.swift */,
+				B10000E9 /* CompareView.swift */,
+			);
+			path = Compare;
+			sourceTree = "<group>";
+		};
 		A5000013 /* Search */ = {
 			isa = PBXGroup;
 			children = (
@@ -637,6 +699,10 @@
 				B1000071 /* DetailContentBlockView.swift */,
 				B1000074 /* DirectoryReferenceCard.swift */,
 				B10000A5 /* DiscoveryItemCard.swift */,
+				B10000DC /* DigestCard.swift */,
+				B10000DD /* BlendedRecommendationCard.swift */,
+				B10000DE /* DetailContextSection.swift */,
+				B10000DF /* DetailExploreSection.swift */,
 
 			);
 			path = Components;
@@ -884,6 +950,20 @@
 				B20000D9 /* RegionDetailView.swift in Sources */,
 				B20000DA /* CollectionDetailViewModel.swift in Sources */,
 				B20000DB /* CollectionDetailView.swift in Sources */,
+				B20000DC /* DigestCard.swift in Sources */,
+				B20000DD /* BlendedRecommendationCard.swift in Sources */,
+				B20000DE /* DetailContextSection.swift in Sources */,
+				B20000DF /* DetailExploreSection.swift in Sources */,
+				B20000E0 /* TaxonomyViewModel.swift in Sources */,
+				B20000E1 /* TaxonomyView.swift in Sources */,
+				B20000E2 /* TaxonomyDetailViewModel.swift in Sources */,
+				B20000E3 /* TaxonomyDetailView.swift in Sources */,
+				B20000E4 /* StoriesIndexViewModel.swift in Sources */,
+				B20000E5 /* StoriesIndexView.swift in Sources */,
+				B20000E6 /* StoryDetailViewModel.swift in Sources */,
+				B20000E7 /* StoryDetailView.swift in Sources */,
+				B20000E8 /* CompareViewModel.swift in Sources */,
+				B20000E9 /* CompareView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

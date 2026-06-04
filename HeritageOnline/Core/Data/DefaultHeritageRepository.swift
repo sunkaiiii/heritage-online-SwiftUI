@@ -177,6 +177,76 @@ final class DefaultHeritageRepository: HeritageRepository {
         try await apiClient.getTopicCollection(type: type, key: key)
     }
 
+    // MARK: - Digest
+
+    func articleDigest(id: String) async throws -> ContentDigestDTO {
+        try await apiClient.getArticleDigest(id: id)
+    }
+
+    func directoryItemDigest(id: String) async throws -> ContentDigestDTO {
+        try await apiClient.getDirectoryItemDigest(id: id)
+    }
+
+    func inheritorDigest(id: String) async throws -> ContentDigestDTO {
+        try await apiClient.getInheritorDigest(id: id)
+    }
+
+    // MARK: - 综合推荐
+
+    func blendedRecommendations(query: BlendedRecommendationQuery) async throws -> BlendedRecommendationResponseDTO {
+        try await apiClient.getBlendedRecommendations(query: query)
+    }
+
+    // MARK: - 数据故事
+
+    func regionStory(region: String) async throws -> DataStoryDTO {
+        try await apiClient.getRegionStory(region: region)
+    }
+
+    func categoryStory(category: String) async throws -> DataStoryDTO {
+        try await apiClient.getCategoryStory(category: category)
+    }
+
+    func yearStory(year: Int) async throws -> DataStoryDTO {
+        try await apiClient.getYearStory(year: year)
+    }
+
+    // MARK: - 主题库
+
+    func taxonomyCategories(limit: Int = 50) async throws -> TaxonomyIndexDTO<TaxonomyTopicDTO> {
+        try await apiClient.getTaxonomyCategories(limit: limit)
+    }
+
+    func taxonomyRegions(limit: Int = 50, sort: TaxonomyRegionSort = .total) async throws -> TaxonomyIndexDTO<TaxonomyTopicDTO> {
+        try await apiClient.getTaxonomyRegions(limit: limit, sort: sort)
+    }
+
+    func taxonomyKinds() async throws -> TaxonomyIndexDTO<TaxonomyKindDTO> {
+        try await apiClient.getTaxonomyKinds()
+    }
+
+    func taxonomyCategoryDetail(category: String, limit: Int = 6) async throws -> TaxonomyCategoryDetailDTO {
+        try await apiClient.getTaxonomyCategoryDetail(category: category, limit: limit)
+    }
+
+    func taxonomyRegionDetail(region: String, limit: Int = 6) async throws -> TaxonomyRegionDetailDTO {
+        try await apiClient.getTaxonomyRegionDetail(region: region, limit: limit)
+    }
+
+    // MARK: - 对比
+
+    func compareRegions(left: String, right: String, limit: Int = 6) async throws -> CompareResultDTO {
+        try await apiClient.compareRegions(left: left, right: right, limit: limit)
+    }
+
+    func compareCategories(left: String, right: String, limit: Int = 6) async throws -> CompareResultDTO {
+        try await apiClient.compareCategories(left: left, right: right, limit: limit)
+    }
+
+    func compareKinds(left: DirectoryItemKind, right: DirectoryItemKind, limit: Int = 6) async throws -> CompareResultDTO {
+        try await apiClient.compareKinds(left: left, right: right, limit: limit)
+    }
+
     // MARK: - Lookup（详情查找）
 
     func article(lookup: ArticleDetailLookup) async throws -> ArticleDetailDTO {

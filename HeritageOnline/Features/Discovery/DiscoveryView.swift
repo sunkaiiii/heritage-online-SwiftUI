@@ -134,10 +134,10 @@ struct DiscoveryView: View {
             TimelineView()
         }
         .navigationDestination(isPresented: $navigateToTaxonomy) {
-            PlaceholderDetailView(titleKey: "page.taxonomy")
+            TaxonomyView()
         }
         .navigationDestination(isPresented: $navigateToStories) {
-            PlaceholderDetailView(titleKey: "page.stories")
+            StoriesIndexView()
         }
         .navigationDestination(item: $navigateToDeepDive) { item in
             PlaceholderDetailView(titleKey: "discovery.deepDive")

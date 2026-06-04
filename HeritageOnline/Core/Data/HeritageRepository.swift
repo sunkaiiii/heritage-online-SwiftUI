@@ -189,6 +189,61 @@ protocol HeritageRepository: Sendable {
     /// 获取主题合集
     func topicCollection(type: String, key: String) async throws -> CollectionDTO
 
+    // MARK: - Digest
+
+    /// 获取文章 Digest
+    func articleDigest(id: String) async throws -> ContentDigestDTO
+
+    /// 获取名录 Digest
+    func directoryItemDigest(id: String) async throws -> ContentDigestDTO
+
+    /// 获取传承人 Digest
+    func inheritorDigest(id: String) async throws -> ContentDigestDTO
+
+    // MARK: - 综合推荐
+
+    /// 获取综合推荐
+    func blendedRecommendations(query: BlendedRecommendationQuery) async throws -> BlendedRecommendationResponseDTO
+
+    // MARK: - 数据故事
+
+    /// 获取地区故事
+    func regionStory(region: String) async throws -> DataStoryDTO
+
+    /// 获取分类故事
+    func categoryStory(category: String) async throws -> DataStoryDTO
+
+    /// 获取年份故事
+    func yearStory(year: Int) async throws -> DataStoryDTO
+
+    // MARK: - 主题库
+
+    /// 获取分类索引
+    func taxonomyCategories(limit: Int) async throws -> TaxonomyIndexDTO<TaxonomyTopicDTO>
+
+    /// 获取地区索引
+    func taxonomyRegions(limit: Int, sort: TaxonomyRegionSort) async throws -> TaxonomyIndexDTO<TaxonomyTopicDTO>
+
+    /// 获取种类索引
+    func taxonomyKinds() async throws -> TaxonomyIndexDTO<TaxonomyKindDTO>
+
+    /// 获取分类详情
+    func taxonomyCategoryDetail(category: String, limit: Int) async throws -> TaxonomyCategoryDetailDTO
+
+    /// 获取地区详情
+    func taxonomyRegionDetail(region: String, limit: Int) async throws -> TaxonomyRegionDetailDTO
+
+    // MARK: - 对比
+
+    /// 地区对比
+    func compareRegions(left: String, right: String, limit: Int) async throws -> CompareResultDTO
+
+    /// 分类对比
+    func compareCategories(left: String, right: String, limit: Int) async throws -> CompareResultDTO
+
+    /// 种类对比
+    func compareKinds(left: DirectoryItemKind, right: DirectoryItemKind, limit: Int) async throws -> CompareResultDTO
+
     // MARK: - Lookup（详情查找）
 
     /// 根据 lookup 参数获取文章详情

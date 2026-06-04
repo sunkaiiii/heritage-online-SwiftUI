@@ -12,6 +12,13 @@ struct DirectoryDetailView: View {
     @State private var previewIndex = 0
     @State private var showSourceError = false
 
+    /// 探索区子导航状态
+    @State private var navigateToExploreArticle: String?
+    @State private var navigateToExploreDirectory: String?
+    @State private var navigateToExploreInheritor: String?
+    @State private var navigateToExploreCollection: String?
+    @State private var navigateToExploreTopic: TopicNavigation?
+
     init(
         itemId: String? = nil,
         sourceId: String? = nil,
@@ -37,6 +44,13 @@ struct DirectoryDetailView: View {
                     item: item,
                     isContentStale: viewModel.uiState.isContentStale,
                     isFavorite: viewModel.uiState.isFavorite,
+                    digest: viewModel.uiState.digest,
+                    digestLoading: viewModel.uiState.digestLoading,
+                    digestError: viewModel.uiState.digestError,
+                    context: viewModel.uiState.context,
+                    contextLoading: viewModel.uiState.contextLoading,
+                    contextError: viewModel.uiState.contextError,
+                    blendedRecommendations: viewModel.uiState.blendedRecommendations,
                     onToggleFavorite: { Task { await viewModel.toggleFavorite() } },
                     onOpenSource: { openSourceURL($0) },
                     onPreviewImage: { urls, index in
@@ -44,7 +58,12 @@ struct DirectoryDetailView: View {
                         previewIndex = index
                         showImagePreview = true
                     },
-                    onRefresh: { Task { await viewModel.refresh() } }
+                    onRefresh: { Task { await viewModel.refresh() } },
+                    onRetryContext: { viewModel.retryContext() },
+                    onRetryDigest: { viewModel.retryDigest() },
+                    onExploreTargetClick: { click in
+                        handleExploreTargetClick(click, from: item)
+                    }
                 )
             }
         }
@@ -80,6 +99,49 @@ struct DirectoryDetailView: View {
             if showSourceError {
                 sourceErrorSnackbar
             }
+        }
+        .navigationDestination(item: $navigateToExploreArticle) { id in
+            ArticleDetailView(articleId: id)
+        }
+        .navigationDestination(item: $navigateToExploreDirectory) { id in
+            DirectoryDetailView(itemId: id)
+        }
+        .navigationDestination(item: $navigateToExploreInheritor) { id in
+            InheritorDetailView(inheritorId: id)
+        }
+        .navigationDestination(item: $navigateToExploreCollection) { id in
+            CollectionDetailView(id: id)
+        }
+        .navigationDestination(item: $navigateToExploreTopic) { topic in
+            ExploreTopicView(type: topic.type, key: topic.key)
+        }
+    }
+
+    /// 处理探索区目标点击
+    private func handleExploreTargetClick(_ click: DetailExploreTargetClick, from item: DirectoryItemDetailDTO) {
+        if let toId = click.targetId, let toType = click.targetContentType {
+            Task {
+                await ReadingPathRecorder.shared.record(
+                    from: ReadingPathEvent.fromRef(item),
+                    toType: toType,
+                    toId: toId,
+                    toTitle: click.title ?? "",
+                    source: click.source,
+                    toCategory: click.category,
+                    toKind: click.kind,
+                    toSourceId: click.sourceId,
+                    toSourceUrl: click.sourceUrl,
+                    toImageUrl: click.imageUrl
+                )
+            }
+        }
+
+        switch click.target {
+        case .article(let id): navigateToExploreArticle = id
+        case .directoryItem(let id): navigateToExploreDirectory = id
+        case .inheritor(let id): navigateToExploreInheritor = id
+        case .collection(let id): navigateToExploreCollection = id
+        case .topic(let type, let key): navigateToExploreTopic = TopicNavigation(type: type, key: key)
         }
     }
 
@@ -123,10 +185,21 @@ private struct DirectoryDetailContent: View {
     let item: DirectoryItemDetailDTO
     let isContentStale: Bool
     let isFavorite: Bool
+    // 探索区状态
+    let digest: ContentDigestDTO?
+    let digestLoading: Bool
+    let digestError: AppError?
+    let context: DetailContextDTO?
+    let contextLoading: Bool
+    let contextError: AppError?
+    let blendedRecommendations: [BlendedRecommendationItemDTO]
     let onToggleFavorite: () -> Void
     let onOpenSource: (String) -> Void
     let onPreviewImage: ([String], Int) -> Void
     let onRefresh: () -> Void
+    let onRetryContext: () -> Void
+    let onRetryDigest: () -> Void
+    let onExploreTargetClick: (DetailExploreTargetClick) -> Void
 
     /// 收集所有可预览图片 URL（封面 + 图库 + 内容块图片）
     private var previewURLs: [String] {
@@ -214,6 +287,20 @@ private struct DirectoryDetailContent: View {
                     title: String(localized: "directoryDetail.relatedDocuments"),
                     references: item.relatedDocuments,
                     isNavigable: false
+                )
+
+                // 底部探索区
+                DetailExploreSection(
+                    digest: digest,
+                    digestLoading: digestLoading,
+                    digestError: digestError,
+                    onDigestRetry: onRetryDigest,
+                    blendedRecommendations: blendedRecommendations,
+                    context: context,
+                    contextLoading: contextLoading,
+                    contextError: contextError,
+                    onContextRetry: onRetryContext,
+                    onExploreTargetClick: onExploreTargetClick
                 )
             }
             .padding(.horizontal, 20)
