@@ -18,7 +18,7 @@ final class StoriesIndexViewModel {
     let uiState = StoriesIndexUiState()
     private let repository: HeritageRepository
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.repository = repository
     }
 

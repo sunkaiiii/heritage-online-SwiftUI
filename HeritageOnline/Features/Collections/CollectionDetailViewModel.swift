@@ -15,7 +15,7 @@ final class CollectionDetailViewModel {
     private let repository: HeritageRepository
 
     /// 按 id 初始化（精选合集 / 固定合集）
-    init(id: String, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(id: String, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.id = id
         self.type = nil
         self.topicKey = nil
@@ -23,7 +23,7 @@ final class CollectionDetailViewModel {
     }
 
     /// 按 type + key 初始化（主题合集）
-    init(type: String, key: String, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(type: String, key: String, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.id = nil
         self.type = type
         self.topicKey = key

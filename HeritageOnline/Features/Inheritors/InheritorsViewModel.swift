@@ -42,7 +42,7 @@ final class InheritorsViewModel {
     private let debounceNanoseconds: UInt64
 
     init(
-        repository: HeritageRepository = DefaultHeritageRepository(),
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository,
         debounceNanoseconds: UInt64 = 350_000_000
     ) {
         self.repository = repository

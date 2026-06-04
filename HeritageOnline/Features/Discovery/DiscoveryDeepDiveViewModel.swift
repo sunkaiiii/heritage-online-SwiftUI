@@ -18,7 +18,7 @@ final class DiscoveryDeepDiveViewModel {
     init(
         seedType: SearchResultType,
         seedId: String,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository
     ) {
         self.seedType = seedType
         self.seedId = seedId

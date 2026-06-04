@@ -18,7 +18,7 @@ final class TaxonomyViewModel {
     let uiState = TaxonomyUiState()
     private let repository: HeritageRepository
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.repository = repository
     }
 

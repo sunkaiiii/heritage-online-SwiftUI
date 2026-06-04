@@ -12,7 +12,7 @@ final class LearningPathViewModel {
     private let id: String
     private let repository: HeritageRepository
 
-    init(id: String, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(id: String, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.id = id
         self.repository = repository
     }

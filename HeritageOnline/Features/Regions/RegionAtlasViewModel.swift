@@ -11,7 +11,7 @@ final class RegionAtlasViewModel {
 
     private let repository: HeritageRepository
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.repository = repository
     }
 

@@ -20,7 +20,10 @@ final class TimelineViewModel {
     private let repository: HeritageRepository
     private let pageSize = 20
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    /// 请求令牌，防止旧请求回写（快速切换年份/类型时）
+    private var loadToken: UUID = UUID()
+
+    init(repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.repository = repository
     }
 
@@ -62,9 +65,10 @@ final class TimelineViewModel {
         hasMore = false
         facets = []
         error = nil
+        loadToken = UUID()
 
         if year != nil {
-            loadItems(reset: true)
+            loadItems(reset: true, token: loadToken)
         }
     }
 
@@ -81,16 +85,17 @@ final class TimelineViewModel {
         page = 1
         hasMore = false
         error = nil
+        loadToken = UUID()
 
         if selectedYear != nil {
-            loadItems(reset: true)
+            loadItems(reset: true, token: loadToken)
         }
     }
 
     /// 加载更多
     func loadMore() {
         guard !isLoadingMore, hasMore, selectedYear != nil else { return }
-        loadItems(reset: false)
+        loadItems(reset: false, token: loadToken)
     }
 
     /// 清除错误
@@ -102,13 +107,14 @@ final class TimelineViewModel {
     func retryLoad() {
         guard selectedYear != nil else { return }
         error = nil
-        loadItems(reset: true)
+        loadToken = UUID()
+        loadItems(reset: true, token: loadToken)
     }
 
     // MARK: - 私有方法
 
     /// 加载内容
-    private func loadItems(reset: Bool) {
+    private func loadItems(reset: Bool, token: UUID) {
         let targetPage = reset ? 1 : page + 1
 
         if reset {
@@ -127,6 +133,9 @@ final class TimelineViewModel {
                 )
                 let response = try await repository.timelineV2(query: query)
 
+                // 防止旧请求回写
+                guard !Task.isCancelled, loadToken == token else { return }
+
                 if reset {
                     items = response.items
                 } else {
@@ -138,6 +147,7 @@ final class TimelineViewModel {
                 isLoading = false
                 isLoadingMore = false
             } catch {
+                guard !Task.isCancelled, loadToken == token else { return }
                 self.error = AppError.from(error)
                 isLoading = false
                 isLoadingMore = false

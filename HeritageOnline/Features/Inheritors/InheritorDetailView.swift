@@ -22,7 +22,7 @@ struct InheritorDetailView: View {
     init(
         inheritorId: String? = nil,
         sourceId: String? = nil,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository
     ) {
         _viewModel = State(initialValue: InheritorDetailViewModel(
             inheritorId: inheritorId,

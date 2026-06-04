@@ -36,12 +36,20 @@ final class ArticleDetailViewModel {
     private let lookup: ArticleDetailLookup
     private var currentSnapshot: SavedContent?
 
+    /// 请求 ID，用于防止旧请求覆盖新数据
+    private var requestId: UUID = UUID()
+
+    /// 运行中的附加区块 task
+    private var contextTask: Task<Void, Never>?
+    private var digestTask: Task<Void, Never>?
+    private var blendedTask: Task<Void, Never>?
+
     init(
         articleId: String? = nil,
         sourceId: String? = nil,
         sourceUrl: String? = nil,
         category: ArticleCategory = .news,
-        repository: HeritageRepository = DefaultHeritageRepository(),
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository,
         savedRepository: SavedContentRepository = DefaultSavedContentRepository.shared
     ) {
         self.repository = repository
@@ -55,11 +63,24 @@ final class ArticleDetailViewModel {
     }
 
     func refresh() async {
+        // 生成新请求 ID，旧的附加区块 task 结果将被丢弃
+        let id = UUID()
+        requestId = id
+
+        // 取消旧的附加区块 task
+        contextTask?.cancel()
+        digestTask?.cancel()
+        blendedTask?.cancel()
+
         uiState.isLoading = uiState.article == nil
         uiState.error = nil
 
         do {
             let article = try await repository.article(lookup: lookup)
+
+            // 检查请求是否仍然有效
+            guard requestId == id else { return }
+
             uiState.article = article
             uiState.isLoading = false
             uiState.isContentStale = false
@@ -74,11 +95,12 @@ final class ArticleDetailViewModel {
 
             // 加载探索区数据
             if let articleId = article.id {
-                loadContext(articleId: articleId)
-                loadDigest(articleId: articleId)
-                loadBlended(articleId: articleId)
+                loadContext(articleId: articleId, requestId: id)
+                loadDigest(articleId: articleId, requestId: id)
+                loadBlended(articleId: articleId, requestId: id)
             }
         } catch {
+            guard requestId == id else { return }
             if uiState.article != nil {
                 uiState.isContentStale = true
             } else {
@@ -106,58 +128,64 @@ final class ArticleDetailViewModel {
 
     func retryContext() {
         if let articleId = uiState.article?.id {
-            loadContext(articleId: articleId)
+            loadContext(articleId: articleId, requestId: requestId)
         }
     }
 
     func retryDigest() {
         if let articleId = uiState.article?.id {
-            loadDigest(articleId: articleId)
+            loadDigest(articleId: articleId, requestId: requestId)
         }
     }
 
-    private func loadContext(articleId: String) {
+    private func loadContext(articleId: String, requestId: UUID) {
         uiState.contextLoading = true
         uiState.contextError = nil
 
-        Task {
+        contextTask = Task {
             do {
                 let context = try await repository.articleContext(id: articleId)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.context = context
                 uiState.contextLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.contextError = AppError.from(error)
                 uiState.contextLoading = false
             }
         }
     }
 
-    private func loadDigest(articleId: String) {
+    private func loadDigest(articleId: String, requestId: UUID) {
         uiState.digestLoading = true
         uiState.digestError = nil
 
-        Task {
+        digestTask = Task {
             do {
                 let digest = try await repository.articleDigest(id: articleId)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.digest = digest
                 uiState.digestLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.digestError = AppError.from(error)
                 uiState.digestLoading = false
             }
         }
     }
 
-    private func loadBlended(articleId: String) {
+    private func loadBlended(articleId: String, requestId: UUID) {
         uiState.blendedLoading = true
 
-        Task {
+        blendedTask = Task {
             do {
                 let query = BlendedRecommendationQuery(type: .article, id: articleId)
                 let response = try await repository.blendedRecommendations(query: query)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.blendedRecommendations = response.items
                 uiState.blendedLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 // 综合推荐失败不显示错误，静默处理
                 uiState.blendedLoading = false
             }

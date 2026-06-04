@@ -28,7 +28,7 @@ struct ArticleDetailView: View {
         sourceId: String? = nil,
         sourceUrl: String? = nil,
         category: ArticleCategory = .news,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository
     ) {
         _viewModel = State(initialValue: ArticleDetailViewModel(
             articleId: articleId,

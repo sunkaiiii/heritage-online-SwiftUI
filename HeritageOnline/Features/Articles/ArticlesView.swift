@@ -20,7 +20,7 @@ struct ArticlesView: View {
     @State private var showImagePreview = false
 
     init(
-        repository: HeritageRepository = DefaultHeritageRepository(),
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository,
         onSettingsSelected: @escaping () -> Void
     ) {
         _viewModel = State(initialValue: ArticlesViewModel(repository: repository))

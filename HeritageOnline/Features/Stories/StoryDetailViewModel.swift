@@ -19,7 +19,7 @@ final class StoryDetailViewModel {
     private let year: Int?
     private let repository: HeritageRepository
 
-    init(region: String? = nil, category: String? = nil, year: Int? = nil, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(region: String? = nil, category: String? = nil, year: Int? = nil, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.region = region
         self.category = category
         self.year = year

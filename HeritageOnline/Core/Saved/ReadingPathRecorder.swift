@@ -2,7 +2,8 @@ import Foundation
 
 /// 阅读路径记录器
 /// 用于详情页跨内容跳转时记录路径
-final class ReadingPathRecorder: @unchecked Sendable {
+@MainActor
+final class ReadingPathRecorder {
     static let shared = ReadingPathRecorder()
 
     private let repository: ReadingPathRepository

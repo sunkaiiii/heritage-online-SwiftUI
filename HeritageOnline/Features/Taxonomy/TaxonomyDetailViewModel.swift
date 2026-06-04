@@ -19,7 +19,7 @@ final class TaxonomyDetailViewModel {
     private let key: String
     private let repository: HeritageRepository
 
-    init(type: String, key: String, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(type: String, key: String, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.type = type
         self.key = key
         self.repository = repository

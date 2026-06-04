@@ -14,7 +14,9 @@ protocol ReadingPathRepository: Sendable {
 }
 
 /// ReadingPath Repository 默认实现
-final class DefaultReadingPathRepository: ReadingPathRepository, @unchecked Sendable {
+/// @MainActor 确保读写串行化，避免并发竞争
+@MainActor
+final class DefaultReadingPathRepository: ReadingPathRepository {
     static let shared = DefaultReadingPathRepository()
 
     private let storageKey = "reading_path_events"

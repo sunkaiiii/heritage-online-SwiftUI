@@ -23,7 +23,7 @@ struct DirectoryDetailView: View {
         itemId: String? = nil,
         sourceId: String? = nil,
         kind: DirectoryItemKind = .nationalProject,
-        repository: HeritageRepository = DefaultHeritageRepository()
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository
     ) {
         _viewModel = State(initialValue: DirectoryDetailViewModel(
             itemId: itemId,

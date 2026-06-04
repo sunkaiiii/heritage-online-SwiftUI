@@ -30,7 +30,9 @@ protocol SavedContentRepository: Sendable {
 
 /// SavedContent Repository 默认实现
 /// 使用 UserDefaults 存储（第一阶段，后续可迁移到 SwiftData/SQLite）
-final class DefaultSavedContentRepository: SavedContentRepository, @unchecked Sendable {
+/// @MainActor 确保读写串行化，避免并发竞争
+@MainActor
+final class DefaultSavedContentRepository: SavedContentRepository {
     static let shared = DefaultSavedContentRepository()
 
     private let favoritesKey = "saved_content_favorites"

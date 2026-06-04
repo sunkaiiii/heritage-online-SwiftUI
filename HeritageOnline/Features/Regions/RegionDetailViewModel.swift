@@ -12,7 +12,7 @@ final class RegionDetailViewModel {
     private let region: String
     private let repository: HeritageRepository
 
-    init(region: String, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(region: String, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.region = region
         self.repository = repository
     }

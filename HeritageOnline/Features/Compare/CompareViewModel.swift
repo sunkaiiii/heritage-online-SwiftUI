@@ -20,7 +20,7 @@ final class CompareViewModel {
     let uiState = CompareUiState()
     private let repository: HeritageRepository
 
-    init(initialType: String? = nil, initialLeft: String? = nil, initialRight: String? = nil, repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(initialType: String? = nil, initialLeft: String? = nil, initialRight: String? = nil, repository: HeritageRepository = AppDependencies.shared.heritageRepository) {
         self.repository = repository
         if let initialType, let type = CompareType(rawValue: initialType) {
             uiState.selectedType = type

@@ -36,11 +36,19 @@ final class DirectoryDetailViewModel {
     private let lookup: DirectoryDetailLookup
     private var currentSnapshot: SavedContent?
 
+    /// 请求 ID，用于防止旧请求覆盖新数据
+    private var requestId: UUID = UUID()
+
+    /// 运行中的附加区块 task
+    private var contextTask: Task<Void, Never>?
+    private var digestTask: Task<Void, Never>?
+    private var blendedTask: Task<Void, Never>?
+
     init(
         itemId: String? = nil,
         sourceId: String? = nil,
         kind: DirectoryItemKind = .nationalProject,
-        repository: HeritageRepository = DefaultHeritageRepository(),
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository,
         savedRepository: SavedContentRepository = DefaultSavedContentRepository.shared
     ) {
         self.repository = repository
@@ -53,11 +61,20 @@ final class DirectoryDetailViewModel {
     }
 
     func refresh() async {
+        let id = UUID()
+        requestId = id
+
+        contextTask?.cancel()
+        digestTask?.cancel()
+        blendedTask?.cancel()
+
         uiState.isLoading = uiState.item == nil
         uiState.error = nil
 
         do {
             let item = try await repository.directoryItem(lookup: lookup)
+            guard requestId == id else { return }
+
             uiState.item = item
             uiState.isLoading = false
             uiState.isContentStale = false
@@ -67,13 +84,13 @@ final class DirectoryDetailViewModel {
                 uiState.isFavorite = await savedRepository.isFavorite(key)
             }
 
-            // 加载探索区数据
             if let itemId = item.id {
-                loadContext(itemId: itemId)
-                loadDigest(itemId: itemId)
-                loadBlended(itemId: itemId)
+                loadContext(itemId: itemId, requestId: id)
+                loadDigest(itemId: itemId, requestId: id)
+                loadBlended(itemId: itemId, requestId: id)
             }
         } catch {
+            guard requestId == id else { return }
             if uiState.item != nil {
                 uiState.isContentStale = true
             } else {
@@ -101,58 +118,64 @@ final class DirectoryDetailViewModel {
 
     func retryContext() {
         if let itemId = uiState.item?.id {
-            loadContext(itemId: itemId)
+            loadContext(itemId: itemId, requestId: requestId)
         }
     }
 
     func retryDigest() {
         if let itemId = uiState.item?.id {
-            loadDigest(itemId: itemId)
+            loadDigest(itemId: itemId, requestId: requestId)
         }
     }
 
-    private func loadContext(itemId: String) {
+    private func loadContext(itemId: String, requestId: UUID) {
         uiState.contextLoading = true
         uiState.contextError = nil
 
-        Task {
+        contextTask = Task {
             do {
                 let context = try await repository.directoryItemContext(id: itemId)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.context = context
                 uiState.contextLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.contextError = AppError.from(error)
                 uiState.contextLoading = false
             }
         }
     }
 
-    private func loadDigest(itemId: String) {
+    private func loadDigest(itemId: String, requestId: UUID) {
         uiState.digestLoading = true
         uiState.digestError = nil
 
-        Task {
+        digestTask = Task {
             do {
                 let digest = try await repository.directoryItemDigest(id: itemId)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.digest = digest
                 uiState.digestLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.digestError = AppError.from(error)
                 uiState.digestLoading = false
             }
         }
     }
 
-    private func loadBlended(itemId: String) {
+    private func loadBlended(itemId: String, requestId: UUID) {
         uiState.blendedLoading = true
 
-        Task {
+        blendedTask = Task {
             do {
                 let query = BlendedRecommendationQuery(type: .directoryItem, id: itemId)
                 let response = try await repository.blendedRecommendations(query: query)
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.blendedRecommendations = response.items
                 uiState.blendedLoading = false
             } catch {
+                guard !Task.isCancelled, self.requestId == requestId else { return }
                 uiState.blendedLoading = false
             }
         }

@@ -12,12 +12,19 @@ final class SearchViewModel {
     private var searchTask: Task<Void, Never>?
     private var suggestionTask: Task<Void, Never>?
 
-    private let searchDebounceMs: UInt64 = 350
-    private let suggestionDebounceMs: UInt64 = 200
+    /// 防抖时长（毫秒），可注入以加速测试
+    private let searchDebounceMs: UInt64
+    private let suggestionDebounceMs: UInt64
     private let pageSize = 20
 
-    init(repository: HeritageRepository = DefaultHeritageRepository()) {
+    init(
+        repository: HeritageRepository = AppDependencies.shared.heritageRepository,
+        searchDebounceMs: UInt64 = 350,
+        suggestionDebounceMs: UInt64 = 200
+    ) {
         self.repository = repository
+        self.searchDebounceMs = searchDebounceMs
+        self.suggestionDebounceMs = suggestionDebounceMs
     }
 
     /// 更新查询文本
