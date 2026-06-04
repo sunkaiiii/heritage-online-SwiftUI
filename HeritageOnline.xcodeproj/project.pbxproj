@@ -93,6 +93,8 @@
 		B2000090 /* SavedContentRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000090 /* SavedContentRepositoryTests.swift */; };
 		B2000091 /* MyPageViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000091 /* MyPageViewModelTests.swift */; };
 		B2000092 /* SavedContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000092 /* SavedContentTests.swift */; };
+		B9000003 /* ReadingPathRecorderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9000001 /* ReadingPathRecorderTests.swift */; };
+		B9000004 /* ReadingPathRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9000002 /* ReadingPathRepositoryTests.swift */; };
 		B2000075 /* DateDisplayFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000075 /* DateDisplayFormatter.swift */; };
 		B2000095 /* ReadingPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000095 /* ReadingPath.swift */; };
 		B2000096 /* ReadingPathRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000096 /* ReadingPathRepository.swift */; };
@@ -260,6 +262,8 @@
 		B1000090 /* SavedContentRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentRepositoryTests.swift; sourceTree = "<group>"; };
 		B1000091 /* MyPageViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewModelTests.swift; sourceTree = "<group>"; };
 		B1000092 /* SavedContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedContentTests.swift; sourceTree = "<group>"; };
+		B9000001 /* ReadingPathRecorderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRecorderTests.swift; sourceTree = "<group>"; };
+		B9000002 /* ReadingPathRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepositoryTests.swift; sourceTree = "<group>"; };
 		B1000075 /* DateDisplayFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateDisplayFormatter.swift; sourceTree = "<group>"; };
 		B1000095 /* ReadingPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPath.swift; sourceTree = "<group>"; };
 		B1000096 /* ReadingPathRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPathRepository.swift; sourceTree = "<group>"; };
@@ -368,6 +372,8 @@
 				B1000073 /* ExternalURLValidatorTests.swift */,				B1000090 /* SavedContentRepositoryTests.swift */,
 				B1000091 /* MyPageViewModelTests.swift */,
 				B1000092 /* SavedContentTests.swift */,
+				B9000001 /* ReadingPathRecorderTests.swift */,
+				B9000002 /* ReadingPathRepositoryTests.swift */,
 
 
 			);
@@ -1025,6 +1031,8 @@
 				B2000090 /* SavedContentRepositoryTests.swift in Sources */,
 				B2000091 /* MyPageViewModelTests.swift in Sources */,
 				B2000092 /* SavedContentTests.swift in Sources */,
+				B9000003 /* ReadingPathRecorderTests.swift in Sources */,
+				B9000004 /* ReadingPathRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -81,6 +81,29 @@ final class SavedContentTests: XCTestCase {
         XCTAssertNil(snapshot.lastViewedAt)
     }
 
+    func testFromArticlePreservesSourceId() {
+        let article = ArticleDetailDTO(
+            id: "a1",
+            sourceId: "src-abc",
+            category: "news",
+            title: "测试文章",
+            summary: nil,
+            publishedAt: nil,
+            coverImage: nil,
+            sourceUrl: nil,
+            sourceName: nil,
+            author: nil,
+            editor: nil,
+            contentBlocks: [],
+            relatedArticles: []
+        )
+
+        let snapshot = SavedContent.fromArticle(article)
+
+        XCTAssertEqual(snapshot.targetSourceId, "src-abc")
+        XCTAssertEqual(snapshot.contentKey, "id:a1")
+    }
+
     // MARK: - fromDirectoryItem
 
     func testFromDirectoryItem() {
@@ -116,6 +139,36 @@ final class SavedContentTests: XCTestCase {
         XCTAssertEqual(snapshot.targetKind, "nationalProject")
     }
 
+    func testFromDirectoryItemPreservesSourceId() {
+        let item = DirectoryItemDetailDTO(
+            id: "d1",
+            sourceId: "dir-src-001",
+            kind: "nationalProject",
+            title: "测试名录",
+            summary: nil,
+            category: nil,
+            region: nil,
+            projectCode: nil,
+            batch: nil,
+            publishedYear: nil,
+            listType: nil,
+            nominationType: nil,
+            protectionUnit: nil,
+            coverImage: nil,
+            sourceUrl: nil,
+            gallery: [],
+            contentBlocks: [],
+            relatedProjects: [],
+            relatedInheritors: [],
+            relatedDocuments: []
+        )
+
+        let snapshot = SavedContent.fromDirectoryItem(item)
+
+        XCTAssertEqual(snapshot.targetSourceId, "dir-src-001")
+        XCTAssertEqual(snapshot.contentKey, "id:d1")
+    }
+
     // MARK: - fromInheritor
 
     func testFromInheritor() {
@@ -145,6 +198,33 @@ final class SavedContentTests: XCTestCase {
         XCTAssertEqual(snapshot.targetId, "i1")
         XCTAssertEqual(snapshot.subtitle, "京剧")
         XCTAssertEqual(snapshot.category, "传统戏剧")
+    }
+
+    func testFromInheritorPreservesSourceId() {
+        let inheritor = InheritorDetailDTO(
+            id: "i1",
+            sourceId: "inh-src-001",
+            name: "张三",
+            gender: nil,
+            birthDateText: nil,
+            ethnicity: nil,
+            category: nil,
+            projectCode: nil,
+            projectName: nil,
+            region: nil,
+            batch: nil,
+            description: nil,
+            coverImage: nil,
+            sourceUrl: nil,
+            contentBlocks: [],
+            relatedProjects: [],
+            relatedInheritors: []
+        )
+
+        let snapshot = SavedContent.fromInheritor(inheritor)
+
+        XCTAssertEqual(snapshot.targetSourceId, "inh-src-001")
+        XCTAssertEqual(snapshot.contentKey, "id:i1")
     }
 
     // MARK: - Identifiable
