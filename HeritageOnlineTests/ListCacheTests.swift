@@ -354,4 +354,70 @@ final class ListCacheTests: XCTestCase {
         await cache.clearArticles(queryKey: ArticleQuery(category: .news, page: 1, keywords: "北京").queryKey)
         await cache.clearArticles(queryKey: ArticleQuery(category: .news, page: 1, keywords: "上海").queryKey)
     }
+
+    // MARK: - 传承人列表 birthDateText 保留测试
+
+    /// InheritorSummaryDTO -> InheritorListCacheEntity -> InheritorSummaryDTO 后保留 birthDateText
+    func testInheritorSummaryRoundTripPreservesBirthDateText() {
+        let original = InheritorSummaryDTO(
+            id: "inh-bdt-1",
+            name: "测试传承人",
+            gender: "男",
+            birthDateText: "1950年",
+            ethnicity: "汉族",
+            category: "传统技艺",
+            projectCode: "I-1",
+            projectName: "测试项目",
+            region: "北京",
+            batch: "第一批",
+            description: "简介",
+            coverImage: nil,
+            sourceUrl: nil
+        )
+
+        let query = InheritorQuery(page: 1, pageSize: 20)
+        let entity = original.toListEntity(query: query, page: 1, positionInPage: 0)
+
+        // entity 应保存 birthDateText
+        XCTAssertEqual(entity.birthDateText, "1950年")
+
+        let restored = entity.toDTO()
+
+        // round-trip 后 birthDateText 不应丢失
+        XCTAssertEqual(restored.birthDateText, "1950年")
+    }
+
+    /// cacheInheritors 写入后，cachedInheritors 读取仍保留 birthDateText
+    func testCachedInheritorsPreserveBirthDateText() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-birthdatetext"
+        let query = InheritorQuery(page: 1, pageSize: 20)
+
+        let original = InheritorSummaryDTO(
+            id: "inh-bdt-cache-1",
+            name: "缓存传承人",
+            gender: "女",
+            birthDateText: "1965年3月",
+            ethnicity: "苗族",
+            category: "传统舞蹈",
+            projectCode: "III-1",
+            projectName: "测试项目",
+            region: "贵州",
+            batch: "第二批",
+            description: "传承人简介",
+            coverImage: nil,
+            sourceUrl: nil
+        )
+
+        let entity = original.toListEntity(query: query, page: 1, positionInPage: 0)
+        await cache.cacheInheritors([entity], queryKey: queryKey, loadType: .refresh)
+
+        let cached = await cache.cachedInheritors(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 1)
+        XCTAssertEqual(cached.first?.birthDateText, "1965年3月")
+        XCTAssertEqual(cached.first?.name, "缓存传承人")
+
+        // 清理
+        await cache.clearInheritors(queryKey: queryKey)
+    }
 }

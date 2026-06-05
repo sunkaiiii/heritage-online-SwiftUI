@@ -44,6 +44,7 @@ struct InheritorListCacheEntity: Codable, Sendable {
     let queryKey: String
     let name: String?
     let gender: String?
+    let birthDateText: String?
     let ethnicity: String?
     let category: String?
     let projectName: String?
