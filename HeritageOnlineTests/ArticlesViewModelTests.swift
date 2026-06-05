@@ -11,7 +11,7 @@ final class ArticlesViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = ArticlesViewModel(repository: mockRepository, debounceNanoseconds: 0)
+        viewModel = ArticlesViewModel(repository: mockRepository, listCache: NoOpListCacheRepository(), debounceNanoseconds: 0)
     }
 
     override func tearDown() {

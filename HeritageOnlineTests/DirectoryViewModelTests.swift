@@ -11,7 +11,7 @@ final class DirectoryViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = DirectoryViewModel(repository: mockRepository, debounceNanoseconds: 0)
+        viewModel = DirectoryViewModel(repository: mockRepository, listCache: NoOpListCacheRepository(), debounceNanoseconds: 0)
     }
 
     override func tearDown() {

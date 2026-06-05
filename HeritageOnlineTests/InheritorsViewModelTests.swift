@@ -11,7 +11,7 @@ final class InheritorsViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockRepository = MockHeritageRepository()
-        viewModel = InheritorsViewModel(repository: mockRepository, debounceNanoseconds: 0)
+        viewModel = InheritorsViewModel(repository: mockRepository, listCache: NoOpListCacheRepository(), debounceNanoseconds: 0)
     }
 
     override func tearDown() {

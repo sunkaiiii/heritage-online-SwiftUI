@@ -170,6 +170,19 @@
 		C2000007 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
 		C2000008 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
 		C2000009 /* ListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1000003 /* ListCacheRepository.swift */; };
+		D2000001 /* ImagePreviewUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000001 /* ImagePreviewUrlTests.swift */; };
+		D2000002 /* ContentLabelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000002 /* ContentLabelsTests.swift */; };
+		D2000003 /* DetailCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000003 /* DetailCacheTests.swift */; };
+		D2000004 /* ListCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000004 /* ListCacheTests.swift */; };
+		D2000005 /* MockListCacheRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000005 /* MockListCacheRepository.swift */; };
+		E2000001 /* ExploreTopicViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000001 /* ExploreTopicViewModelTests.swift */; };
+		E2000002 /* LearningPathViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000002 /* LearningPathViewModelTests.swift */; };
+		E2000003 /* RegionAtlasViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000003 /* RegionAtlasViewModelTests.swift */; };
+		E2000004 /* RegionDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000004 /* RegionDetailViewModelTests.swift */; };
+		E2000005 /* CollectionDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000005 /* CollectionDetailViewModelTests.swift */; };
+		E2000006 /* StoryDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000006 /* StoryDetailViewModelTests.swift */; };
+		E2000007 /* TaxonomyDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000007 /* TaxonomyDetailViewModelTests.swift */; };
+		E2000008 /* SettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000008 /* SettingsManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,6 +359,19 @@
 		C1000001 /* ListCacheEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheEntity.swift; path = HeritageOnline/Core/Cache/ListCacheEntity.swift; sourceTree = SOURCE_ROOT; };
 		C1000002 /* ListCacheMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheMapper.swift; path = HeritageOnline/Core/Cache/ListCacheMapper.swift; sourceTree = SOURCE_ROOT; };
 		C1000003 /* ListCacheRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheRepository.swift; path = HeritageOnline/Core/Cache/ListCacheRepository.swift; sourceTree = SOURCE_ROOT; };
+		D1000001 /* ImagePreviewUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImagePreviewUrlTests.swift; path = HeritageOnlineTests/ImagePreviewUrlTests.swift; sourceTree = SOURCE_ROOT; };
+		D1000002 /* ContentLabelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentLabelsTests.swift; path = HeritageOnlineTests/ContentLabelsTests.swift; sourceTree = SOURCE_ROOT; };
+		D1000003 /* DetailCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailCacheTests.swift; path = HeritageOnlineTests/DetailCacheTests.swift; sourceTree = SOURCE_ROOT; };
+		D1000004 /* ListCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListCacheTests.swift; path = HeritageOnlineTests/ListCacheTests.swift; sourceTree = SOURCE_ROOT; };
+		D1000005 /* MockListCacheRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockListCacheRepository.swift; path = HeritageOnlineTests/MockListCacheRepository.swift; sourceTree = SOURCE_ROOT; };
+		E1000001 /* ExploreTopicViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExploreTopicViewModelTests.swift; path = HeritageOnlineTests/ExploreTopicViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000002 /* LearningPathViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LearningPathViewModelTests.swift; path = HeritageOnlineTests/LearningPathViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000003 /* RegionAtlasViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RegionAtlasViewModelTests.swift; path = HeritageOnlineTests/RegionAtlasViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000004 /* RegionDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RegionDetailViewModelTests.swift; path = HeritageOnlineTests/RegionDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000005 /* CollectionDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CollectionDetailViewModelTests.swift; path = HeritageOnlineTests/CollectionDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000006 /* StoryDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoryDetailViewModelTests.swift; path = HeritageOnlineTests/StoryDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000007 /* TaxonomyDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TaxonomyDetailViewModelTests.swift; path = HeritageOnlineTests/TaxonomyDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
+		E1000008 /* SettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsManagerTests.swift; path = HeritageOnlineTests/SettingsManagerTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1110,6 +1136,15 @@
 				B800000C,
 				B800000E,
 				B8000010,
+				D2000005 /* MockListCacheRepository.swift in Sources */,
+				E2000001 /* ExploreTopicViewModelTests.swift in Sources */,
+				E2000002 /* LearningPathViewModelTests.swift in Sources */,
+				E2000003 /* RegionAtlasViewModelTests.swift in Sources */,
+				E2000004 /* RegionDetailViewModelTests.swift in Sources */,
+				E2000005 /* CollectionDetailViewModelTests.swift in Sources */,
+				E2000006 /* StoryDetailViewModelTests.swift in Sources */,
+				E2000007 /* TaxonomyDetailViewModelTests.swift in Sources */,
+				E2000008 /* SettingsManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

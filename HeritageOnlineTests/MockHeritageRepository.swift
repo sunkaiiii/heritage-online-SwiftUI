@@ -706,7 +706,7 @@ final class MockHeritageRepository: HeritageRepository, @unchecked Sendable {
 // MARK: - Mock DTO 工厂
 
 /// 用于创建没有默认 init 的 DTO mock 实例
-private enum MockDTOFactory {
+enum MockDTOFactory {
     static func contentDigestDTO() -> ContentDigestDTO {
         let json = """
         {"type":"article","id":"test","title":"Test Digest","quickRead":"Quick","highlights":[],"keyFacts":[],"keywords":[],"readingTimeMinutes":1}
@@ -768,5 +768,33 @@ private enum MockDTOFactory {
         {"left":{"directoryItemCount":0,"inheritorCount":0,"articleCount":0,"total":0,"topCategories":[],"topRegions":[]},"right":{"directoryItemCount":0,"inheritorCount":0,"articleCount":0,"total":0,"topCategories":[],"topRegions":[]},"summary":{},"sharedCategories":[],"leftUniqueCategories":[],"rightUniqueCategories":[],"sharedRegions":[],"leftUniqueRegions":[],"rightUniqueRegions":[],"leftFeaturedItems":[],"rightFeaturedItems":[]}
         """
         return try! JSONDecoder().decode(CompareResultDTO.self, from: json.data(using: .utf8)!)
+    }
+
+    static func exploreTopicV2DTO() -> ExploreTopicV2DTO {
+        let json = """
+        {"topic":{"type":"region","key":"beijing","title":"北京","subtitle":null},"stats":[],"sections":[],"relatedTopics":[],"timeline":[]}
+        """
+        return try! JSONDecoder().decode(ExploreTopicV2DTO.self, from: json.data(using: .utf8)!)
+    }
+
+    static func learningPathDetailDTO() -> LearningPathDetailDTO {
+        let json = """
+        {"id":"path-1","title":"Test Path","subtitle":null,"tags":[],"estimatedItemCount":0,"stepCount":0,"featuredItems":[],"steps":[],"relatedTopics":[]}
+        """
+        return try! JSONDecoder().decode(LearningPathDetailDTO.self, from: json.data(using: .utf8)!)
+    }
+
+    static func regionAtlasDTO() -> RegionAtlasDTO {
+        let json = """
+        {"totals":{"directoryItemCount":0,"inheritorCount":0,"regionCount":0},"regions":[]}
+        """
+        return try! JSONDecoder().decode(RegionAtlasDTO.self, from: json.data(using: .utf8)!)
+    }
+
+    static func collectionDTO() -> CollectionDTO {
+        let json = """
+        {"id":"test","title":"Test Collection","subtitle":null,"type":"mixed","tags":[],"items":[],"generatedAt":null}
+        """
+        return try! JSONDecoder().decode(CollectionDTO.self, from: json.data(using: .utf8)!)
     }
 }
