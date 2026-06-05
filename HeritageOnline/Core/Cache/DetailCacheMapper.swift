@@ -19,20 +19,23 @@ private func safeDecode<T: Decodable>(_ json: String?) -> T? {
 
 extension ArticleDetailDTO {
     /// 从 DTO 转换为缓存实体
+    /// 优先使用 DTO 自带的 sourceId/sourceUrl，再 fallback 到 lookup 参数
     func toCacheEntity(
         category: String,
         sourceId: String?,
         sourceUrl: String?
     ) -> ArticleDetailCacheEntity {
-        ArticleDetailCacheEntity(
-            id: id ?? sourceId ?? sourceUrl ?? UUID().uuidString,
-            sourceId: sourceId,
+        let resolvedSourceId = self.sourceId ?? sourceId
+        let resolvedSourceUrl = self.sourceUrl ?? sourceUrl
+        return ArticleDetailCacheEntity(
+            id: id ?? resolvedSourceId ?? resolvedSourceUrl ?? UUID().uuidString,
+            sourceId: resolvedSourceId,
             category: category,
             title: title,
             summary: summary,
             publishedAt: publishedAt,
             coverImageJson: coverImage.flatMap { try? JSONEncoder().encode($0) }.flatMap { String(data: $0, encoding: .utf8) },
-            sourceUrl: self.sourceUrl ?? sourceUrl,
+            sourceUrl: resolvedSourceUrl,
             sourceName: sourceName,
             author: author,
             editor: editor,
@@ -68,13 +71,15 @@ extension ArticleDetailCacheEntity {
 
 extension DirectoryItemDetailDTO {
     /// 从 DTO 转换为缓存实体
+    /// 优先使用 DTO 自带的 sourceId，再 fallback 到 lookup 参数
     func toCacheEntity(
         kind: String,
         sourceId: String?
     ) -> DirectoryDetailCacheEntity {
-        DirectoryDetailCacheEntity(
-            id: id ?? sourceId ?? sourceUrl ?? UUID().uuidString,
-            sourceId: sourceId,
+        let resolvedSourceId = self.sourceId ?? sourceId
+        return DirectoryDetailCacheEntity(
+            id: id ?? resolvedSourceId ?? sourceUrl ?? UUID().uuidString,
+            sourceId: resolvedSourceId,
             kind: kind,
             title: title,
             summary: summary,
@@ -130,12 +135,14 @@ extension DirectoryDetailCacheEntity {
 
 extension InheritorDetailDTO {
     /// 从 DTO 转换为缓存实体
+    /// 优先使用 DTO 自带的 sourceId，再 fallback 到 lookup 参数
     func toCacheEntity(
         sourceId: String?
     ) -> InheritorDetailCacheEntity {
-        InheritorDetailCacheEntity(
-            id: id ?? sourceId ?? sourceUrl ?? UUID().uuidString,
-            sourceId: sourceId,
+        let resolvedSourceId = self.sourceId ?? sourceId
+        return InheritorDetailCacheEntity(
+            id: id ?? resolvedSourceId ?? sourceUrl ?? UUID().uuidString,
+            sourceId: resolvedSourceId,
             name: name,
             gender: gender,
             birthDateText: birthDateText,

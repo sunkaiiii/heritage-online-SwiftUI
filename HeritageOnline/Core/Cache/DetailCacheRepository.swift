@@ -98,13 +98,13 @@ final class DefaultDetailCacheRepository: DetailCacheRepository {
         // 写入主缓存
         save(entity, to: articleCacheURL(id: entity.id))
 
-        // 写入索引
+        // 写入索引（使用 entity 最终解析后的字段，确保 DTO 自带的 sourceId/sourceUrl 也被索引）
         let index = CacheIndex(id: entity.id)
-        if let sourceId = lookup.sourceId {
-            save(index, to: articleIndexURL(sourceId: sourceId, category: lookup.category.rawValue))
+        if let sourceId = entity.sourceId, !sourceId.isEmpty {
+            save(index, to: articleIndexURL(sourceId: sourceId, category: entity.category))
         }
-        if let sourceUrl = lookup.sourceUrl {
-            save(index, to: articleIndexURL(sourceUrl: sourceUrl, category: lookup.category.rawValue))
+        if let sourceUrl = entity.sourceUrl, !sourceUrl.isEmpty {
+            save(index, to: articleIndexURL(sourceUrl: sourceUrl, category: entity.category))
         }
     }
 
@@ -131,10 +131,10 @@ final class DefaultDetailCacheRepository: DetailCacheRepository {
         // 写入主缓存
         save(entity, to: directoryCacheURL(id: entity.id))
 
-        // 写入索引
+        // 写入索引（使用 entity 最终解析后的字段）
         let index = CacheIndex(id: entity.id)
-        if let sourceId = lookup.sourceId {
-            save(index, to: directoryIndexURL(sourceId: sourceId, kind: lookup.kind.rawValue))
+        if let sourceId = entity.sourceId, !sourceId.isEmpty {
+            save(index, to: directoryIndexURL(sourceId: sourceId, kind: entity.kind))
         }
     }
 
@@ -158,9 +158,9 @@ final class DefaultDetailCacheRepository: DetailCacheRepository {
         // 写入主缓存
         save(entity, to: inheritorCacheURL(id: entity.id))
 
-        // 写入索引
+        // 写入索引（使用 entity 最终解析后的字段）
         let index = CacheIndex(id: entity.id)
-        if let sourceId = lookup.sourceId {
+        if let sourceId = entity.sourceId, !sourceId.isEmpty {
             save(index, to: inheritorIndexURL(sourceId: sourceId))
         }
     }

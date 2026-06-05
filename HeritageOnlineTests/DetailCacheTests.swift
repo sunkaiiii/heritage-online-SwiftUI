@@ -304,4 +304,117 @@ final class DetailCacheTests: XCTestCase {
         let cached2 = await cache.cachedArticle(id: "rewrite-1")
         XCTAssertEqual(cached2?.title, "第二版")
     }
+
+    // MARK: - DTO sourceId/sourceUrl 兜底索引测试
+
+    /// lookup 只有 articleId，DTO 自带 sourceId，写缓存后可通过 sourceId 读取
+    func testArticleCacheIndexesDtoSourceIdWhenLookupOnlyHasId() async {
+        let cache = DefaultDetailCacheRepository.shared
+        let dto = ArticleDetailDTO(
+            id: "art-dto-sid",
+            sourceId: "art-dto-source-id",
+            category: "news",
+            title: "DTO有sourceId",
+            summary: nil, publishedAt: nil, coverImage: nil,
+            sourceUrl: nil, sourceName: nil, author: nil, editor: nil,
+            contentBlocks: [], relatedArticles: []
+        )
+        // lookup 只传 articleId，不传 sourceId
+        let lookup = ArticleDetailLookup(articleId: "art-dto-sid", category: .news)
+
+        await cache.cacheArticle(dto, lookup: lookup)
+
+        // 通过 id 读取
+        let byId = await cache.cachedArticle(id: "art-dto-sid")
+        XCTAssertNotNil(byId)
+        XCTAssertEqual(byId?.sourceId, "art-dto-source-id")
+
+        // 通过 DTO 自带的 sourceId 读取
+        let bySourceId = await cache.cachedArticleBySourceId(sourceId: "art-dto-source-id", category: "news")
+        XCTAssertNotNil(bySourceId)
+        XCTAssertEqual(bySourceId?.title, "DTO有sourceId")
+    }
+
+    /// lookup 只有 articleId，DTO 自带 sourceUrl，写缓存后可通过 sourceUrl 读取
+    func testArticleCacheIndexesDtoSourceUrlWhenLookupOnlyHasId() async {
+        let cache = DefaultDetailCacheRepository.shared
+        let dto = ArticleDetailDTO(
+            id: "art-dto-surl",
+            sourceId: nil,
+            category: "news",
+            title: "DTO有sourceUrl",
+            summary: nil, publishedAt: nil, coverImage: nil,
+            sourceUrl: "https://example.com/dto-article",
+            sourceName: nil, author: nil, editor: nil,
+            contentBlocks: [], relatedArticles: []
+        )
+        // lookup 只传 articleId，不传 sourceUrl
+        let lookup = ArticleDetailLookup(articleId: "art-dto-surl", category: .news)
+
+        await cache.cacheArticle(dto, lookup: lookup)
+
+        // 通过 DTO 自带的 sourceUrl 读取
+        let bySourceUrl = await cache.cachedArticleBySourceUrl(sourceUrl: "https://example.com/dto-article", category: "news")
+        XCTAssertNotNil(bySourceUrl)
+        XCTAssertEqual(bySourceUrl?.title, "DTO有sourceUrl")
+    }
+
+    /// lookup 只有 itemId，DTO 自带 sourceId，写缓存后可通过 sourceId 读取
+    func testDirectoryCacheIndexesDtoSourceIdWhenLookupOnlyHasId() async {
+        let cache = DefaultDetailCacheRepository.shared
+        let dto = DirectoryItemDetailDTO(
+            id: "dir-dto-sid",
+            sourceId: "dir-dto-source-id",
+            kind: "nationalProject",
+            title: "DTO有sourceId名录",
+            summary: nil, category: nil, region: nil, projectCode: nil,
+            batch: nil, publishedYear: nil, listType: nil,
+            nominationType: nil, protectionUnit: nil,
+            coverImage: nil, sourceUrl: nil,
+            gallery: [], contentBlocks: [],
+            relatedProjects: [], relatedInheritors: [], relatedDocuments: []
+        )
+        // lookup 只传 itemId，不传 sourceId
+        let lookup = DirectoryDetailLookup(itemId: "dir-dto-sid", kind: .nationalProject)
+
+        await cache.cacheDirectoryItem(dto, lookup: lookup)
+
+        // 通过 id 读取
+        let byId = await cache.cachedDirectoryItem(id: "dir-dto-sid")
+        XCTAssertNotNil(byId)
+        XCTAssertEqual(byId?.sourceId, "dir-dto-source-id")
+
+        // 通过 DTO 自带的 sourceId 读取
+        let bySourceId = await cache.cachedDirectoryItemBySourceId(sourceId: "dir-dto-source-id", kind: "nationalProject")
+        XCTAssertNotNil(bySourceId)
+        XCTAssertEqual(bySourceId?.title, "DTO有sourceId名录")
+    }
+
+    /// lookup 只有 inheritorId，DTO 自带 sourceId，写缓存后可通过 sourceId 读取
+    func testInheritorCacheIndexesDtoSourceIdWhenLookupOnlyHasId() async {
+        let cache = DefaultDetailCacheRepository.shared
+        let dto = InheritorDetailDTO(
+            id: "inh-dto-sid",
+            sourceId: "inh-dto-source-id",
+            name: "DTO有sourceId传承人",
+            gender: nil, birthDateText: nil, ethnicity: nil, category: nil,
+            projectCode: nil, projectName: nil, region: nil, batch: nil,
+            description: nil, coverImage: nil, sourceUrl: nil,
+            contentBlocks: [], relatedProjects: [], relatedInheritors: []
+        )
+        // lookup 只传 inheritorId，不传 sourceId
+        let lookup = InheritorDetailLookup(inheritorId: "inh-dto-sid")
+
+        await cache.cacheInheritor(dto, lookup: lookup)
+
+        // 通过 id 读取
+        let byId = await cache.cachedInheritor(id: "inh-dto-sid")
+        XCTAssertNotNil(byId)
+        XCTAssertEqual(byId?.sourceId, "inh-dto-source-id")
+
+        // 通过 DTO 自带的 sourceId 读取
+        let bySourceId = await cache.cachedInheritorBySourceId(sourceId: "inh-dto-source-id")
+        XCTAssertNotNil(bySourceId)
+        XCTAssertEqual(bySourceId?.name, "DTO有sourceId传承人")
+    }
 }

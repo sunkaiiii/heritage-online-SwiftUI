@@ -41,6 +41,13 @@ struct ArticleReferenceDTO: Codable, Sendable {
     let sourceId: String?
     let publishedAt: String?
 
+    init(title: String?, detailUrl: String? = nil, sourceId: String? = nil, publishedAt: String? = nil) {
+        self.title = title
+        self.detailUrl = detailUrl
+        self.sourceId = sourceId
+        self.publishedAt = publishedAt
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decodeIfPresent(String.self, forKey: .title)

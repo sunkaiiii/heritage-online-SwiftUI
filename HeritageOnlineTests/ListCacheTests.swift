@@ -238,16 +238,19 @@ final class ListCacheTests: XCTestCase {
             makeTestArticle(id: "a\(i)", title: "文章\(i)").toListEntity(query: query, page: 1, positionInPage: i)
         }
         await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh)
-        XCTAssertEqual(await cache.cachedArticles(queryKey: queryKey).count, 2)
+        let count1 = await cache.cachedArticles(queryKey: queryKey).count
+        XCTAssertEqual(count1, 2)
 
         // Append page 2（去重）
         let items2 = [makeTestArticle(id: "a2", title: "文章2").toListEntity(query: query, page: 2, positionInPage: 2)]
         await cache.cacheArticles(items2, queryKey: queryKey, loadType: .append)
-        XCTAssertEqual(await cache.cachedArticles(queryKey: queryKey).count, 3)
+        let count2 = await cache.cachedArticles(queryKey: queryKey).count
+        XCTAssertEqual(count2, 3)
 
         // Append 重复 id 不新增
         await cache.cacheArticles(items1, queryKey: queryKey, loadType: .append)
-        XCTAssertEqual(await cache.cachedArticles(queryKey: queryKey).count, 3)
+        let count3 = await cache.cachedArticles(queryKey: queryKey).count
+        XCTAssertEqual(count3, 3)
 
         // 清理
         await cache.clearArticles(queryKey: queryKey)
@@ -296,8 +299,10 @@ final class ListCacheTests: XCTestCase {
         await cache.cacheArticles(itemsB, queryKey: "keyB", loadType: .refresh)
 
         // 互不影响
-        XCTAssertEqual(await cache.cachedArticles(queryKey: "keyA").count, 2)
-        XCTAssertEqual(await cache.cachedArticles(queryKey: "keyB").count, 1)
+        let countA = await cache.cachedArticles(queryKey: "keyA").count
+        let countB = await cache.cachedArticles(queryKey: "keyB").count
+        XCTAssertEqual(countA, 2)
+        XCTAssertEqual(countB, 1)
 
         // 清理
         await cache.clearArticles(queryKey: "keyA")
@@ -312,13 +317,17 @@ final class ListCacheTests: XCTestCase {
         let items = [makeTestArticle(id: "a0", title: "文章").toListEntity(query: query, page: 1, positionInPage: 0)]
         await cache.cacheArticles(items, queryKey: queryKey, loadType: .refresh)
         await cache.saveArticleRemoteKey(ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
-        XCTAssertEqual(await cache.cachedArticles(queryKey: queryKey).count, 1)
-        XCTAssertNotNil(await cache.articleRemoteKey(queryKey: queryKey))
+        let countBefore = await cache.cachedArticles(queryKey: queryKey).count
+        let keyBefore = await cache.articleRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(countBefore, 1)
+        XCTAssertNotNil(keyBefore)
 
         // 清理
         await cache.clearArticles(queryKey: queryKey)
-        XCTAssertEqual(await cache.cachedArticles(queryKey: queryKey).count, 0)
-        XCTAssertNil(await cache.articleRemoteKey(queryKey: queryKey))
+        let countAfter = await cache.cachedArticles(queryKey: queryKey).count
+        let keyAfter = await cache.articleRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(countAfter, 0)
+        XCTAssertNil(keyAfter)
     }
 
     func testChineseQueryKeyDoesNotCollide() async {
