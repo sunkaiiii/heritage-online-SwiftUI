@@ -1,8 +1,7 @@
 import SwiftUI
 
 /// Tab 内容保活容器
-/// 使用 ZStack + opacity 实现懒挂载后保活
-/// 未选中的栏目隐藏但不销毁，保留滚动状态和 NavigationPath
+/// 使用系统 TabView 保活每个 tab 的 NavigationStack
 struct TabContentHost: View {
     @Binding var selectedTab: HomeTab
     @Binding var mountedTabs: Set<HomeTab>
@@ -14,41 +13,21 @@ struct TabContentHost: View {
     let onSettingsSelected: () -> Void
 
     var body: some View {
-        ZStack {
-            if mountedTabs.contains(.articles) {
-                keptAlive(.articles) {
-                    ArticlesTab(path: $articlesPath, onSettingsSelected: onSettingsSelected)
-                }
-            }
+        TabView(selection: $selectedTab) {
+            ArticlesTab(path: $articlesPath, onSettingsSelected: onSettingsSelected)
+                .tag(HomeTab.articles)
 
-            if mountedTabs.contains(.directory) {
-                keptAlive(.directory) {
-                    DirectoryTab(path: $directoryPath)
-                }
-            }
+            DirectoryTab(path: $directoryPath)
+                .tag(HomeTab.directory)
 
-            if mountedTabs.contains(.inheritors) {
-                keptAlive(.inheritors) {
-                    InheritorsTab(path: $inheritorsPath)
-                }
-            }
+            InheritorsTab(path: $inheritorsPath)
+                .tag(HomeTab.inheritors)
 
-            if mountedTabs.contains(.discovery) {
-                keptAlive(.discovery) {
-                    DiscoveryTab(path: $discoveryPath)
-                }
-            }
+            DiscoveryTab(path: $discoveryPath)
+                .tag(HomeTab.discovery)
         }
-    }
-
-    @ViewBuilder
-    private func keptAlive<Content: View>(
-        _ tab: HomeTab,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        content()
-            .opacity(selectedTab == tab ? 1 : 0)
-            .allowsHitTesting(selectedTab == tab)
-            .accessibilityHidden(selectedTab != tab)
+        .onChange(of: selectedTab) { _, tab in
+            mountedTabs.insert(tab)
+        }
     }
 }

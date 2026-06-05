@@ -234,7 +234,10 @@ private struct InheritorRow: View {
     let item: InheritorSummaryDTO
 
     var body: some View {
-        NavigationLink(destination: InheritorDetailView(inheritorId: item.id)) {
+        NavigationLink(value: AppRoute.inheritor(
+            inheritorId: item.id,
+            sourceId: nil
+        )) {
             ContentCard {
                 HStack(spacing: 12) {
                     // 左侧头像/占位

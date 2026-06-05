@@ -183,12 +183,13 @@ struct DetailContextDTO: Decodable, Sendable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        related = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .related) ?? []
-        recommendations = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .recommendations) ?? []
-        semanticRecommendations = try container.decodeIfPresent([RelatedItemDTO].self, forKey: .semanticRecommendations) ?? []
-        collections = try container.decodeIfPresent([CollectionRefDTO].self, forKey: .collections) ?? []
-        exploreTopics = try container.decodeIfPresent([ExploreTopicRefDTO].self, forKey: .exploreTopics) ?? []
-        graph = try container.decodeIfPresent([GraphEdgeDTO].self, forKey: .graph) ?? []
+        // 使用容错解码：单个 item 解码失败时跳过，不影响其他 section
+        related = container.decodeLossyArrayIfPresent(RelatedItemDTO.self, forKey: .related)
+        recommendations = container.decodeLossyArrayIfPresent(RelatedItemDTO.self, forKey: .recommendations)
+        semanticRecommendations = container.decodeLossyArrayIfPresent(RelatedItemDTO.self, forKey: .semanticRecommendations)
+        collections = container.decodeLossyArrayIfPresent(CollectionRefDTO.self, forKey: .collections)
+        exploreTopics = container.decodeLossyArrayIfPresent(ExploreTopicRefDTO.self, forKey: .exploreTopics)
+        graph = container.decodeLossyArrayIfPresent(GraphEdgeDTO.self, forKey: .graph)
     }
 }
 

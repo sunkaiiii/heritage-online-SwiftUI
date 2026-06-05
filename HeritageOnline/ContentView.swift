@@ -23,7 +23,7 @@ extension AppRoute: Identifiable {
 
 /// 应用主视图 - App Shell
 /// 对齐 Android MainActivity HeritageApp
-/// macOS 使用左侧栏导航，iOS/iPadOS 使用底部 TabView
+/// 使用 SwiftUI 默认 TabView 导航
 struct ContentView: View {
     @Environment(SettingsManager.self) private var settingsManager
     @Environment(\.heritageColorScheme) private var colorScheme
@@ -48,18 +48,6 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            #if os(macOS)
-            MacSidebarShell(
-                selectedTab: $selectedTab,
-                mountedTabs: $mountedTabs,
-                articlesPath: $articlesPath,
-                directoryPath: $directoryPath,
-                inheritorsPath: $inheritorsPath,
-                discoveryPath: $discoveryPath,
-                onSettingsSelected: { showSettings = true },
-                onMyPageSelected: { showMyPage = true }
-            )
-            #else
             MobileTabShell(
                 selectedTab: $selectedTab,
                 articlesPath: $articlesPath,
@@ -68,7 +56,6 @@ struct ContentView: View {
                 discoveryPath: $discoveryPath,
                 onSettingsSelected: { showSettings = true }
             )
-            #endif
 
             // 设置页覆盖层
             if showSettings {
@@ -80,7 +67,8 @@ struct ContentView: View {
                 .zIndex(1)
             }
 
-            // 我的页覆盖层
+            // 我的页覆盖层（iOS overlay）
+            #if !os(macOS)
             if showMyPage {
                 MyPageView(
                     onBack: { showMyPage = false },
@@ -94,12 +82,30 @@ struct ContentView: View {
                 .transition(.move(edge: .trailing))
                 .zIndex(2)
             }
+            #endif
         }
         .animation(.default, value: showSettings)
+        #if !os(macOS)
         .animation(.default, value: showMyPage)
+        #endif
         .onChange(of: selectedTab) { _, newValue in
             mountedTabs.insert(newValue)
         }
+        // macOS: My Page 用 sheet 展示
+        #if os(macOS)
+        .sheet(isPresented: $showMyPage) {
+            MyPageView(
+                onBack: { showMyPage = false },
+                onNavigate: { item in
+                    navigateFromSavedContent(item)
+                },
+                onNavigateReadingPath: { event in
+                    navigateFromReadingPath(event)
+                }
+            )
+            .frame(minWidth: 760, idealWidth: 920, minHeight: 560, idealHeight: 680)
+        }
+        #endif
     }
 
     // MARK: - 导航方法

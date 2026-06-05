@@ -30,6 +30,12 @@ struct MyPageView: View {
                         readingPathTab
                     }
                 }
+                #if os(macOS)
+                .frame(maxWidth: 920)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 18)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                #endif
             }
             .navigationTitle("page.my")
             #if os(iOS)
@@ -37,6 +43,16 @@ struct MyPageView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("nav.back") { onBack() }
+                }
+            }
+            #elseif os(macOS)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        onBack()
+                    } label: {
+                        Label("nav.close", systemImage: "xmark")
+                    }
                 }
             }
             #endif
@@ -59,6 +75,20 @@ struct MyPageView: View {
     // MARK: - Tab 切换
 
     private var tabToggle: some View {
+        #if os(macOS)
+        Picker("page.my", selection: Binding(
+            get: { viewModel.selectedTab },
+            set: { viewModel.selectedTab = $0 }
+        )) {
+            ForEach(MyPageTab.allCases, id: \.self) { tab in
+                Text(tab.localizationKey).tag(tab)
+            }
+        }
+        .pickerStyle(.segmented)
+        .frame(maxWidth: 560)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 16)
+        #else
         HStack(spacing: 0) {
             ForEach(MyPageTab.allCases, id: \.self) { tab in
                 Button {
@@ -82,6 +112,7 @@ struct MyPageView: View {
         }
         .padding(.horizontal, 20)
         .padding(.bottom, 8)
+        #endif
     }
 
     // MARK: - 收藏 Tab

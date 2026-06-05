@@ -11,6 +11,7 @@
 
 /* Navigation */
 "nav.back" = "返回";
+"nav.close" = "关闭";
 "nav.cancel" = "取消";
 "nav.done" = "完成";
 "nav.search" = "搜索";

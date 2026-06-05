@@ -405,7 +405,7 @@ private struct ArticleRow: View {
             return String(localized: String.LocalizationValue(key))
         }()
 
-        NavigationLink(destination: ArticleDetailView(
+        NavigationLink(value: AppRoute.article(
             articleId: article.id,
             sourceId: nil,
             sourceUrl: article.sourceUrl,

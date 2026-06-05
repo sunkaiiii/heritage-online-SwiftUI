@@ -150,6 +150,7 @@
 		'B20000FA' = {isa = PBXBuildFile; fileRef = B10000F7; };
 		'B20000FB' = {isa = PBXBuildFile; fileRef = B10000F8; };
 		'B20000FC' = {isa = PBXBuildFile; fileRef = B10000F9; };
+		'B20000FD' = {isa = PBXBuildFile; fileRef = B10000FA; };
 		'B8000002' = {isa = PBXBuildFile; fileRef = B8000001; };
 		'B8000004' = {isa = PBXBuildFile; fileRef = B8000003; };
 		'B8000006' = {isa = PBXBuildFile; fileRef = B8000005; };
@@ -186,6 +187,8 @@
 		E2000006 /* StoryDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000006 /* StoryDetailViewModelTests.swift */; };
 		E2000007 /* TaxonomyDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000007 /* TaxonomyDetailViewModelTests.swift */; };
 		E2000008 /* SettingsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000008 /* SettingsManagerTests.swift */; };
+		F2000001 /* AppRouteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000001 /* AppRouteTests.swift */; };
+		F2000002 /* DetailContextDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000002 /* DetailContextDecodingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -346,6 +349,7 @@
 		'B10000F1' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryDtos.swift; sourceTree = "<group>"; };
 		'B10000F2' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaxonomyDtos.swift; sourceTree = "<group>"; };
 		'B10000F3' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareDtos.swift; sourceTree = "<group>"; };
+		'B10000FA' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LossyDecodableArray.swift; sourceTree = "<group>"; };
 		'B10000F4' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryContentView.swift; sourceTree = "<group>"; };
 		'B10000F5' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverySections.swift; sourceTree = "<group>"; };
 		'B10000F6' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryComponents.swift; sourceTree = "<group>"; };
@@ -378,6 +382,8 @@
 		E1000006 /* StoryDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoryDetailViewModelTests.swift; path = HeritageOnlineTests/StoryDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
 		E1000007 /* TaxonomyDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TaxonomyDetailViewModelTests.swift; path = HeritageOnlineTests/TaxonomyDetailViewModelTests.swift; sourceTree = SOURCE_ROOT; };
 		E1000008 /* SettingsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsManagerTests.swift; path = HeritageOnlineTests/SettingsManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		F1000001 /* AppRouteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRouteTests.swift; path = HeritageOnlineTests/AppRouteTests.swift; sourceTree = SOURCE_ROOT; };
+		F1000002 /* DetailContextDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DetailContextDecodingTests.swift; path = HeritageOnlineTests/DetailContextDecodingTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -472,6 +478,8 @@
 				B800000B,
 				B800000D,
 				B800000F,
+				F1000001 /* AppRouteTests.swift */,
+				F1000002 /* DetailContextDecodingTests.swift */,
 			);
 			path = HeritageOnlineTests;
 			sourceTree = "<group>";
@@ -802,6 +810,7 @@
 				B10000F1,
 				B10000F2,
 				B10000F3,
+				B10000FA,
 				B100001C,
 			);
 			path = DTOs;
@@ -1122,6 +1131,7 @@
 				B20000FA,
 				B20000FB,
 				B20000FC,
+				B20000FD,
 				6B24433892C2CF1CC846B36B /* DetailCacheEntity.swift in Sources */,
 				CC9C4E678BC78BE5D097BF27 /* DetailCacheMapper.swift in Sources */,
 				04244A95A911FBE51F2B9B54 /* DetailCacheRepository.swift in Sources */,
@@ -1169,6 +1179,8 @@
 				E2000006 /* StoryDetailViewModelTests.swift in Sources */,
 				E2000007 /* TaxonomyDetailViewModelTests.swift in Sources */,
 				E2000008 /* SettingsManagerTests.swift in Sources */,
+				F2000001 /* AppRouteTests.swift in Sources */,
+				F2000002 /* DetailContextDecodingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

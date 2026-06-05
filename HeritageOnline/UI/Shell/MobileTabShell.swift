@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// iOS/iPadOS 底部 Tab 导航 Shell
-/// 保留当前 TabView 行为，不使用侧栏
+/// SwiftUI 默认 Tab 导航 Shell
+/// macOS 显示为窗口顶部 tab，iOS/iPadOS 显示为底部 tab
 struct MobileTabShell: View {
     @Environment(\.heritageColorScheme) private var colorScheme
 

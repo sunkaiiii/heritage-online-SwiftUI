@@ -99,6 +99,15 @@ struct DetailExploreSection: View {
         return hasDigest || hasBlended || hasContext
     }
 
+    /// context 错误是否应该显示
+    /// 当 digest 或 blended 已有内容时，不显示 context 原始错误，避免突兀的英文 decoding error
+    private var shouldShowContextError: Bool {
+        guard contextError != nil else { return false }
+        let hasDigest = digest != nil || digestLoading || digestError != nil
+        let hasBlended = !blendedRecommendations.isEmpty
+        return !hasDigest && !hasBlended && context == nil
+    }
+
     var body: some View {
         if !hasAnyContent {
             EmptyView()
@@ -132,10 +141,11 @@ struct DetailExploreSection: View {
                 }
 
                 // 3-8. Context 区块
+                // 当 digest 或 blended 已有内容时，不显示 context 原始错误
                 DetailContextSection(
                     context: context,
                     isLoading: contextLoading,
-                    error: contextError,
+                    error: shouldShowContextError ? contextError : nil,
                     onRetry: onContextRetry,
                     onItemClick: { event in
                         handleContextItemClick(event)

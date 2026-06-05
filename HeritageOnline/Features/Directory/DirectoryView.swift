@@ -299,7 +299,7 @@ private struct DirectoryItemRow: View {
     let item: DirectoryItemSummaryDTO
 
     var body: some View {
-        NavigationLink(destination: DirectoryDetailView(
+        NavigationLink(value: AppRoute.directory(
             itemId: item.id,
             sourceId: nil,
             kind: DirectoryItemKind(rawValue: item.kind ?? "nationalProject") ?? .nationalProject
