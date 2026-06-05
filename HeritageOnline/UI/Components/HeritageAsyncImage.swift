@@ -194,13 +194,31 @@ struct HeritageListImage: View {
     }
 
     var body: some View {
-        HeritageAsyncImage(
-            urlString: urlString,
-            placeholderText: placeholderText,
-            contentMode: .fill,
-            onTap: onTap
-        )
-        .frame(width: width, height: height)
+        image
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
+    }
+
+    @ViewBuilder
+    private var image: some View {
+        if let width {
+            HeritageAsyncImage(
+                urlString: urlString,
+                placeholderText: placeholderText,
+                contentMode: .fill,
+                onTap: onTap
+            )
+            .frame(width: width, height: height)
+        } else {
+            HeritageAsyncImage(
+                urlString: urlString,
+                placeholderText: placeholderText,
+                contentMode: .fill,
+                onTap: onTap
+            )
+            .frame(maxWidth: .infinity)
+            .frame(height: height)
+        }
     }
 }
 
