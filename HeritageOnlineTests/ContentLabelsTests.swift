@@ -39,8 +39,9 @@ final class ContentLabelsTests: XCTestCase {
         XCTAssertEqual(ContentLabels.localizedArticleCategory("specialTopic"), "articleCategory.specialTopic")
     }
 
-    func testLocalizedArticleCategoryReturnsNilForUnknown() {
-        XCTAssertNil(ContentLabels.localizedArticleCategory("unknown"))
+    func testLocalizedArticleCategoryReturnsOriginalForUnknown() {
+        // 未知非空值原样返回，空字符串返回 nil
+        XCTAssertEqual(ContentLabels.localizedArticleCategory("unknown"), "unknown")
         XCTAssertNil(ContentLabels.localizedArticleCategory(""))
     }
 
@@ -70,8 +71,9 @@ final class ContentLabelsTests: XCTestCase {
         XCTAssertEqual(ContentLabels.localizedDirectoryKind("contractingState"), "directoryKind.contractingState")
     }
 
-    func testLocalizedDirectoryKindReturnsNilForUnknown() {
-        XCTAssertNil(ContentLabels.localizedDirectoryKind("unknown"))
+    func testLocalizedDirectoryKindReturnsOriginalForUnknown() {
+        // 未知非空值原样返回，空字符串返回 nil
+        XCTAssertEqual(ContentLabels.localizedDirectoryKind("unknown"), "unknown")
         XCTAssertNil(ContentLabels.localizedDirectoryKind(""))
     }
 

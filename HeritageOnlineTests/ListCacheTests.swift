@@ -205,12 +205,13 @@ final class ListCacheTests: XCTestCase {
         let cache = DefaultListCacheRepository.shared
         let queryKey = "test-cache-refresh"
         let query = ArticleQuery(category: .news, page: 1)
+        let dummyKey = ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: nil, hasMore: false)
 
         // 写入 page 1
         let items1 = (0..<3).map { i in
             makeTestArticle(id: "a\(i)", title: "文章\(i)").toListEntity(query: query, page: 1, positionInPage: i)
         }
-        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh)
+        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh, remoteKey: dummyKey)
 
         // 读取
         let cached1 = await cache.cachedArticles(queryKey: queryKey)
@@ -218,7 +219,7 @@ final class ListCacheTests: XCTestCase {
 
         // Refresh 应替换旧数据
         let items2 = [makeTestArticle(id: "b0", title: "新文章").toListEntity(query: query, page: 1, positionInPage: 0)]
-        await cache.cacheArticles(items2, queryKey: queryKey, loadType: .refresh)
+        await cache.cacheArticles(items2, queryKey: queryKey, loadType: .refresh, remoteKey: dummyKey)
 
         let cached2 = await cache.cachedArticles(queryKey: queryKey)
         XCTAssertEqual(cached2.count, 1)
@@ -232,23 +233,24 @@ final class ListCacheTests: XCTestCase {
         let cache = DefaultListCacheRepository.shared
         let queryKey = "test-cache-append"
         let query = ArticleQuery(category: .news, page: 1)
+        let dummyKey = ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: nil, hasMore: false)
 
         // 写入 page 1
         let items1 = (0..<2).map { i in
             makeTestArticle(id: "a\(i)", title: "文章\(i)").toListEntity(query: query, page: 1, positionInPage: i)
         }
-        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh)
+        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh, remoteKey: dummyKey)
         let count1 = await cache.cachedArticles(queryKey: queryKey).count
         XCTAssertEqual(count1, 2)
 
         // Append page 2（去重）
         let items2 = [makeTestArticle(id: "a2", title: "文章2").toListEntity(query: query, page: 2, positionInPage: 2)]
-        await cache.cacheArticles(items2, queryKey: queryKey, loadType: .append)
+        await cache.cacheArticles(items2, queryKey: queryKey, loadType: .append, remoteKey: dummyKey)
         let count2 = await cache.cachedArticles(queryKey: queryKey).count
         XCTAssertEqual(count2, 3)
 
         // Append 重复 id 不新增
-        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .append)
+        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .append, remoteKey: dummyKey)
         let count3 = await cache.cachedArticles(queryKey: queryKey).count
         XCTAssertEqual(count3, 3)
 
@@ -259,14 +261,16 @@ final class ListCacheTests: XCTestCase {
     func testRemoteKeySaveAndLoad() async {
         let cache = DefaultListCacheRepository.shared
         let queryKey = "test-remote-key"
+        let query = ArticleQuery(category: .news, page: 1)
 
         // 初始无 remoteKey
         let initial = await cache.articleRemoteKey(queryKey: queryKey)
         XCTAssertNil(initial)
 
-        // 写入 remoteKey
+        // 通过一次性写入 remoteKey
         let key = ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true)
-        await cache.saveArticleRemoteKey(key)
+        let items = [makeTestArticle(id: "rk0", title: "测试").toListEntity(query: query, page: 1, positionInPage: 0)]
+        await cache.cacheArticles(items, queryKey: queryKey, loadType: .refresh, remoteKey: key)
 
         // 读取
         let loaded = await cache.articleRemoteKey(queryKey: queryKey)
@@ -275,7 +279,7 @@ final class ListCacheTests: XCTestCase {
 
         // 更新 remoteKey
         let updatedKey = ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: nil, hasMore: false)
-        await cache.saveArticleRemoteKey(updatedKey)
+        await cache.cacheArticles([], queryKey: queryKey, loadType: .refresh, remoteKey: updatedKey)
         let loaded2 = await cache.articleRemoteKey(queryKey: queryKey)
         XCTAssertNil(loaded2?.nextPage)
         XCTAssertFalse(loaded2?.hasMore ?? true)
@@ -287,16 +291,18 @@ final class ListCacheTests: XCTestCase {
     func testDifferentQueryKeysDontMix() async {
         let cache = DefaultListCacheRepository.shared
         let query = ArticleQuery(category: .news, page: 1)
+        let dummyKeyA = ArticleRemoteKeyEntity(queryKey: "keyA", nextPage: nil, hasMore: false)
+        let dummyKeyB = ArticleRemoteKeyEntity(queryKey: "keyB", nextPage: nil, hasMore: false)
 
         // queryKey A: 写入 2 篇
         let itemsA = (0..<2).map { i in
             makeTestArticle(id: "a\(i)", title: "A\(i)").toListEntity(query: query, page: 1, positionInPage: i)
         }
-        await cache.cacheArticles(itemsA, queryKey: "keyA", loadType: .refresh)
+        await cache.cacheArticles(itemsA, queryKey: "keyA", loadType: .refresh, remoteKey: dummyKeyA)
 
         // queryKey B: 写入 1 篇
         let itemsB = [makeTestArticle(id: "b0", title: "B0").toListEntity(query: query, page: 1, positionInPage: 0)]
-        await cache.cacheArticles(itemsB, queryKey: "keyB", loadType: .refresh)
+        await cache.cacheArticles(itemsB, queryKey: "keyB", loadType: .refresh, remoteKey: dummyKeyB)
 
         // 互不影响
         let countA = await cache.cachedArticles(queryKey: "keyA").count
@@ -315,8 +321,7 @@ final class ListCacheTests: XCTestCase {
         let query = ArticleQuery(category: .news, page: 1)
 
         let items = [makeTestArticle(id: "a0", title: "文章").toListEntity(query: query, page: 1, positionInPage: 0)]
-        await cache.cacheArticles(items, queryKey: queryKey, loadType: .refresh)
-        await cache.saveArticleRemoteKey(ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
+        await cache.cacheArticles(items, queryKey: queryKey, loadType: .refresh, remoteKey: ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
         let countBefore = await cache.cachedArticles(queryKey: queryKey).count
         let keyBefore = await cache.articleRemoteKey(queryKey: queryKey)
         XCTAssertEqual(countBefore, 1)
@@ -332,15 +337,17 @@ final class ListCacheTests: XCTestCase {
 
     func testChineseQueryKeyDoesNotCollide() async {
         let cache = DefaultListCacheRepository.shared
-        let query = ArticleQuery(category: .news, page: 1)
+
+        let beijingKey = ArticleQuery(category: .news, page: 1, keywords: "北京").queryKey
+        let shanghaiKey = ArticleQuery(category: .news, page: 1, keywords: "上海").queryKey
 
         // 写入 queryKey "北京"
         let beijingItems = [makeTestArticle(id: "b1", title: "北京文章").toListEntity(query: ArticleQuery(category: .news, page: 1, keywords: "北京"), page: 1, positionInPage: 0)]
-        await cache.cacheArticles(beijingItems, queryKey: ArticleQuery(category: .news, page: 1, keywords: "北京").queryKey, loadType: .refresh)
+        await cache.cacheArticles(beijingItems, queryKey: beijingKey, loadType: .refresh, remoteKey: ArticleRemoteKeyEntity(queryKey: beijingKey, nextPage: nil, hasMore: false))
 
         // 写入 queryKey "上海"
         let shanghaiItems = [makeTestArticle(id: "s1", title: "上海文章").toListEntity(query: ArticleQuery(category: .news, page: 1, keywords: "上海"), page: 1, positionInPage: 0)]
-        await cache.cacheArticles(shanghaiItems, queryKey: ArticleQuery(category: .news, page: 1, keywords: "上海").queryKey, loadType: .refresh)
+        await cache.cacheArticles(shanghaiItems, queryKey: shanghaiKey, loadType: .refresh, remoteKey: ArticleRemoteKeyEntity(queryKey: shanghaiKey, nextPage: nil, hasMore: false))
 
         // 两个 queryKey 不应碰撞
         let beijingCached = await cache.cachedArticles(queryKey: ArticleQuery(category: .news, page: 1, keywords: "北京").queryKey)
@@ -410,7 +417,7 @@ final class ListCacheTests: XCTestCase {
         )
 
         let entity = original.toListEntity(query: query, page: 1, positionInPage: 0)
-        await cache.cacheInheritors([entity], queryKey: queryKey, loadType: .refresh)
+        await cache.cacheInheritors([entity], queryKey: queryKey, loadType: .refresh, remoteKey: InheritorRemoteKeyEntity(queryKey: queryKey, nextPage: nil, hasMore: false))
 
         let cached = await cache.cachedInheritors(queryKey: queryKey)
         XCTAssertEqual(cached.count, 1)
