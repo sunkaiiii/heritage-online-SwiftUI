@@ -6,6 +6,8 @@
 "tab.directory" = "名录";
 "tab.inheritors" = "传承人";
 "tab.discovery" = "发现";
+"tab.myPage" = "我的";
+"tab.settings" = "设置";
 
 /* Navigation */
 "nav.back" = "返回";

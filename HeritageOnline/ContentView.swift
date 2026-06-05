@@ -23,13 +23,16 @@ extension AppRoute: Identifiable {
 
 /// 应用主视图 - App Shell
 /// 对齐 Android MainActivity HeritageApp
-/// 实现四个底部导航、隐藏入口、二级页隐藏底部导航
+/// macOS 使用左侧栏导航，iOS/iPadOS 使用底部 TabView
 struct ContentView: View {
     @Environment(SettingsManager.self) private var settingsManager
     @Environment(\.heritageColorScheme) private var colorScheme
 
     /// 当前选中的 tab
     @State private var selectedTab: HomeTab = .articles
+
+    /// 已挂载的 tab 集合（用于懒挂载后保活）
+    @State private var mountedTabs: Set<HomeTab> = [.articles]
 
     /// 是否显示设置页
     @State private var showSettings = false
@@ -45,36 +48,27 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // 主内容
-            TabView(selection: $selectedTab) {
-                ArticlesTab(
-                    path: $articlesPath,
-                    onSettingsSelected: { showSettings = true }
-                )
-                .tabItem {
-                    Label(HomeTab.articles.localizationKey, systemImage: HomeTab.articles.icon)
-                }
-                .tag(HomeTab.articles)
-
-                DirectoryTab(path: $directoryPath)
-                    .tabItem {
-                        Label(HomeTab.directory.localizationKey, systemImage: HomeTab.directory.icon)
-                    }
-                    .tag(HomeTab.directory)
-
-                InheritorsTab(path: $inheritorsPath)
-                    .tabItem {
-                        Label(HomeTab.inheritors.localizationKey, systemImage: HomeTab.inheritors.icon)
-                    }
-                    .tag(HomeTab.inheritors)
-
-                DiscoveryTab(path: $discoveryPath)
-                    .tabItem {
-                        Label(HomeTab.discovery.localizationKey, systemImage: HomeTab.discovery.icon)
-                    }
-                    .tag(HomeTab.discovery)
-            }
-            .tint(colorScheme.primary)
+            #if os(macOS)
+            MacSidebarShell(
+                selectedTab: $selectedTab,
+                mountedTabs: $mountedTabs,
+                articlesPath: $articlesPath,
+                directoryPath: $directoryPath,
+                inheritorsPath: $inheritorsPath,
+                discoveryPath: $discoveryPath,
+                onSettingsSelected: { showSettings = true },
+                onMyPageSelected: { showMyPage = true }
+            )
+            #else
+            MobileTabShell(
+                selectedTab: $selectedTab,
+                articlesPath: $articlesPath,
+                directoryPath: $directoryPath,
+                inheritorsPath: $inheritorsPath,
+                discoveryPath: $discoveryPath,
+                onSettingsSelected: { showSettings = true }
+            )
+            #endif
 
             // 设置页覆盖层
             if showSettings {
@@ -103,6 +97,9 @@ struct ContentView: View {
         }
         .animation(.default, value: showSettings)
         .animation(.default, value: showMyPage)
+        .onChange(of: selectedTab) { _, newValue in
+            mountedTabs.insert(newValue)
+        }
     }
 
     // MARK: - 导航方法
@@ -113,10 +110,9 @@ struct ContentView: View {
         showSettings = false
 
         let tab = item.targetTab
-        selectedTab = tab
-
-        // 构造路由并推入对应导航栈
         let route = buildRoute(for: item)
+        mountedTabs.insert(tab)
+        selectedTab = tab
         appendRoute(route, to: tab)
     }
 
@@ -126,10 +122,9 @@ struct ContentView: View {
         showSettings = false
 
         let tab = event.targetTab
-        selectedTab = tab
-
-        // 构造路由并推入对应导航栈
         let route = buildRoute(for: event)
+        mountedTabs.insert(tab)
+        selectedTab = tab
         appendRoute(route, to: tab)
     }
 
@@ -295,6 +290,7 @@ struct DiscoveryTab: View {
 // MARK: - 路由目标视图
 
 /// 根据 AppRoute 创建对应的详情视图
+@MainActor
 @ViewBuilder
 private func destinationView(for route: AppRoute) -> some View {
     switch route {

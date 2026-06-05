@@ -6,6 +6,8 @@
 "tab.directory" = "Directory";
 "tab.inheritors" = "Inheritors";
 "tab.discovery" = "Discovery";
+"tab.myPage" = "My Page";
+"tab.settings" = "Settings";
 
 /* Navigation */
 "nav.back" = "Back";

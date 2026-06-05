@@ -147,6 +147,9 @@
 		'B20000F7' = {isa = PBXBuildFile; fileRef = B10000F4; };
 		'B20000F8' = {isa = PBXBuildFile; fileRef = B10000F5; };
 		'B20000F9' = {isa = PBXBuildFile; fileRef = B10000F6; };
+		'B20000FA' = {isa = PBXBuildFile; fileRef = B10000F7; };
+		'B20000FB' = {isa = PBXBuildFile; fileRef = B10000F8; };
+		'B20000FC' = {isa = PBXBuildFile; fileRef = B10000F9; };
 		'B8000002' = {isa = PBXBuildFile; fileRef = B8000001; };
 		'B8000004' = {isa = PBXBuildFile; fileRef = B8000003; };
 		'B8000006' = {isa = PBXBuildFile; fileRef = B8000005; };
@@ -346,6 +349,9 @@
 		'B10000F4' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryContentView.swift; sourceTree = "<group>"; };
 		'B10000F5' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverySections.swift; sourceTree = "<group>"; };
 		'B10000F6' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryComponents.swift; sourceTree = "<group>"; };
+		'B10000F7' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileTabShell.swift; sourceTree = "<group>"; };
+		'B10000F8' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSidebarShell.swift; sourceTree = "<group>"; };
+		'B10000F9' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabContentHost.swift; sourceTree = "<group>"; };
 		'B8000001' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryViewModelTests.swift; sourceTree = "<group>"; };
 		'B8000003' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModelTests.swift; sourceTree = "<group>"; };
 		'B8000005' = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewModelTests.swift; sourceTree = "<group>"; };
@@ -535,6 +541,7 @@
 				A5000018,
 				A5000019,
 				B3000002,
+				B3000035,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -859,6 +866,16 @@
 			path = Compare;
 			sourceTree = "<group>";
 		};
+		'B3000035' = {
+			isa = PBXGroup;
+			children = (
+				B10000F7,
+				B10000F8,
+				B10000F9,
+			);
+			path = Shell;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1102,6 +1119,9 @@
 				B20000E7,
 				B20000E8,
 				B20000E9,
+				B20000FA,
+				B20000FB,
+				B20000FC,
 				6B24433892C2CF1CC846B36B /* DetailCacheEntity.swift in Sources */,
 				CC9C4E678BC78BE5D097BF27 /* DetailCacheMapper.swift in Sources */,
 				04244A95A911FBE51F2B9B54 /* DetailCacheRepository.swift in Sources */,

@@ -562,10 +562,10 @@ private struct ArticleFilterSheet: View {
                         validateAndApply()
                     }
                     .font(HeritageTypography.labelLarge)
-                    .foregroundStyle(colorScheme.onPrimary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
                     .background(colorScheme.primary)
+                    .foregroundStyle(colorScheme.onPrimary)
                     .clipShape(RoundedRectangle(cornerRadius: HeritageShapes.cornerRadius))
                 }
 
