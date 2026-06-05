@@ -8,6 +8,19 @@ enum AppRoute: Hashable {
     case inheritor(inheritorId: String?, sourceId: String?)
 }
 
+extension AppRoute: Identifiable {
+    var id: String {
+        switch self {
+        case .article(let articleId, let sourceId, let sourceUrl, let category):
+            return "article|\(articleId ?? "")|\(sourceId ?? "")|\(sourceUrl ?? "")|\(category.rawValue)"
+        case .directory(let itemId, let sourceId, let kind):
+            return "directory|\(itemId ?? "")|\(sourceId ?? "")|\(kind.rawValue)"
+        case .inheritor(let inheritorId, let sourceId):
+            return "inheritor|\(inheritorId ?? "")|\(sourceId ?? "")"
+        }
+    }
+}
+
 /// 应用主视图 - App Shell
 /// 对齐 Android MainActivity HeritageApp
 /// 实现四个底部导航、隐藏入口、二级页隐藏底部导航

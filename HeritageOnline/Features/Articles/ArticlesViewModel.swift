@@ -151,12 +151,16 @@ final class ArticlesViewModel {
             let entities = result.items.enumerated().map { index, item in
                 item.toListEntity(query: query, page: 1, positionInPage: index)
             }
-            await listCache.cacheArticles(entities, queryKey: queryKey, loadType: .refresh)
-            await listCache.saveArticleRemoteKey(ArticleRemoteKeyEntity(
+            await listCache.cacheArticles(
+                entities,
                 queryKey: queryKey,
-                nextPage: result.hasMore ? 2 : nil,
-                hasMore: result.hasMore
-            ))
+                loadType: .refresh,
+                remoteKey: ArticleRemoteKeyEntity(
+                    queryKey: queryKey,
+                    nextPage: result.hasMore ? 2 : nil,
+                    hasMore: result.hasMore
+                )
+            )
         } catch {
             // 网络失败但有缓存时不显示错误
             if cached.isEmpty {
@@ -192,12 +196,16 @@ final class ArticlesViewModel {
             let entities = result.items.enumerated().map { index, item in
                 item.toListEntity(query: query, page: nextPage, positionInPage: startIndex + index)
             }
-            await listCache.cacheArticles(entities, queryKey: queryKey, loadType: .append)
-            await listCache.saveArticleRemoteKey(ArticleRemoteKeyEntity(
+            await listCache.cacheArticles(
+                entities,
                 queryKey: queryKey,
-                nextPage: result.hasMore ? nextPage + 1 : nil,
-                hasMore: result.hasMore
-            ))
+                loadType: .append,
+                remoteKey: ArticleRemoteKeyEntity(
+                    queryKey: queryKey,
+                    nextPage: result.hasMore ? nextPage + 1 : nil,
+                    hasMore: result.hasMore
+                )
+            )
         } catch {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false

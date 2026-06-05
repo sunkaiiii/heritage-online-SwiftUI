@@ -98,4 +98,45 @@ final class DiscoveryDeepDiveViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.related.isEmpty)
         XCTAssertNil(viewModel.error)
     }
+
+    // MARK: - stableListID 稳定性测试
+
+    /// 不同 item 应产生不同的 stableListID
+    func testStableListIDDifferentForDifferentItems() {
+        let item1 = DiscoveryItemDTO(id: "a1", type: "article", title: "文章1", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/a1")
+        let item2 = DiscoveryItemDTO(id: "a2", type: "article", title: "文章2", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/a2")
+
+        XCTAssertNotEqual(item1.stableListID, item2.stableListID)
+    }
+
+    /// 同 sourceUrl 但不同 id 应产生不同的 stableListID
+    func testStableListIDDifferentWhenSameSourceUrlDifferentId() {
+        let item1 = DiscoveryItemDTO(id: "a1", type: "article", title: "文章1", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/same")
+        let item2 = DiscoveryItemDTO(id: "a2", type: "article", title: "文章2", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/same")
+
+        XCTAssertNotEqual(item1.stableListID, item2.stableListID)
+    }
+
+    /// id 为 nil 时，不同 title 应产生不同的 stableListID
+    func testStableListIDDifferentWhenIdNil() {
+        let item1 = DiscoveryItemDTO(id: nil, type: "article", title: "标题A", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/x")
+        let item2 = DiscoveryItemDTO(id: nil, type: "article", title: "标题B", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/x")
+
+        XCTAssertNotEqual(item1.stableListID, item2.stableListID)
+    }
+
+    /// 不同 type 应产生不同的 stableListID（即使其他字段相同）
+    func testStableListIDDifferentForDifferentTypes() {
+        let article = DiscoveryItemDTO(id: "x1", type: "article", title: "标题", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/x1")
+        let directory = DiscoveryItemDTO(id: "x1", type: "directoryItem", title: "标题", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/x1")
+
+        XCTAssertNotEqual(article.stableListID, directory.stableListID)
+    }
+
+    /// stableListID 是确定性的（相同输入 → 相同输出）
+    func testStableListIDIsDeterministic() {
+        let item = DiscoveryItemDTO(id: "d1", type: "article", title: "确定性测试", summary: nil, category: nil, kind: nil, region: nil, publishedAt: nil, publishedYear: nil, coverImage: nil, sourceUrl: "https://example.com/d1")
+
+        XCTAssertEqual(item.stableListID, item.stableListID)
+    }
 }

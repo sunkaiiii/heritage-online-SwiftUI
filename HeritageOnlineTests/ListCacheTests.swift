@@ -420,4 +420,169 @@ final class ListCacheTests: XCTestCase {
         // 清理
         await cache.clearInheritors(queryKey: queryKey)
     }
+
+    // MARK: - 一次性写入 items + remoteKey 测试
+
+    /// 文章 refresh 一次写入后 items 和 remoteKey 同时存在
+    func testArticleRefreshWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-article-refresh"
+        let query = ArticleQuery(category: .news, page: 1)
+
+        let items = (0..<3).map { i in
+            makeTestArticle(id: "ar\(i)", title: "文章\(i)").toListEntity(query: query, page: 1, positionInPage: i)
+        }
+        let remoteKey = ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true)
+
+        await cache.cacheArticles(items, queryKey: queryKey, loadType: .refresh, remoteKey: remoteKey)
+
+        let cached = await cache.cachedArticles(queryKey: queryKey)
+        let loadedKey = await cache.articleRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 3)
+        XCTAssertNotNil(loadedKey)
+        XCTAssertEqual(loadedKey?.nextPage, 2)
+        XCTAssertTrue(loadedKey?.hasMore ?? false)
+
+        await cache.clearArticles(queryKey: queryKey)
+    }
+
+    /// 文章 append 一次写入后 items 扩展、remoteKey 更新
+    func testArticleAppendWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-article-append"
+        let query = ArticleQuery(category: .news, page: 1)
+
+        // 先写入 page 1
+        let items1 = (0..<2).map { i in
+            makeTestArticle(id: "aa\(i)", title: "文章\(i)").toListEntity(query: query, page: 1, positionInPage: i)
+        }
+        await cache.cacheArticles(items1, queryKey: queryKey, loadType: .refresh, remoteKey: ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
+
+        // Append page 2
+        let items2 = [makeTestArticle(id: "aa2", title: "文章2").toListEntity(query: query, page: 2, positionInPage: 0)]
+        await cache.cacheArticles(items2, queryKey: queryKey, loadType: .append, remoteKey: ArticleRemoteKeyEntity(queryKey: queryKey, nextPage: 3, hasMore: true))
+
+        let cached = await cache.cachedArticles(queryKey: queryKey)
+        let loadedKey = await cache.articleRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 3)
+        XCTAssertEqual(loadedKey?.nextPage, 3)
+
+        await cache.clearArticles(queryKey: queryKey)
+    }
+
+    /// 名录 refresh 一次写入后 items 和 remoteKey 同时存在
+    func testDirectoryRefreshWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-directory-refresh"
+        let query = DirectoryItemQuery(kind: .nationalProject, page: 1, pageSize: 20)
+
+        let items = (0..<2).map { i -> DirectoryListCacheEntity in
+            let dto = DirectoryItemSummaryDTO(
+                id: "dr\(i)", kind: "nationalProject", title: "名录\(i)",
+                summary: nil, category: nil, region: nil, projectCode: nil,
+                batch: nil, publishedYear: nil, listType: nil,
+                coverImage: nil, sourceUrl: nil
+            )
+            return dto.toListEntity(query: query, page: 1, positionInPage: i)
+        }
+        let remoteKey = DirectoryRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true)
+
+        await cache.cacheDirectoryItems(items, queryKey: queryKey, loadType: .refresh, remoteKey: remoteKey)
+
+        let cached = await cache.cachedDirectoryItems(queryKey: queryKey)
+        let loadedKey = await cache.directoryRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 2)
+        XCTAssertNotNil(loadedKey)
+        XCTAssertEqual(loadedKey?.nextPage, 2)
+
+        await cache.clearDirectoryItems(queryKey: queryKey)
+    }
+
+    /// 名录 append 一次写入后 items 扩展、remoteKey 更新
+    func testDirectoryAppendWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-directory-append"
+        let query = DirectoryItemQuery(kind: .nationalProject, page: 1, pageSize: 20)
+
+        let items1 = [DirectoryItemSummaryDTO(
+            id: "da0", kind: "nationalProject", title: "名录0",
+            summary: nil, category: nil, region: nil, projectCode: nil,
+            batch: nil, publishedYear: nil, listType: nil,
+            coverImage: nil, sourceUrl: nil
+        ).toListEntity(query: query, page: 1, positionInPage: 0)]
+        await cache.cacheDirectoryItems(items1, queryKey: queryKey, loadType: .refresh, remoteKey: DirectoryRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
+
+        let items2 = [DirectoryItemSummaryDTO(
+            id: "da1", kind: "nationalProject", title: "名录1",
+            summary: nil, category: nil, region: nil, projectCode: nil,
+            batch: nil, publishedYear: nil, listType: nil,
+            coverImage: nil, sourceUrl: nil
+        ).toListEntity(query: query, page: 2, positionInPage: 0)]
+        await cache.cacheDirectoryItems(items2, queryKey: queryKey, loadType: .append, remoteKey: DirectoryRemoteKeyEntity(queryKey: queryKey, nextPage: 3, hasMore: true))
+
+        let cached = await cache.cachedDirectoryItems(queryKey: queryKey)
+        let loadedKey = await cache.directoryRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 2)
+        XCTAssertEqual(loadedKey?.nextPage, 3)
+
+        await cache.clearDirectoryItems(queryKey: queryKey)
+    }
+
+    /// 传承人 refresh 一次写入后 items 和 remoteKey 同时存在
+    func testInheritorRefreshWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-inheritor-refresh"
+        let query = InheritorQuery(page: 1, pageSize: 20)
+
+        let items = (0..<2).map { i -> InheritorListCacheEntity in
+            let dto = InheritorSummaryDTO(
+                id: "ir\(i)", name: "传承人\(i)", gender: nil,
+                birthDateText: nil, ethnicity: nil, category: nil,
+                projectCode: nil, projectName: nil, region: nil,
+                batch: nil, description: nil, coverImage: nil, sourceUrl: nil
+            )
+            return dto.toListEntity(query: query, page: 1, positionInPage: i)
+        }
+        let remoteKey = InheritorRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true)
+
+        await cache.cacheInheritors(items, queryKey: queryKey, loadType: .refresh, remoteKey: remoteKey)
+
+        let cached = await cache.cachedInheritors(queryKey: queryKey)
+        let loadedKey = await cache.inheritorRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 2)
+        XCTAssertNotNil(loadedKey)
+        XCTAssertEqual(loadedKey?.nextPage, 2)
+
+        await cache.clearInheritors(queryKey: queryKey)
+    }
+
+    /// 传承人 append 一次写入后 items 扩展、remoteKey 更新
+    func testInheritorAppendWritesItemsAndRemoteKeyTogether() async {
+        let cache = DefaultListCacheRepository.shared
+        let queryKey = "test-oneshot-inheritor-append"
+        let query = InheritorQuery(page: 1, pageSize: 20)
+
+        let items1 = [InheritorSummaryDTO(
+            id: "ia0", name: "传承人0", gender: nil,
+            birthDateText: nil, ethnicity: nil, category: nil,
+            projectCode: nil, projectName: nil, region: nil,
+            batch: nil, description: nil, coverImage: nil, sourceUrl: nil
+        ).toListEntity(query: query, page: 1, positionInPage: 0)]
+        await cache.cacheInheritors(items1, queryKey: queryKey, loadType: .refresh, remoteKey: InheritorRemoteKeyEntity(queryKey: queryKey, nextPage: 2, hasMore: true))
+
+        let items2 = [InheritorSummaryDTO(
+            id: "ia1", name: "传承人1", gender: nil,
+            birthDateText: nil, ethnicity: nil, category: nil,
+            projectCode: nil, projectName: nil, region: nil,
+            batch: nil, description: nil, coverImage: nil, sourceUrl: nil
+        ).toListEntity(query: query, page: 2, positionInPage: 0)]
+        await cache.cacheInheritors(items2, queryKey: queryKey, loadType: .append, remoteKey: InheritorRemoteKeyEntity(queryKey: queryKey, nextPage: 3, hasMore: true))
+
+        let cached = await cache.cachedInheritors(queryKey: queryKey)
+        let loadedKey = await cache.inheritorRemoteKey(queryKey: queryKey)
+        XCTAssertEqual(cached.count, 2)
+        XCTAssertEqual(loadedKey?.nextPage, 3)
+
+        await cache.clearInheritors(queryKey: queryKey)
+    }
 }

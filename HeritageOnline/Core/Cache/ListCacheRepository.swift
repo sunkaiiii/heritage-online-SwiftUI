@@ -33,6 +33,9 @@ protocol ListCacheRepository: Sendable {
     /// 写入文章列表缓存（事务：REFRESH 时清空旧数据再写入）
     func cacheArticles(_ items: [ArticleListCacheEntity], queryKey: String, loadType: ListLoadType) async
 
+    /// 一次性写入文章列表缓存 + remoteKey（原子操作）
+    func cacheArticles(_ items: [ArticleListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: ArticleRemoteKeyEntity) async
+
     /// 读取文章远程分页 Key
     func articleRemoteKey(queryKey: String) async -> ArticleRemoteKeyEntity?
 
@@ -47,6 +50,9 @@ protocol ListCacheRepository: Sendable {
     /// 写入名录列表缓存
     func cacheDirectoryItems(_ items: [DirectoryListCacheEntity], queryKey: String, loadType: ListLoadType) async
 
+    /// 一次性写入名录列表缓存 + remoteKey（原子操作）
+    func cacheDirectoryItems(_ items: [DirectoryListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: DirectoryRemoteKeyEntity) async
+
     /// 读取名录远程分页 Key
     func directoryRemoteKey(queryKey: String) async -> DirectoryRemoteKeyEntity?
 
@@ -60,6 +66,9 @@ protocol ListCacheRepository: Sendable {
 
     /// 写入传承人列表缓存
     func cacheInheritors(_ items: [InheritorListCacheEntity], queryKey: String, loadType: ListLoadType) async
+
+    /// 一次性写入传承人列表缓存 + remoteKey（原子操作）
+    func cacheInheritors(_ items: [InheritorListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: InheritorRemoteKeyEntity) async
 
     /// 读取传承人远程分页 Key
     func inheritorRemoteKey(queryKey: String) async -> InheritorRemoteKeyEntity?
@@ -139,6 +148,23 @@ final class DefaultListCacheRepository: ListCacheRepository {
         }
     }
 
+    func cacheArticles(_ items: [ArticleListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: ArticleRemoteKeyEntity) async {
+        let url = articlesCacheURL(queryKey: queryKey)
+
+        switch loadType {
+        case .refresh:
+            let bundle = ArticleListCacheBundle(items: items, remoteKey: remoteKey)
+            save(bundle, to: url)
+        case .append:
+            var bundle: ArticleListCacheBundle = load(from: url) ?? ArticleListCacheBundle(items: [], remoteKey: nil)
+            let existingIds = Set(bundle.items.map(\.id))
+            let newItems = items.filter { !existingIds.contains($0.id) }
+            bundle.items.append(contentsOf: newItems)
+            bundle.remoteKey = remoteKey
+            save(bundle, to: url)
+        }
+    }
+
     func articleRemoteKey(queryKey: String) async -> ArticleRemoteKeyEntity? {
         let url = articlesCacheURL(queryKey: queryKey)
         let bundle: ArticleListCacheBundle? = load(from: url)
@@ -178,6 +204,23 @@ final class DefaultListCacheRepository: ListCacheRepository {
         }
     }
 
+    func cacheDirectoryItems(_ items: [DirectoryListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: DirectoryRemoteKeyEntity) async {
+        let url = directoryCacheURL(queryKey: queryKey)
+
+        switch loadType {
+        case .refresh:
+            let bundle = DirectoryListCacheBundle(items: items, remoteKey: remoteKey)
+            save(bundle, to: url)
+        case .append:
+            var bundle: DirectoryListCacheBundle = load(from: url) ?? DirectoryListCacheBundle(items: [], remoteKey: nil)
+            let existingIds = Set(bundle.items.map(\.id))
+            let newItems = items.filter { !existingIds.contains($0.id) }
+            bundle.items.append(contentsOf: newItems)
+            bundle.remoteKey = remoteKey
+            save(bundle, to: url)
+        }
+    }
+
     func directoryRemoteKey(queryKey: String) async -> DirectoryRemoteKeyEntity? {
         let url = directoryCacheURL(queryKey: queryKey)
         let bundle: DirectoryListCacheBundle? = load(from: url)
@@ -213,6 +256,23 @@ final class DefaultListCacheRepository: ListCacheRepository {
             let existingIds = Set(bundle.items.map(\.id))
             let newItems = items.filter { !existingIds.contains($0.id) }
             bundle.items.append(contentsOf: newItems)
+            save(bundle, to: url)
+        }
+    }
+
+    func cacheInheritors(_ items: [InheritorListCacheEntity], queryKey: String, loadType: ListLoadType, remoteKey: InheritorRemoteKeyEntity) async {
+        let url = inheritorCacheURL(queryKey: queryKey)
+
+        switch loadType {
+        case .refresh:
+            let bundle = InheritorListCacheBundle(items: items, remoteKey: remoteKey)
+            save(bundle, to: url)
+        case .append:
+            var bundle: InheritorListCacheBundle = load(from: url) ?? InheritorListCacheBundle(items: [], remoteKey: nil)
+            let existingIds = Set(bundle.items.map(\.id))
+            let newItems = items.filter { !existingIds.contains($0.id) }
+            bundle.items.append(contentsOf: newItems)
+            bundle.remoteKey = remoteKey
             save(bundle, to: url)
         }
     }

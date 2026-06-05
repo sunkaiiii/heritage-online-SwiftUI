@@ -7,10 +7,8 @@ struct DiscoveryDeepDiveView: View {
 
     @State private var viewModel: DiscoveryDeepDiveViewModel
 
-    /// 子导航状态
-    @State private var navigateToArticle: String?
-    @State private var navigateToDirectory: String?
-    @State private var navigateToInheritor: String?
+    /// 统一导航路由状态
+    @State private var navigationRoute: AppRoute?
 
     init(seedType: SearchResultType, seedId: String) {
         _viewModel = State(initialValue: DiscoveryDeepDiveViewModel(
@@ -37,14 +35,8 @@ struct DiscoveryDeepDiveView: View {
         .toolbar(.hidden, for: .tabBar)
         #endif
         .task { await viewModel.load() }
-        .navigationDestination(item: $navigateToArticle) { articleId in
-            ArticleDetailView(articleId: articleId)
-        }
-        .navigationDestination(item: $navigateToDirectory) { itemId in
-            DirectoryDetailView(itemId: itemId)
-        }
-        .navigationDestination(item: $navigateToInheritor) { inheritorId in
-            InheritorDetailView(inheritorId: inheritorId)
+        .navigationDestination(item: $navigationRoute) { route in
+            destinationView(for: route)
         }
     }
 
@@ -99,7 +91,7 @@ struct DiscoveryDeepDiveView: View {
                 .font(HeritageTypography.headlineMedium)
                 .foregroundStyle(colorScheme.onBackground)
 
-            ForEach(viewModel.related, id: \.sourceUrl) { item in
+            ForEach(viewModel.related, id: \.stableListID) { item in
                 DiscoveryItemRow(item: item) {
                     navigateToItem(item)
                 }
@@ -135,17 +127,71 @@ struct DiscoveryDeepDiveView: View {
 
     // MARK: - 导航
 
+    @ViewBuilder
+    private func destinationView(for route: AppRoute) -> some View {
+        switch route {
+        case .article(let articleId, let sourceId, let sourceUrl, let category):
+            ArticleDetailView(
+                articleId: articleId,
+                sourceId: sourceId,
+                sourceUrl: sourceUrl,
+                category: category
+            )
+        case .directory(let itemId, let sourceId, let kind):
+            DirectoryDetailView(
+                itemId: itemId,
+                sourceId: sourceId,
+                kind: kind
+            )
+        case .inheritor(let inheritorId, let sourceId):
+            InheritorDetailView(
+                inheritorId: inheritorId,
+                sourceId: sourceId
+            )
+        }
+    }
+
     private func navigateToItem(_ item: DiscoveryItemDTO) {
-        guard let id = item.id else { return }
         switch item.type {
         case "article":
-            navigateToArticle = id
+            // 文章可用 id 或 sourceUrl 兜底
+            guard item.id != nil || !item.sourceUrl.isEmpty else { return }
+            navigationRoute = .article(
+                articleId: item.id,
+                sourceId: nil,
+                sourceUrl: item.sourceUrl,
+                category: ArticleCategory(rawValue: item.category ?? "") ?? .news
+            )
         case "directoryItem":
-            navigateToDirectory = id
+            guard item.id != nil else { return }
+            navigationRoute = .directory(
+                itemId: item.id,
+                sourceId: nil,
+                kind: DirectoryItemKind(rawValue: item.kind ?? "") ?? .nationalProject
+            )
         case "inheritor":
-            navigateToInheritor = id
+            guard item.id != nil else { return }
+            navigationRoute = .inheritor(
+                inheritorId: item.id,
+                sourceId: nil
+            )
         default:
             break
         }
+    }
+}
+
+// MARK: - DiscoveryItemDTO 稳定列表 ID
+
+extension DiscoveryItemDTO {
+    /// 用于 SwiftUI ForEach 的稳定 ID
+    /// 组合 type + id + sourceUrl + title，避免可空或重复字段导致 diff 错乱
+    var stableListID: String {
+        [
+            type,
+            id ?? "",
+            sourceUrl,
+            title,
+        ].joined(separator: "|")
     }
 }

@@ -89,12 +89,16 @@ final class InheritorsViewModel {
             let entities = result.items.enumerated().map { index, item in
                 item.toListEntity(query: query, page: 1, positionInPage: index)
             }
-            await listCache.cacheInheritors(entities, queryKey: queryKey, loadType: .refresh)
-            await listCache.saveInheritorRemoteKey(InheritorRemoteKeyEntity(
+            await listCache.cacheInheritors(
+                entities,
                 queryKey: queryKey,
-                nextPage: result.hasMore ? 2 : nil,
-                hasMore: result.hasMore
-            ))
+                loadType: .refresh,
+                remoteKey: InheritorRemoteKeyEntity(
+                    queryKey: queryKey,
+                    nextPage: result.hasMore ? 2 : nil,
+                    hasMore: result.hasMore
+                )
+            )
         } catch {
             if cached.isEmpty {
                 uiState.error = AppError.from(error)
@@ -128,12 +132,16 @@ final class InheritorsViewModel {
             let entities = result.items.enumerated().map { index, item in
                 item.toListEntity(query: query, page: nextPage, positionInPage: startIndex + index)
             }
-            await listCache.cacheInheritors(entities, queryKey: queryKey, loadType: .append)
-            await listCache.saveInheritorRemoteKey(InheritorRemoteKeyEntity(
+            await listCache.cacheInheritors(
+                entities,
                 queryKey: queryKey,
-                nextPage: result.hasMore ? nextPage + 1 : nil,
-                hasMore: result.hasMore
-            ))
+                loadType: .append,
+                remoteKey: InheritorRemoteKeyEntity(
+                    queryKey: queryKey,
+                    nextPage: result.hasMore ? nextPage + 1 : nil,
+                    hasMore: result.hasMore
+                )
+            )
         } catch {
             uiState.appendError = AppError.from(error)
             uiState.isLoadingMore = false
