@@ -9,7 +9,7 @@ struct APIConfig: Sendable {
     }
 
     /// 默认 base URL
-    private static let defaultBaseURL = "https://localhost:5078"
+    private static let defaultBaseURL = "https://tuantuan.myds.me:28887"
 
     /// 共享实例
     static let shared = APIConfig()

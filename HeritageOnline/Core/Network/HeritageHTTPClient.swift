@@ -407,9 +407,9 @@ extension HeritageHTTPClient {
             return
         }
 
-        // 仅信任 localhost 和 127.0.0.1（iOS 开发常用地址）
+        // 信任开发环境常用地址
         let host = challenge.protectionSpace.host
-        let trustedHosts = ["localhost", "127.0.0.1"]
+        let trustedHosts = ["localhost", "127.0.0.1", "tuantuan.myds.me"]
 
         guard trustsSelfSigned && trustedHosts.contains(host) else {
             completionHandler(.cancelAuthenticationChallenge, nil)
